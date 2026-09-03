@@ -5,7 +5,7 @@ const socket = io();
 
 function App() {
   const [gameState, setGameState] = useState(null);
-  const [playerName, setPlayerName] = useState('');
+  const [playerName, setPlayerName] = useState(() => localStorage.getItem('nbaPlayerName') || '');
   const [hasJoined, setHasJoined] = useState(false);
   const [customBid, setCustomBid] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -31,8 +31,9 @@ function App() {
 
   const handleJoin = () => {
     if (playerName.trim() !== '') {
+      localStorage.setItem('nbaPlayerName', playerName.trim()); 
       setErrorMsg('');
-      socket.emit('joinGame', playerName);
+      socket.emit('joinGame', playerName.trim());
       setHasJoined(true);
     }
   };
@@ -207,13 +208,8 @@ function App() {
     <div style={{ direction: 'rtl', padding: '10px', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
       <h1 style={{ textAlign: 'center', fontSize: '2em' }}>זירת המכרז 🏀</h1>
       
-      {/* 
-        כאן הוספנו flexWrap: 'wrap-reverse' 
-        זה אומר שבמסך קטן, הזירה של השחקן תקפוץ למעלה ורשימת המשתתפים תרד למטה!
-      */}
       <div style={{ display: 'flex', flexWrap: 'wrap-reverse', gap: '20px', marginTop: '20px' }}>
         
-        {/* רשימת המשתתפים */}
         <div style={{ flex: '1 1 300px', border: '1px solid #ddd', padding: '15px', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
           <h2 style={{ fontSize: '1.5em', marginTop: 0 }}>משתתפים מחוברים</h2>
           {gameState?.participants.map(p => {
@@ -247,7 +243,6 @@ function App() {
           })}
         </div>
 
-        {/* זירת המכרז המרכזית */}
         <div style={{ flex: '2 1 300px', border: '2px solid #ff9800', padding: '20px', borderRadius: '8px', textAlign: 'center', backgroundColor: '#fff8f0' }}>
           {gameState?.currentAuction.player ? (
             <div>

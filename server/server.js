@@ -39,7 +39,7 @@ for (const position in rawNames) {
 
 let playersDB = [];
 let gameState = {
-    gameStarted: false, // משתנה חדש שמונע מהמשחק להתחיל לבד
+    gameStarted: false,
     participants: [],
     auctionIndex: 0,
     currentAuction: {
@@ -138,15 +138,36 @@ function startNextAuction() {
 
 io.on('connection', (socket) => {
     socket.on('joinGame', (playerName) => {
-        // מניעת כניסת שחקנים חדשים אם המשחק כבר התחיל
+        const cleanName = playerName.trim();
+        
+        const existingPlayer = gameState.participants.find(p => p.name === cleanName);
+
+        if (existingPlayer) {
+            const oldId = existingPlayer.id;
+            existingPlayer.id = socket.id; 
+
+            if (gameState.currentAuction) {
+                const activeIndex = gameState.currentAuction.activeBidders.indexOf(oldId);
+                if (activeIndex !== -1) {
+                    gameState.currentAuction.activeBidders[activeIndex] = socket.id;
+                }
+                if (gameState.currentAuction.currentTurnId === oldId) {
+                    gameState.currentAuction.currentTurnId = socket.id;
+                }
+            }
+            
+            io.emit('updateState', gameState);
+            return;
+        }
+
         if (gameState.gameStarted) {
-            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע.');
+            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע (אלא אם אתה חוזר למשחק ואז עליך להקליד את השם המדויק שלך).');
             return;
         }
 
         const newPlayer = { 
             id: socket.id, 
-            name: playerName, 
+            name: cleanName, 
             budget: 20, 
             roster: [
                 { pos: 'PG', player: null },
@@ -160,7 +181,6 @@ io.on('connection', (socket) => {
         io.emit('updateState', gameState);
     });
 
-    // כפתור התחל משחק שמאתחל את הכל
     socket.on('startGame', () => {
         if (!gameState.gameStarted && gameState.participants.length > 0) {
             gameState.gameStarted = true;
@@ -224,30 +244,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        gameState.participants = gameState.participants.filter(p => p.id !== socket.id);
-        
-        if (gameState.gameStarted) {
-            const activeIdx = gameState.currentAuction.activeBidders.indexOf(socket.id);
-            if (activeIdx !== -1) {
-                gameState.currentAuction.activeBidders.splice(activeIdx, 1);
-                
-                if (gameState.currentAuction.currentTurnId === socket.id) {
-                    if (gameState.currentAuction.activeBidders.length <= 1) {
-                        handleAuctionEnd();
-                    } else {
-                        const nextIndex = activeIdx % gameState.currentAuction.activeBidders.length;
-                        gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
-                    }
-                }
-            }
-        }
-        
-        // איפוס אוטומטי של המשחק אם כולם התנתקו
         if (gameState.participants.length === 0) {
             gameState.gameStarted = false;
         }
-        
-        io.emit('updateState', gameState);
     });
 });
 
