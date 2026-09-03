@@ -17,7 +17,6 @@ function App() {
       setGameState(newState);
       setCustomBid('');
       
-      // איפוס ההרכב המקומי אם השרת החזיר את כולם לחדר ההמתנה
       if (!newState.gameStarted) {
         setMyEditableRoster(null);
       }
@@ -91,8 +90,8 @@ function App() {
             <h2>שחקנים מחוברים כרגע:</h2>
             <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.2em' }}>
               {gameState.participants.map(p => (
-                <li key={p.id} style={{ margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '8px' }}>
-                  🟢 {p.name} {p.id === socket.id ? '(אתה)' : ''}
+                <li key={p.id} style={{ margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '8px', opacity: p.connected === false ? 0.5 : 1 }}>
+                  {p.connected === false ? '🔴' : '🟢'} {p.name} {p.id === socket.id ? '(אתה)' : ''} {p.connected === false ? '(מנותק)' : ''}
                 </li>
               ))}
             </ul>
@@ -109,7 +108,6 @@ function App() {
             )}
           </div>
 
-          {/* טבלת הדירוג - תוצג רק אם יש תוצאות */}
           {sortedLeaderboard.length > 0 && (
             <div style={{ flex: '1 1 300px', backgroundColor: '#fff8f0', padding: '20px', borderRadius: '8px', border: '2px solid #ff9800' }}>
               <h2>🏆 טבלת אלופים 🏆</h2>
@@ -179,7 +177,10 @@ function App() {
             
             return (
               <div key={p.id} style={{ flex: '1 1 300px', maxWidth: '350px', border: isMe ? '3px solid #4caf50' : '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: isMe ? '#f1f8e9' : '#fff' }}>
-                <h3 style={{ margin: '0 0 10px 0' }}>{p.name} {isMe ? '(הקבוצה שלך)' : ''}</h3>
+                <h3 style={{ margin: '0 0 10px 0', opacity: p.connected === false ? 0.5 : 1 }}>
+                  {p.connected === false && '🔴 '}
+                  {p.name} {isMe ? '(הקבוצה שלך)' : ''}
+                </h3>
                 <p style={{ color: 'green', fontWeight: 'bold' }}>עודף בקופה: ${p.budget}</p>
                 
                 <div style={{ marginTop: '15px', backgroundColor: '#fafafa', padding: '10px', borderRadius: '4px', border: '1px solid #eee' }}>
@@ -213,7 +214,6 @@ function App() {
                   </button>
                 )}
 
-                {/* כפתור הכתרת הזוכה - מעניק נקודה למשתתף ומתחיל משחק חדש */}
                 <button 
                   onClick={() => handleDeclareWinner(p.name)} 
                   style={{ width: '100%', marginTop: '10px', padding: '10px', backgroundColor: '#ffd54f', color: '#333', border: '2px solid #ffb300', borderRadius: '4px', fontSize: '16px', cursor: 'pointer', fontWeight: 'bold' }}>
@@ -265,8 +265,12 @@ function App() {
             const filledCount = p.roster.filter(s => s.player !== null).length;
             
             return (
-              <div key={p.id} style={{ borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '10px' }}>
-                <strong style={{ fontSize: '1.2em' }}>{p.name} {p.id === socket.id ? '(אתה)' : ''}</strong>
+              <div key={p.id} style={{ borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '10px', opacity: p.connected === false ? 0.6 : 1 }}>
+                <strong style={{ fontSize: '1.2em' }}>
+                  {p.connected === false && '🔴 '}
+                  {p.name} {p.id === socket.id ? '(אתה)' : ''}
+                  {p.connected === false && <span style={{ color: 'red', fontSize: '0.8em' }}> (מנותק)</span>}
+                </strong>
                 <p style={{ margin: '5px 0', color: 'green', fontWeight: 'bold' }}>תקציב נותר: ${p.budget}</p>
                 <p style={{ margin: 0, fontSize: '0.9em', color: '#555' }}>שחקנים ({filledCount}/5):</p>
                 

@@ -3,7 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs'); // ספרייה לניהול קבצים
+const fs = require('fs'); 
 
 const app = express();
 app.use(cors());
@@ -18,7 +18,6 @@ app.use((req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
-// טעינת טבלת הדירוג מהקובץ (אם קיים)
 const leaderboardPath = path.join(__dirname, 'leaderboard.json');
 let leaderboard = {};
 if (fs.existsSync(leaderboardPath)) {
@@ -102,7 +101,7 @@ let gameState = {
         activeBidders: [], 
         currentTurnId: null 
     },
-    leaderboard: leaderboard // משדרים גם את טבלת הדירוג
+    leaderboard: leaderboard 
 };
 
 function initializeGamePlayers() {
@@ -198,6 +197,7 @@ io.on('connection', (socket) => {
         if (existingPlayer) {
             const oldId = existingPlayer.id;
             existingPlayer.id = socket.id; 
+            existingPlayer.connected = true; // סימון כשחקן מחובר
 
             if (gameState.currentAuction) {
                 const activeIndex = gameState.currentAuction.activeBidders.indexOf(oldId);
@@ -222,6 +222,7 @@ io.on('connection', (socket) => {
             id: socket.id, 
             name: cleanName, 
             budget: 20, 
+            connected: true, // סימון כשחקן מחובר
             roster: [
                 { pos: 'PG', player: null },
                 { pos: 'SG', player: null },
@@ -243,21 +244,21 @@ io.on('connection', (socket) => {
         }
     });
 
-    // הכרזת זוכה וחלוקת נקודה
     socket.on('declareWinner', (winnerName) => {
         if (!leaderboard[winnerName]) {
             leaderboard[winnerName] = 0;
         }
         leaderboard[winnerName] += 1;
         
-        // שמירה לקובץ
         fs.writeFileSync(leaderboardPath, JSON.stringify(leaderboard));
         
-        // איפוס נתוני המשחק אבל שמירת המשתתפים לקראת הסיבוב הבא
         gameState.gameStarted = false;
         gameState.auctionIndex = 0;
         gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null };
         gameState.leaderboard = leaderboard;
+        
+        // ניקוי אוטומטי של כל מי שהתנתק מהמשחק הקודם לפני שחוזרים ללובי
+        gameState.participants = gameState.participants.filter(p => p.connected);
         
         gameState.participants.forEach(p => {
             p.budget = 20;
@@ -327,9 +328,26 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        if (gameState.participants.length === 0) {
-            gameState.gameStarted = false;
+        const player = gameState.participants.find(p => p.id === socket.id);
+        if (player) {
+            player.connected = false;
         }
+
+        // אם אנחנו בחדר ההמתנה והוא התנתק - מוחקים אותו מיד (אין לו קבוצה להפסיד)
+        if (!gameState.gameStarted) {
+            gameState.participants = gameState.participants.filter(p => p.connected);
+        }
+
+        // אם *כל* המשתתפים במערכת מנותקים - מאפסים את השרת לחלוטין
+        const anyConnected = gameState.participants.some(p => p.connected);
+        if (!anyConnected) {
+            gameState.gameStarted = false;
+            gameState.participants = [];
+            gameState.auctionIndex = 0;
+            gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null };
+        }
+
+        io.emit('updateState', gameState);
     });
 });
 
