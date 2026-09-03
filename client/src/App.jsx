@@ -16,6 +16,11 @@ function App() {
     socket.on('updateState', (newState) => {
       setGameState(newState);
       setCustomBid('');
+      
+      // איפוס ההרכב המקומי אם השרת החזיר את כולם לחדר ההמתנה
+      if (!newState.gameStarted) {
+        setMyEditableRoster(null);
+      }
     });
     
     socket.on('error', (msg) => {
@@ -45,6 +50,12 @@ function App() {
   const handleBid = (amount) => socket.emit('placeBid', amount);
   const handleFold = () => socket.emit('fold');
 
+  const handleDeclareWinner = (winnerName) => {
+    if (window.confirm(`האם אתם מסכימים להכתיר את ${winnerName} כזוכה של המשחק הזה?`)) {
+      socket.emit('declareWinner', winnerName);
+    }
+  };
+
   if (!hasJoined) {
     return (
       <div style={{ textAlign: 'center', direction: 'rtl', marginTop: '50px', padding: '20px', fontFamily: 'sans-serif' }}>
@@ -66,33 +77,64 @@ function App() {
     );
   }
 
-  // --- חדר המתנה ---
+  // --- חדר המתנה וטבלת דירוג ---
   if (gameState && !gameState.gameStarted) {
-    return (
-      <div style={{ textAlign: 'center', direction: 'rtl', padding: '20px', fontFamily: 'sans-serif' }}>
-        <h1 style={{ fontSize: '2.5em', color: '#ff9800' }}>חדר המתנה 🏀</h1>
-        <h2>שחקנים שמחוברים כרגע:</h2>
-        
-        <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.2em' }}>
-          {gameState.participants.map(p => (
-            <li key={p.id} style={{ margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '8px' }}>
-              🟢 {p.name} {p.id === socket.id ? '(אתה)' : ''}
-            </li>
-          ))}
-        </ul>
+    const sortedLeaderboard = Object.entries(gameState.leaderboard || {}).sort((a, b) => b[1] - a[1]);
 
-        {gameState.participants.length >= 2 ? (
-          <div style={{ marginTop: '30px' }}>
-            <button 
-              onClick={handleStartGame}
-              style={{ padding: '15px 30px', fontSize: '1.2em', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', width: '100%', maxWidth: '300px' }}>
-              התחל משחק!
-            </button>
-            <p style={{ color: 'gray', marginTop: '10px' }}>* ודא שכל החברים נכנסו לפני הלחיצה</p>
+    return (
+      <div style={{ textAlign: 'center', direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
+        <h1 style={{ fontSize: '2.5em', color: '#ff9800' }}>חדר המתנה 🏀</h1>
+        
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', marginTop: '30px' }}>
+          
+          <div style={{ flex: '1 1 300px', backgroundColor: '#fff', padding: '20px', borderRadius: '8px', border: '1px solid #ddd' }}>
+            <h2>שחקנים מחוברים כרגע:</h2>
+            <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.2em' }}>
+              {gameState.participants.map(p => (
+                <li key={p.id} style={{ margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '8px' }}>
+                  🟢 {p.name} {p.id === socket.id ? '(אתה)' : ''}
+                </li>
+              ))}
+            </ul>
+            {gameState.participants.length >= 2 ? (
+              <div style={{ marginTop: '30px' }}>
+                <button 
+                  onClick={handleStartGame}
+                  style={{ padding: '15px 30px', fontSize: '1.2em', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', width: '100%' }}>
+                  התחל משחק!
+                </button>
+              </div>
+            ) : (
+              <p style={{ color: 'gray', marginTop: '30px', fontSize: '1.1em' }}>ממתין לשחקנים נוספים... (דרושים 2 לפחות)</p>
+            )}
           </div>
-        ) : (
-          <p style={{ color: 'gray', marginTop: '30px', fontSize: '1.1em' }}>ממתין לשחקנים נוספים... (דרושים לפחות 2)</p>
-        )}
+
+          {/* טבלת הדירוג - תוצג רק אם יש תוצאות */}
+          {sortedLeaderboard.length > 0 && (
+            <div style={{ flex: '1 1 300px', backgroundColor: '#fff8f0', padding: '20px', borderRadius: '8px', border: '2px solid #ff9800' }}>
+              <h2>🏆 טבלת אלופים 🏆</h2>
+              <table style={{ width: '100%', fontSize: '1.2em', borderCollapse: 'collapse', marginTop: '10px' }}>
+                <tbody>
+                  {sortedLeaderboard.map(([name, score], idx) => (
+                    <tr key={name} style={{ borderBottom: '1px solid #f5ca99' }}>
+                      <td style={{ padding: '10px', textAlign: 'right', fontWeight: idx === 0 ? 'bold' : 'normal' }}>
+                        {idx === 0 && '🥇 '} 
+                        {idx === 1 && '🥈 '} 
+                        {idx === 2 && '🥉 '}
+                        {idx > 2 && `${idx + 1}. `} 
+                        {name}
+                      </td>
+                      <td style={{ padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#2e7d32' }}>
+                        {score} נק'
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+        </div>
       </div>
     );
   }
@@ -128,7 +170,7 @@ function App() {
     return (
       <div style={{ direction: 'rtl', padding: '15px', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
         <h1 style={{ textAlign: 'center', fontSize: '2.2em', color: '#ff9800' }}>המשחק הסתיים! 🎉</h1>
-        <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>סיכום קבוצות סופי</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>סיכום קבוצות והכרזת מנצח</h2>
         
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
           {gameState?.participants.map(p => {
@@ -170,6 +212,13 @@ function App() {
                     שמור הרכב מעודכן
                   </button>
                 )}
+
+                {/* כפתור הכתרת הזוכה - מעניק נקודה למשתתף ומתחיל משחק חדש */}
+                <button 
+                  onClick={() => handleDeclareWinner(p.name)} 
+                  style={{ width: '100%', marginTop: '10px', padding: '10px', backgroundColor: '#ffd54f', color: '#333', border: '2px solid #ffb300', borderRadius: '4px', fontSize: '16px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  🏆 הכתר כזוכה
+                </button>
               </div>
             );
           })}

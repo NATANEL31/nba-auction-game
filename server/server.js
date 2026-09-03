@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs'); // ספרייה לניהול קבצים
 
 const app = express();
 app.use(cors());
@@ -17,7 +18,13 @@ app.use((req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
-// המאגר החדש: אובייקטים עם שם ודירוג 2K
+// טעינת טבלת הדירוג מהקובץ (אם קיים)
+const leaderboardPath = path.join(__dirname, 'leaderboard.json');
+let leaderboard = {};
+if (fs.existsSync(leaderboardPath)) {
+    leaderboard = JSON.parse(fs.readFileSync(leaderboardPath, 'utf8'));
+}
+
 const rawPlayersData = {
     PG: [
         { name: "שיי", rating: 97 }, { name: "לוקה", rating: 97 }, { name: "קנינגהאם", rating: 87 }, { name: "קרי", rating: 95 }, 
@@ -77,7 +84,7 @@ for (const position in rawPlayersData) {
     rawPlayersDB[position] = rawPlayersData[position].map(player => ({
         id: globalId++,
         name: player.name,
-        rating: player.rating, // הוספת הדירוג למאגר
+        rating: player.rating,
         position: position,
         image: "🏀" 
     }));
@@ -94,7 +101,8 @@ let gameState = {
         highestBidder: null,
         activeBidders: [], 
         currentTurnId: null 
-    }
+    },
+    leaderboard: leaderboard // משדרים גם את טבלת הדירוג
 };
 
 function initializeGamePlayers() {
@@ -206,7 +214,7 @@ io.on('connection', (socket) => {
         }
 
         if (gameState.gameStarted) {
-            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע (אלא אם אתה חוזר למשחק ואז עליך להקליד את השם המדויק שלך).');
+            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע.');
             return;
         }
 
@@ -233,6 +241,36 @@ io.on('connection', (socket) => {
             initializeGamePlayers();
             startNextAuction();
         }
+    });
+
+    // הכרזת זוכה וחלוקת נקודה
+    socket.on('declareWinner', (winnerName) => {
+        if (!leaderboard[winnerName]) {
+            leaderboard[winnerName] = 0;
+        }
+        leaderboard[winnerName] += 1;
+        
+        // שמירה לקובץ
+        fs.writeFileSync(leaderboardPath, JSON.stringify(leaderboard));
+        
+        // איפוס נתוני המשחק אבל שמירת המשתתפים לקראת הסיבוב הבא
+        gameState.gameStarted = false;
+        gameState.auctionIndex = 0;
+        gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null };
+        gameState.leaderboard = leaderboard;
+        
+        gameState.participants.forEach(p => {
+            p.budget = 20;
+            p.roster = [
+                { pos: 'PG', player: null },
+                { pos: 'SG', player: null },
+                { pos: 'SF', player: null },
+                { pos: 'PF', player: null },
+                { pos: 'C', player: null }
+            ];
+        });
+
+        io.emit('updateState', gameState);
     });
 
     socket.on('placeBid', (bidAmount) => {
