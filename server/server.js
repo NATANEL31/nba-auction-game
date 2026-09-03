@@ -17,21 +17,67 @@ app.use((req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
-const rawNames = {
-    PG: ["שיי", "לוקה", "קנינגהאם", "קרי", "האליברטון", "טריי יאנג", "ג'ה מוראנט", "הארפר", "הארדן", "לאמלו", "קיונטה ג'ורג'", "פריצ'ארד", "הולידיי", "נמבהארד", "קולייר", "קובי וויט", "ואן וליט", "מקונל", "הנדרסון", "מקיין", "אלבראדו", "גודווין", "קאם פיין", "בן שרף", "דיאנג'לו ראסל", "בופקין", "פודזימסקי", "שרודר"],
-    SG: ["אדוארדס", "ריבס", "קאסל", "אמן", "מילר", "אדג'קומבה", "אלכסנדר ווקר", "בארט", "לאבין", "ג'יילן גרין", "דוסנמו", "קווארד", "שיידון שארפ", "אלן", "וולאס", "מאות'רין", "פול", "אנפרניי", "רובינסון", "גריימס", "ג'ו", "שאמט", "מלטון", "ביל", "תומפסון", "קנארד", "עמנואל שארפ", "קיספרט", "בן שפרד", "גארי טרנט ג'וניור", "טייבולי"],
-    SF: ["בראון", "טריי מרפי", "ג' וויליאמס", "אייס ביילי", "דוראנט", "קוואי", "לברון", "פלאג", "דני אבדיה", "אאוזר", "קנופל", "דרוזן", "ברוקס", "ואסל", "ביי", "סמארט", "נסמית", "אוברה ג'וניור", "איסון", "קוזמה", "האנטר", "קרטר בראיינט", "האוזר", "ריזאשה", "מידלטון", "אוקורו", "לראביה", "גארי פייטון השני", "גריידי דיק"],
-    PF: ["יאניס", "טייטום", "בארנס", "סיאקם", "ריד", "באנקרו", "זיון", "הולמגרן", "רנדל", "בוזליס", "מיילס ברידג'ס", "האצ'ימורה", "דריימונד גרין", "אובי טופין", "אלדאמה", "DJJ", "JJJ", "רויס אוניל", "ממוקשווילי", "בובי פורטיס", "שמפני", "ד. ווייד", "דני וולף", "ליילס", "מינוט", "קאמינגה"],
-    C: ["וומבניאמה", "אמביד", "יוקיץ", "טאונס", "סבוניס", "אלן", "דורן", "גובר", "זובאק", "אוקונגו", "קלינגן", "פורזינגיס", "אידי", "גאפורד", "דיאבאטה", "לייבלי", "ווצ'ביץ'", "רוברט וויליאמס", "ברוק לופס", "אל הורפורד", "ג'יילין וויליאמס", "דראמונד", "הייז", "קורנט", "בונה", "לנדל", "האף", "סטיבן אדאמס", "ביטאדזה", "קאפלה", "פוסט", "מלוואח", "אוליניק", "מו במבה"]
+// המאגר החדש: אובייקטים עם שם ודירוג 2K
+const rawPlayersData = {
+    PG: [
+        { name: "שיי", rating: 97 }, { name: "לוקה", rating: 97 }, { name: "קנינגהאם", rating: 87 }, { name: "קרי", rating: 95 }, 
+        { name: "האליברטון", rating: 90 }, { name: "טריי יאנג", rating: 89 }, { name: "ג'ה מוראנט", rating: 91 }, { name: "הארפר", rating: 80 }, 
+        { name: "הארדן", rating: 84 }, { name: "לאמלו", rating: 88 }, { name: "קיונטה ג'ורג'", rating: 81 }, { name: "פריצ'ארד", rating: 78 }, 
+        { name: "הולידיי", rating: 86 }, { name: "נמבהארד", rating: 80 }, { name: "קולייר", rating: 77 }, { name: "קובי וויט", rating: 84 }, 
+        { name: "ואן וליט", rating: 83 }, { name: "מקונל", rating: 79 }, { name: "הנדרסון", rating: 79 }, { name: "מקיין", rating: 77 }, 
+        { name: "אלבראדו", rating: 77 }, { name: "גודווין", rating: 74 }, { name: "קאם פיין", rating: 75 }, { name: "בן שרף", rating: 78 }, 
+        { name: "דיאנג'לו ראסל", rating: 81 }, { name: "בופקין", rating: 75 }, { name: "פודזימסקי", rating: 80 }, { name: "שרודר", rating: 79 }
+    ],
+    SG: [
+        { name: "אדוארדס", rating: 95 }, { name: "ריבס", rating: 83 }, { name: "קאסל", rating: 78 }, { name: "אמן", rating: 81 }, 
+        { name: "מילר", rating: 84 }, { name: "אדג'קומבה", rating: 78 }, { name: "אלכסנדר ווקר", rating: 77 }, { name: "בארט", rating: 83 }, 
+        { name: "לאבין", rating: 83 }, { name: "ג'יילן גרין", rating: 84 }, { name: "דוסנמו", rating: 79 }, { name: "קווארד", rating: 75 }, 
+        { name: "שיידון שארפ", rating: 81 }, { name: "אלן", rating: 80 }, { name: "וולאס", rating: 78 }, { name: "מאות'רין", rating: 81 }, 
+        { name: "פול", rating: 78 }, { name: "אנפרניי", rating: 83 }, { name: "רובינסון", rating: 78 }, { name: "גריימס", rating: 77 }, 
+        { name: "ג'ו", rating: 76 }, { name: "שאמט", rating: 74 }, { name: "מלטון", rating: 77 }, { name: "ביל", rating: 84 }, 
+        { name: "תומפסון", rating: 80 }, { name: "קנארד", rating: 77 }, { name: "עמנואל שארפ", rating: 73 }, { name: "קיספרט", rating: 78 }, 
+        { name: "בן שפרד", rating: 75 }, { name: "גארי טרנט ג'וניור", rating: 78 }, { name: "טייבולי", rating: 76 }
+    ],
+    SF: [
+        { name: "בראון", rating: 92 }, { name: "טריי מרפי", rating: 82 }, { name: "ג' וויליאמס", rating: 86 }, { name: "אייס ביילי", rating: 80 }, 
+        { name: "דוראנט", rating: 94 }, { name: "קוואי", rating: 91 }, { name: "לברון", rating: 95 }, { name: "פלאג", rating: 82 }, 
+        { name: "דני אבדיה", rating: 82 }, { name: "אאוזר", rating: 80 }, { name: "קנופל", rating: 77 }, { name: "דרוזן", rating: 86 }, 
+        { name: "ברוקס", rating: 79 }, { name: "ואסל", rating: 83 }, { name: "ביי", rating: 78 }, { name: "סמארט", rating: 80 }, 
+        { name: "נסמית", rating: 78 }, { name: "אוברה ג'וניור", rating: 80 }, { name: "איסון", rating: 79 }, { name: "קוזמה", rating: 83 }, 
+        { name: "האנטר", rating: 79 }, { name: "קרטר בראיינט", rating: 75 }, { name: "האוזר", rating: 76 }, { name: "ריזאשה", rating: 78 }, 
+        { name: "מידלטון", rating: 83 }, { name: "אוקורו", rating: 77 }, { name: "לראביה", rating: 75 }, { name: "גארי פייטון השני", rating: 76 }, 
+        { name: "גריידי דיק", rating: 78 }
+    ],
+    PF: [
+        { name: "יאניס", rating: 97 }, { name: "טייטום", rating: 96 }, { name: "בארנס", rating: 85 }, { name: "סיאקם", rating: 88 }, 
+        { name: "ריד", rating: 82 }, { name: "באנקרו", rating: 89 }, { name: "זיון", rating: 89 }, { name: "הולמגרן", rating: 88 }, 
+        { name: "רנדל", rating: 85 }, { name: "בוזליס", rating: 77 }, { name: "מיילס ברידג'ס", rating: 82 }, { name: "האצ'ימורה", rating: 79 }, 
+        { name: "דריימונד גרין", rating: 81 }, { name: "אובי טופין", rating: 79 }, { name: "אלדאמה", rating: 77 }, { name: "DJJ", rating: 77 }, 
+        { name: "JJJ", rating: 86 }, { name: "רויס אוניל", rating: 76 }, { name: "ממוקשווילי", rating: 75 }, { name: "בובי פורטיס", rating: 81 }, 
+        { name: "שמפני", rating: 75 }, { name: "ד. ווייד", rating: 75 }, { name: "דני וולף", rating: 74 }, { name: "ליילס", rating: 76 }, 
+        { name: "מינוט", rating: 74 }, { name: "קאמינגה", rating: 83 }
+    ],
+    C: [
+        { name: "וומבניאמה", rating: 95 }, { name: "אמביד", rating: 97 }, { name: "יוקיץ", rating: 98 }, { name: "טאונס", rating: 87 }, 
+        { name: "סבוניס", rating: 88 }, { name: "אלן", rating: 85 }, { name: "דורן", rating: 83 }, { name: "גובר", rating: 85 }, 
+        { name: "זובאק", rating: 81 }, { name: "אוקונגו", rating: 80 }, { name: "קלינגן", rating: 78 }, { name: "פורזינגיס", rating: 86 }, 
+        { name: "אידי", rating: 79 }, { name: "גאפורד", rating: 81 }, { name: "דיאבאטה", rating: 74 }, { name: "לייבלי", rating: 82 }, 
+        { name: "ווצ'ביץ'", rating: 82 }, { name: "רוברט וויליאמס", rating: 79 }, { name: "ברוק לופס", rating: 80 }, { name: "אל הורפורד", rating: 79 }, 
+        { name: "ג'יילין וויליאמס", rating: 78 }, { name: "דראמונד", rating: 78 }, { name: "הייז", rating: 76 }, { name: "קורנט", rating: 75 }, 
+        { name: "בונה", rating: 74 }, { name: "לנדל", rating: 75 }, { name: "האף", rating: 74 }, { name: "סטיבן אדאמס", rating: 78 }, 
+        { name: "ביטאדזה", rating: 76 }, { name: "קאפלה", rating: 80 }, { name: "פוסט", rating: 73 }, { name: "מלוואח", rating: 76 }, 
+        { name: "אוליניק", rating: 77 }, { name: "מו במבה", rating: 76 }
+    ]
 };
 
 const rawPlayersDB = {};
 let globalId = 1;
 
-for (const position in rawNames) {
-    rawPlayersDB[position] = rawNames[position].map(name => ({
+for (const position in rawPlayersData) {
+    rawPlayersDB[position] = rawPlayersData[position].map(player => ({
         id: globalId++,
-        name: name,
+        name: player.name,
+        rating: player.rating, // הוספת הדירוג למאגר
         position: position,
         image: "🏀" 
     }));
@@ -139,7 +185,6 @@ function startNextAuction() {
 io.on('connection', (socket) => {
     socket.on('joinGame', (playerName) => {
         const cleanName = playerName.trim();
-        
         const existingPlayer = gameState.participants.find(p => p.name === cleanName);
 
         if (existingPlayer) {

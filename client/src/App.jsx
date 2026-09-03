@@ -148,7 +148,7 @@ function App() {
                       <div style={{ flex: 1 }}>
                         {slot.player ? (
                           <span>
-                            {slot.player.name} <span style={{ color: '#2e7d32', fontWeight: 'bold' }}>(${slot.player.boughtFor})</span>
+                            {slot.player.name} <span style={{ fontSize: '0.85em', color: '#555' }}>(⭐ {slot.player.rating})</span> <span style={{ color: '#2e7d32', fontWeight: 'bold' }}>(${slot.player.boughtFor})</span>
                           </span>
                         ) : (
                           <span style={{ color: '#aaa' }}>-</span>
@@ -228,7 +228,7 @@ function App() {
                       <div style={{ flex: 1 }}>
                         {slot.player ? (
                           <span>
-                            {slot.player.name} <span style={{ color: '#2e7d32', fontWeight: 'bold' }}>(${slot.player.boughtFor})</span>
+                            {slot.player.name} <span style={{ fontSize: '0.85em', color: '#555' }}>(⭐ {slot.player.rating})</span> <span style={{ color: '#2e7d32', fontWeight: 'bold' }}>(${slot.player.boughtFor})</span>
                             {slot.pos !== slot.player.position && <span style={{ fontSize: '0.75em', color: 'gray' }}> (היה {slot.player.position})</span>}
                           </span>
                         ) : (
@@ -262,9 +262,13 @@ function App() {
 
               <h2 style={{ color: '#ff9800', margin: '0', fontSize: '1.3em' }}>סיבוב {gameState.auctionIndex + 1}</h2>
               <p style={{ fontSize: '1.1em', margin: '5px 0 0 0', fontWeight: 'bold' }}>עמדה: {gameState.currentAuction.player.position}</p>
-              <h3 style={{ fontSize: '2.2em', margin: '15px 0' }}>
+              
+              <h3 style={{ fontSize: '2.5em', margin: '15px 0 5px 0' }}>
                 {gameState.currentAuction.player.name} {gameState.currentAuction.player.image}
               </h3>
+              <div style={{ fontSize: '1.3em', backgroundColor: '#ffd54f', display: 'inline-block', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', border: '2px solid #ffb300' }}>
+                ⭐ דירוג 2K27: {gameState.currentAuction.player.rating}
+              </div>
               
               <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#fff', borderRadius: '8px' }}>
                 <h4 style={{ fontSize: '1.5em', color: '#2e7d32', margin: '0 0 10px 0' }}>
