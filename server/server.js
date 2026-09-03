@@ -11,6 +11,11 @@ app.use(cors());
 const clientBuildPath = path.join(__dirname, '../client/dist');
 app.use(express.static(clientBuildPath));
 
+// ניתוב מפורש: כל כתובת שלא נמצאה, תחזיר את המשחק שלנו
+app.get('*', (req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+});
+
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
