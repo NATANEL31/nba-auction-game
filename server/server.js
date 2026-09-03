@@ -7,11 +7,9 @@ const path = require('path');
 const app = express();
 app.use(cors());
 
-// הגשת קבצי צד הלקוח (המשחק שעשינו לו build)
 const clientBuildPath = path.join(__dirname, '../client/dist');
 app.use(express.static(clientBuildPath));
 
-// ניתוב מפורש: כל כתובת שלא נמצאה, תחזיר את המשחק שלנו
 app.use((req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
@@ -41,6 +39,7 @@ for (const position in rawNames) {
 
 let playersDB = [];
 let gameState = {
+    gameStarted: false, // משתנה חדש שמונע מהמשחק להתחיל לבד
     participants: [],
     auctionIndex: 0,
     currentAuction: {
@@ -63,12 +62,7 @@ function initializeGamePlayers() {
     }
 
     playersDB = shuffleArray(selectedPlayers);
-    if (gameState && gameState.currentAuction) {
-        gameState.currentAuction.player = playersDB[0];
-    }
 }
-
-initializeGamePlayers();
 
 function handleAuctionEnd() {
     const active = gameState.currentAuction.activeBidders;
@@ -144,6 +138,12 @@ function startNextAuction() {
 
 io.on('connection', (socket) => {
     socket.on('joinGame', (playerName) => {
+        // מניעת כניסת שחקנים חדשים אם המשחק כבר התחיל
+        if (gameState.gameStarted) {
+            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע.');
+            return;
+        }
+
         const newPlayer = { 
             id: socket.id, 
             name: playerName, 
@@ -157,18 +157,21 @@ io.on('connection', (socket) => {
             ] 
         };
         gameState.participants.push(newPlayer);
-        
-        if (!gameState.currentAuction.activeBidders.includes(socket.id) && gameState.currentAuction.player) {
-            gameState.currentAuction.activeBidders.push(socket.id);
-            if (!gameState.currentAuction.currentTurnId) {
-                gameState.currentAuction.currentTurnId = socket.id;
-            }
-        }
         io.emit('updateState', gameState);
     });
 
+    // כפתור התחל משחק שמאתחל את הכל
+    socket.on('startGame', () => {
+        if (!gameState.gameStarted && gameState.participants.length > 0) {
+            gameState.gameStarted = true;
+            gameState.auctionIndex = 0;
+            initializeGamePlayers();
+            startNextAuction();
+        }
+    });
+
     socket.on('placeBid', (bidAmount) => {
-        if (gameState.currentAuction.currentTurnId !== socket.id) return;
+        if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
         
         const numericBid = Math.floor(Number(bidAmount));
         const participant = gameState.participants.find(p => p.id === socket.id);
@@ -182,7 +185,6 @@ io.on('connection', (socket) => {
                 gameState.currentAuction.highestBid = numericBid;
                 gameState.currentAuction.highestBidder = participant.name;
                 
-                // התיקון: אם הוא היחיד שפעיל במשחק והציע סכום - המכרז נסגר מיד לטובתו
                 if (gameState.currentAuction.activeBidders.length === 1) {
                     handleAuctionEnd();
                 } else {
@@ -196,7 +198,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('fold', () => {
-        if (gameState.currentAuction.currentTurnId !== socket.id) return;
+        if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
         if (gameState.currentAuction.highestBid === 0) return; 
         
         const currentIndex = gameState.currentAuction.activeBidders.indexOf(socket.id);
@@ -224,19 +226,27 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         gameState.participants = gameState.participants.filter(p => p.id !== socket.id);
         
-        const activeIdx = gameState.currentAuction.activeBidders.indexOf(socket.id);
-        if (activeIdx !== -1) {
-            gameState.currentAuction.activeBidders.splice(activeIdx, 1);
-            
-            if (gameState.currentAuction.currentTurnId === socket.id) {
-                if (gameState.currentAuction.activeBidders.length <= 1) {
-                    handleAuctionEnd();
-                } else {
-                    const nextIndex = activeIdx % gameState.currentAuction.activeBidders.length;
-                    gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
+        if (gameState.gameStarted) {
+            const activeIdx = gameState.currentAuction.activeBidders.indexOf(socket.id);
+            if (activeIdx !== -1) {
+                gameState.currentAuction.activeBidders.splice(activeIdx, 1);
+                
+                if (gameState.currentAuction.currentTurnId === socket.id) {
+                    if (gameState.currentAuction.activeBidders.length <= 1) {
+                        handleAuctionEnd();
+                    } else {
+                        const nextIndex = activeIdx % gameState.currentAuction.activeBidders.length;
+                        gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
+                    }
                 }
             }
         }
+        
+        // איפוס אוטומטי של המשחק אם כולם התנתקו
+        if (gameState.participants.length === 0) {
+            gameState.gameStarted = false;
+        }
+        
         io.emit('updateState', gameState);
     });
 });

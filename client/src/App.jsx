@@ -8,6 +8,7 @@ function App() {
   const [playerName, setPlayerName] = useState('');
   const [hasJoined, setHasJoined] = useState(false);
   const [customBid, setCustomBid] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   
   const [myEditableRoster, setMyEditableRoster] = useState(null);
 
@@ -16,14 +17,28 @@ function App() {
       setGameState(newState);
       setCustomBid('');
     });
-    return () => socket.off('updateState');
+    
+    socket.on('error', (msg) => {
+      setErrorMsg(msg);
+      setHasJoined(false);
+    });
+
+    return () => {
+      socket.off('updateState');
+      socket.off('error');
+    };
   }, []);
 
   const handleJoin = () => {
     if (playerName.trim() !== '') {
+      setErrorMsg('');
       socket.emit('joinGame', playerName);
       setHasJoined(true);
     }
+  };
+
+  const handleStartGame = () => {
+    socket.emit('startGame');
   };
 
   const handleBid = (amount) => socket.emit('placeBid', amount);
@@ -33,6 +48,7 @@ function App() {
     return (
       <div style={{ textAlign: 'center', direction: 'rtl', marginTop: '100px', fontFamily: 'sans-serif' }}>
         <h1>ברוך הבא למכרז NBA 🏀</h1>
+        {errorMsg && <p style={{ color: 'red', fontWeight: 'bold' }}>{errorMsg}</p>}
         <input 
           type="text" 
           placeholder="איך קוראים לך?" 
@@ -43,6 +59,37 @@ function App() {
         <button onClick={handleJoin} style={{ padding: '10px 20px', fontSize: '16px', marginRight: '10px', cursor: 'pointer' }}>
           הכנס למשחק
         </button>
+      </div>
+    );
+  }
+
+  // --- חדר המתנה ---
+  if (gameState && !gameState.gameStarted) {
+    return (
+      <div style={{ textAlign: 'center', direction: 'rtl', padding: '50px', fontFamily: 'sans-serif' }}>
+        <h1 style={{ fontSize: '3em', color: '#ff9800' }}>חדר המתנה 🏀</h1>
+        <h2>שחקנים שמחוברים כרגע:</h2>
+        
+        <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.5em' }}>
+          {gameState.participants.map(p => (
+            <li key={p.id} style={{ margin: '10px 0' }}>
+              🟢 {p.name} {p.id === socket.id ? '(אתה)' : ''}
+            </li>
+          ))}
+        </ul>
+
+        {gameState.participants.length >= 2 ? (
+          <div>
+            <button 
+              onClick={handleStartGame}
+              style={{ padding: '15px 30px', fontSize: '1.5em', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', marginTop: '30px' }}>
+              התחל משחק!
+            </button>
+            <p style={{ color: 'gray', marginTop: '10px' }}>* ודא שכל החברים נכנסו לפני הלחיצה</p>
+          </div>
+        ) : (
+          <p style={{ color: 'gray', marginTop: '30px', fontSize: '1.2em' }}>ממתין לשחקנים נוספים... (דרושים לפחות 2)</p>
+        )}
       </div>
     );
   }
