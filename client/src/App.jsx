@@ -11,6 +11,24 @@ function App() {
   const [errorMsg, setErrorMsg] = useState('');
   
   const [myEditableRoster, setMyEditableRoster] = useState(null);
+  const [soldNotification, setSoldNotification] = useState(null);
+  
+  // סטייט חדש לניהול הזמן שנשאר
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  // אפקט חישוב הטיימר (רץ כל 100 מילי-שניות כדי להיות מדויק)
+  useEffect(() => {
+    let interval;
+    if (gameState?.gameStarted && gameState?.currentAuction?.turnEndTime) {
+      interval = setInterval(() => {
+        const remaining = Math.max(0, Math.ceil((gameState.currentAuction.turnEndTime - Date.now()) / 1000));
+        setTimeLeft(remaining);
+      }, 100);
+    } else {
+      setTimeLeft(0);
+    }
+    return () => clearInterval(interval);
+  }, [gameState?.currentAuction?.turnEndTime, gameState?.gameStarted]);
 
   useEffect(() => {
     socket.on('updateState', (newState) => {
@@ -27,9 +45,18 @@ function App() {
       setHasJoined(false);
     });
 
+    socket.on('playerSold', (data) => {
+      setSoldNotification(`${data.playerName} נדגם על ידי ${data.winnerName}! 🏀`);
+      
+      setTimeout(() => {
+        setSoldNotification(null);
+      }, 4000); 
+    });
+
     return () => {
       socket.off('updateState');
       socket.off('error');
+      socket.off('playerSold');
     };
   }, []);
 
@@ -163,10 +190,16 @@ function App() {
     }
   };
 
-  // --- מסך סיכום המשחק ---
   if (isGameOver) {
     return (
       <div style={{ direction: 'rtl', padding: '15px', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
+        
+        {soldNotification && (
+          <div style={{ position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)', backgroundColor: '#4caf50', color: 'white', padding: '15px 30px', borderRadius: '30px', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', fontSize: '1.2em', fontWeight: 'bold', zIndex: 1000, textAlign: 'center', animation: 'fadeIn 0.5s ease-in-out' }}>
+            {soldNotification}
+          </div>
+        )}
+
         <h1 style={{ textAlign: 'center', fontSize: '2.2em', color: '#ff9800' }}>המשחק הסתיים! 🎉</h1>
         <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>סיכום קבוצות והכרזת מנצח</h2>
         
@@ -239,6 +272,9 @@ function App() {
     maxAllowedBid = me.budget - requiredReserve;
   }
 
+  // חישוב לוגיקה לכפתור ה+1$ 
+  const plusOneBid = currentHighest === 0 ? 1 : currentHighest + 1;
+  const canPlusOne = isMyTurn && plusOneBid <= maxAllowedBid;
   const isValidCustom = Number(customBid) > currentHighest && Number(customBid) <= maxAllowedBid;
 
   const activeBiddersIds = gameState?.currentAuction?.activeBidders || [];
@@ -254,7 +290,14 @@ function App() {
   }
 
   return (
-    <div style={{ direction: 'rtl', padding: '10px', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ direction: 'rtl', padding: '10px', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
+      
+      {soldNotification && (
+        <div style={{ position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)', backgroundColor: '#4caf50', color: 'white', padding: '15px 30px', borderRadius: '30px', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', fontSize: '1.2em', fontWeight: 'bold', zIndex: 1000, textAlign: 'center', animation: 'fadeIn 0.5s ease-in-out' }}>
+          {soldNotification}
+        </div>
+      )}
+
       <h1 style={{ textAlign: 'center', fontSize: '2em' }}>זירת המכרז 🏀</h1>
       
       <div style={{ display: 'flex', flexWrap: 'wrap-reverse', gap: '20px', marginTop: '20px' }}>
@@ -333,13 +376,26 @@ function App() {
               </div>
 
               <div style={{ padding: '15px', border: isMyTurn ? '2px solid green' : '1px solid transparent', borderRadius: '8px' }}>
-                <h3 style={{ color: isMyTurn ? 'green' : 'gray', margin: '0 0 15px 0', fontSize: '1.2em' }}>
+                <h3 style={{ color: isMyTurn ? 'green' : 'gray', margin: '0 0 5px 0', fontSize: '1.2em' }}>
                   {isMyTurn ? 'התור שלך!' : `ממתין להחלטה של ${currentTurnPlayer?.name || '...'}`}
                 </h3>
+                
+                <div style={{ fontSize: '2.2em', fontWeight: 'bold', color: timeLeft <= 5 ? 'red' : '#ff9800', margin: '5px 0 15px 0' }}>
+                  ⏳ {timeLeft}
+                </div>
                 
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                   
                   <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '5px' }}>
+                    
+                    {/* הכפתור החדש - מהיר ונוח */}
+                    <button 
+                      disabled={!canPlusOne}
+                      onClick={() => handleBid(plusOneBid)}
+                      style={{ opacity: canPlusOne ? 1 : 0.5, padding: '10px 15px', fontSize: '16px', backgroundColor: '#2196f3', color: 'white', border: 'none', borderRadius: '4px', cursor: canPlusOne ? 'pointer' : 'not-allowed', fontWeight: 'bold' }}>
+                      +1$ 
+                    </button>
+
                     <input 
                       type="number" 
                       value={customBid}
@@ -357,9 +413,9 @@ function App() {
                   </div>
 
                   <button 
-                    disabled={!isMyTurn || currentHighest === 0}
+                    disabled={!isMyTurn}
                     onClick={handleFold}
-                    style={{ opacity: (isMyTurn && currentHighest > 0) ? 1 : 0.5, padding: '10px 20px', fontSize: '16px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: (isMyTurn && currentHighest > 0) ? 'pointer' : 'not-allowed', width: '100%', maxWidth: '200px', marginTop: '10px' }}>
+                    style={{ opacity: isMyTurn ? 1 : 0.5, padding: '10px 20px', fontSize: '16px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: isMyTurn ? 'pointer' : 'not-allowed', width: '100%', maxWidth: '200px', marginTop: '10px' }}>
                     פרוש (Fold)
                   </button>
                 </div>
@@ -368,11 +424,11 @@ function App() {
                   <div style={{ marginTop: '15px' }}>
                     {currentHighest === 0 && (
                       <p style={{ fontSize: '0.9em', color: '#ff9800', fontWeight: 'bold', margin: '5px 0' }}>
-                        ⚠️ חובה להציע לפחות $1
+                        ⚠️ זהו תחילת המכרז, עליך להציע לפחות $1 או לפרוש.
                       </p>
                     )}
                     <p style={{ fontSize: '0.85em', color: '#e91e63', fontWeight: 'bold', margin: '5px 0' }}>
-                      הצעה מקסימלית: ${maxAllowedBid}
+                      הצעה מקסימלית עבורך כרגע: ${maxAllowedBid}
                     </p>
                   </div>
                 )}

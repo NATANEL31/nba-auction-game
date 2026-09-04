@@ -99,10 +99,37 @@ let gameState = {
         highestBid: 0,
         highestBidder: null,
         activeBidders: [], 
-        currentTurnId: null 
+        currentTurnId: null,
+        turnEndTime: null // זמן סיום התור הנוכחי
     },
     leaderboard: leaderboard 
 };
+
+// --- ניהול טיימרים בצד השרת ---
+let turnTimer = null;
+
+function clearTurnTimer() {
+    if (turnTimer) {
+        clearTimeout(turnTimer);
+        turnTimer = null;
+    }
+}
+
+function setTurnTimer() {
+    clearTurnTimer();
+    if (!gameState.gameStarted || !gameState.currentAuction || !gameState.currentAuction.player) return;
+
+    // מגדיר את הזמן ל-15 שניות קדימה
+    gameState.currentAuction.turnEndTime = Date.now() + 15000;
+    
+    // אם עברו 15 שניות, מבצע פרישה אוטומטית לשחקן
+    turnTimer = setTimeout(() => {
+        const turnId = gameState.currentAuction.currentTurnId;
+        if (turnId) {
+            executeFold(turnId);
+        }
+    }, 15000);
+}
 
 function initializeGamePlayers() {
     let selectedPlayers = [];
@@ -118,14 +145,18 @@ function initializeGamePlayers() {
 }
 
 function handleAuctionEnd() {
+    clearTurnTimer(); // השחקן נמכר, עוצרים את הטיימר
     const active = gameState.currentAuction.activeBidders;
     
     if (active.length === 1) {
         const winnerId = active[0];
         const winner = gameState.participants.find(p => p.id === winnerId);
         
-        if (winner && gameState.currentAuction.highestBid > 0) {
-            winner.budget -= gameState.currentAuction.highestBid;
+        // גם אם ההצעה הגבוהה ביותר היא 0 (כולם פרשו חוץ ממנו), הוא מקבל אותו ב-1$
+        const finalBid = gameState.currentAuction.highestBid > 0 ? gameState.currentAuction.highestBid : 1;
+
+        if (winner && winner.budget >= finalBid) {
+            winner.budget -= finalBid;
             
             const positionsOrder = ['PG', 'SG', 'SF', 'PF', 'C'];
             const startIdx = positionsOrder.indexOf(gameState.currentAuction.player.position);
@@ -135,11 +166,16 @@ function handleAuctionEnd() {
                 if (winner.roster[checkIdx].player === null) {
                     winner.roster[checkIdx].player = {
                         ...gameState.currentAuction.player,
-                        boughtFor: gameState.currentAuction.highestBid
+                        boughtFor: finalBid
                     };
                     break; 
                 }
             }
+
+            io.emit('playerSold', {
+                playerName: gameState.currentAuction.player.name,
+                winnerName: winner.name
+            });
         }
     }
     
@@ -181,12 +217,34 @@ function startNextAuction() {
             highestBid: 0,
             highestBidder: null,
             activeBidders: orderedBidders,
-            currentTurnId: startingId
+            currentTurnId: startingId,
+            turnEndTime: null
         };
+        
+        setTurnTimer(); // הפעלת השעון לראשון בתור
     } else {
         gameState.currentAuction.player = null; 
     }
     io.emit('updateState', gameState);
+}
+
+// פונקציית העזר לפרישה (Fold) - יכולה להיות מופעלת ידנית או על ידי הטיימר
+function executeFold(socketId) {
+    if (!gameState.gameStarted || !gameState.currentAuction || !gameState.currentAuction.player) return;
+    
+    const currentIndex = gameState.currentAuction.activeBidders.indexOf(socketId);
+    if (currentIndex !== -1) {
+        gameState.currentAuction.activeBidders.splice(currentIndex, 1);
+        
+        if (gameState.currentAuction.activeBidders.length <= 1) {
+            handleAuctionEnd();
+        } else {
+            const nextIndex = currentIndex % gameState.currentAuction.activeBidders.length;
+            gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
+            setTurnTimer(); // הפעלת השעון לשחקן הבא
+            io.emit('updateState', gameState);
+        }
+    }
 }
 
 io.on('connection', (socket) => {
@@ -197,7 +255,7 @@ io.on('connection', (socket) => {
         if (existingPlayer) {
             const oldId = existingPlayer.id;
             existingPlayer.id = socket.id; 
-            existingPlayer.connected = true; // סימון כשחקן מחובר
+            existingPlayer.connected = true; 
 
             if (gameState.currentAuction) {
                 const activeIndex = gameState.currentAuction.activeBidders.indexOf(oldId);
@@ -222,7 +280,7 @@ io.on('connection', (socket) => {
             id: socket.id, 
             name: cleanName, 
             budget: 20, 
-            connected: true, // סימון כשחקן מחובר
+            connected: true, 
             roster: [
                 { pos: 'PG', player: null },
                 { pos: 'SG', player: null },
@@ -245,6 +303,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('declareWinner', (winnerName) => {
+        clearTurnTimer();
         if (!leaderboard[winnerName]) {
             leaderboard[winnerName] = 0;
         }
@@ -254,10 +313,9 @@ io.on('connection', (socket) => {
         
         gameState.gameStarted = false;
         gameState.auctionIndex = 0;
-        gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null };
+        gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
         gameState.leaderboard = leaderboard;
         
-        // ניקוי אוטומטי של כל מי שהתנתק מהמשחק הקודם לפני שחוזרים ללובי
         gameState.participants = gameState.participants.filter(p => p.connected);
         
         gameState.participants.forEach(p => {
@@ -295,6 +353,7 @@ io.on('connection', (socket) => {
                     const currentIndex = gameState.currentAuction.activeBidders.indexOf(socket.id);
                     const nextIndex = (currentIndex + 1) % gameState.currentAuction.activeBidders.length;
                     gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
+                    setTurnTimer(); // הפעלת השעון לשחקן הבא
                     io.emit('updateState', gameState);
                 }
             }
@@ -303,20 +362,7 @@ io.on('connection', (socket) => {
 
     socket.on('fold', () => {
         if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
-        if (gameState.currentAuction.highestBid === 0) return; 
-        
-        const currentIndex = gameState.currentAuction.activeBidders.indexOf(socket.id);
-        if (currentIndex !== -1) {
-            gameState.currentAuction.activeBidders.splice(currentIndex, 1);
-            
-            if (gameState.currentAuction.activeBidders.length <= 1) {
-                handleAuctionEnd();
-            } else {
-                const nextIndex = currentIndex % gameState.currentAuction.activeBidders.length;
-                gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
-                io.emit('updateState', gameState);
-            }
-        }
+        executeFold(socket.id);
     });
 
     socket.on('rearrangeRoster', (newRoster) => {
@@ -333,18 +379,17 @@ io.on('connection', (socket) => {
             player.connected = false;
         }
 
-        // אם אנחנו בחדר ההמתנה והוא התנתק - מוחקים אותו מיד (אין לו קבוצה להפסיד)
         if (!gameState.gameStarted) {
             gameState.participants = gameState.participants.filter(p => p.connected);
         }
 
-        // אם *כל* המשתתפים במערכת מנותקים - מאפסים את השרת לחלוטין
         const anyConnected = gameState.participants.some(p => p.connected);
         if (!anyConnected) {
+            clearTurnTimer();
             gameState.gameStarted = false;
             gameState.participants = [];
             gameState.auctionIndex = 0;
-            gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null };
+            gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
         }
 
         io.emit('updateState', gameState);
