@@ -5,7 +5,11 @@ const socket = io();
 
 function App() {
   const [gameState, setGameState] = useState(null);
-  const [playerName, setPlayerName] = useState(() => localStorage.getItem('nbaPlayerName') || '');
+  
+  // ניהול שם משתמש וסיסמה בזיכרון הלקוח
+  const [username, setUsername] = useState(() => localStorage.getItem('michrazUsername') || '');
+  const [password, setPassword] = useState(() => localStorage.getItem('michrazPassword') || '');
+  
   const [hasJoined, setHasJoined] = useState(false);
   const [customBid, setCustomBid] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -20,7 +24,6 @@ function App() {
       setGameState(newState);
       setCustomBid('');
       
-      // גיבוי לטיימר למקרה שעידכון המצב מגיע לפני הטיק הראשון של הטיימר
       if (newState?.currentAuction?.timeLeft !== undefined) {
         setTimeLeft(newState.currentAuction.timeLeft);
       }
@@ -30,14 +33,13 @@ function App() {
       }
     });
 
-    // האזנה לשעון המדויק של השרת!
     socket.on('timerUpdate', (time) => {
       setTimeLeft(time);
     });
     
     socket.on('error', (msg) => {
       setErrorMsg(msg);
-      setHasJoined(false);
+      setHasJoined(false); // מחזיר למסך התחברות במקרה של שגיאה (כמו סיסמה לא נכונה)
     });
 
     socket.on('playerSold', (data) => {
@@ -57,11 +59,15 @@ function App() {
   }, []);
 
   const handleJoin = () => {
-    if (playerName.trim() !== '') {
-      localStorage.setItem('nbaPlayerName', playerName.trim()); 
+    if (username.trim() !== '' && password.trim() !== '') {
+      localStorage.setItem('michrazUsername', username.trim()); 
+      localStorage.setItem('michrazPassword', password.trim()); 
       setErrorMsg('');
-      socket.emit('joinGame', playerName.trim());
+      // שולחים את פרטי ההתחברות לשרת
+      socket.emit('joinGame', { username: username.trim(), password: password.trim() });
       setHasJoined(true);
+    } else {
+      setErrorMsg('נא למלא שם משתמש וסיסמה');
     }
   };
 
@@ -71,7 +77,6 @@ function App() {
 
   const handleBid = (amount) => socket.emit('placeBid', amount);
   const handleFold = () => socket.emit('fold');
-  const handleSwap = () => socket.emit('swapPlayer');
 
   const handleDeclareWinner = (winnerName) => {
     if (window.confirm(`האם אתם מסכימים להכתיר את ${winnerName} כזוכה של המשחק הזה?`)) {
@@ -82,19 +87,29 @@ function App() {
   if (!hasJoined) {
     return (
       <div style={{ textAlign: 'center', direction: 'rtl', marginTop: '50px', padding: '20px', fontFamily: 'sans-serif' }}>
-        <h1>ברוך הבא למכרז NBA 🏀</h1>
+        <h1>מכרז 🏀</h1>
         {errorMsg && <p style={{ color: 'red', fontWeight: 'bold' }}>{errorMsg}</p>}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', marginTop: '30px' }}>
+          
           <input 
             type="text" 
-            placeholder="איך קוראים לך?" 
-            value={playerName} 
-            onChange={(e) => setPlayerName(e.target.value)}
+            placeholder="שם משתמש" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)}
             style={{ padding: '12px', fontSize: '18px', width: '100%', maxWidth: '300px', borderRadius: '8px', border: '1px solid #ccc' }}
           />
+          <input 
+            type="password" 
+            placeholder="סיסמה" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ padding: '12px', fontSize: '18px', width: '100%', maxWidth: '300px', borderRadius: '8px', border: '1px solid #ccc' }}
+          />
+          
           <button onClick={handleJoin} style={{ padding: '12px 30px', fontSize: '18px', backgroundColor: '#ff9800', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', width: '100%', maxWidth: '300px' }}>
             הכנס למשחק
           </button>
+          <p style={{ color: '#555', fontSize: '0.9em', maxWidth: '300px' }}>* בפעם הראשונה המערכת תשמור את הסיסמה שבחרת. מאותו רגע, רק אתה תוכל להתחבר לשם הזה.</p>
         </div>
       </div>
     );
@@ -106,7 +121,7 @@ function App() {
 
     return (
       <div style={{ textAlign: 'center', direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2.5em', color: '#ff9800' }}>חדר המתנה 🏀</h1>
+        <h1 style={{ fontSize: '2.5em', color: '#ff9800' }}>מכרז 🏀 - חדר המתנה</h1>
         
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', marginTop: '30px' }}>
           
@@ -423,25 +438,6 @@ function App() {
                       }}>
                       {isFirstBid ? 'הצע $0' : 'פרוש'}
                     </button>
-
-                    {/* כפתור החלף שחקן - מופיע רק לשחקן הראשון ובמידה ועוד לא הוחלף */}
-                    {isMyTurn && isFirstBid && !gameState?.currentAuction?.swapUsed && (
-                      <button 
-                        onClick={handleSwap}
-                        style={{ 
-                          flex: 1,
-                          padding: '10px', 
-                          fontSize: '16px', 
-                          backgroundColor: '#9c27b0', 
-                          color: 'white', 
-                          border: 'none', 
-                          borderRadius: '4px', 
-                          cursor: 'pointer', 
-                          fontWeight: 'bold'
-                        }}>
-                        🔄 החלף
-                      </button>
-                    )}
                   </div>
                 </div>
 
@@ -449,7 +445,7 @@ function App() {
                   <div style={{ marginTop: '15px' }}>
                     {isFirstBid && (
                       <p style={{ fontSize: '0.9em', color: '#ff9800', fontWeight: 'bold', margin: '5px 0' }}>
-                        ⚠️ המכרז נפתח! לחץ "הצע $0" או השתמש בכפתור ה"החלף".
+                        ⚠️ המכרז נפתח! לחץ "הצע $0" כדי להעביר את התור ללא עלות.
                       </p>
                     )}
                     <p style={{ fontSize: '0.85em', color: '#e91e63', fontWeight: 'bold', margin: '5px 0' }}>

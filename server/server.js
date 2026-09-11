@@ -18,10 +18,18 @@ app.use((req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
+// טעינת טבלת הדירוג
 const leaderboardPath = path.join(__dirname, 'leaderboard.json');
 let leaderboard = {};
 if (fs.existsSync(leaderboardPath)) {
     leaderboard = JSON.parse(fs.readFileSync(leaderboardPath, 'utf8'));
+}
+
+// טעינת בסיס נתוני המשתמשים (שם משתמש וסיסמה)
+const usersPath = path.join(__dirname, 'users.json');
+let usersDB = {};
+if (fs.existsSync(usersPath)) {
+    usersDB = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
 }
 
 const rawPlayersData = {
@@ -124,7 +132,6 @@ for (const position in rawPlayersData) {
 }
 
 let playersDB = [];
-let availablePool = { PG: [], SG: [], SF: [], PF: [], C: [] }; // מאגר רזרבות להחלפות
 
 let gameState = {
     gameStarted: false,
@@ -136,13 +143,11 @@ let gameState = {
         highestBidder: null,
         activeBidders: [], 
         currentTurnId: null,
-        timeLeft: 15,
-        swapUsed: false // האם השתמשו כבר בכפתור החלף בסיבוב הזה
+        timeLeft: 15
     },
     leaderboard: leaderboard 
 };
 
-// שעון מדויק שרץ בשרת
 let turnTimerInterval = null;
 
 function clearTurnTimer() {
@@ -176,18 +181,10 @@ function initializeGamePlayers() {
     let selectedPlayers = [];
     const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
 
-    // איפוס מאגר הרזרבות
-    availablePool = { PG: [], SG: [], SF: [], PF: [], C: [] };
-
     for (const position in rawPlayersDB) {
         const shuffledPosition = shuffleArray([...rawPlayersDB[position]]);
-        
-        // לוקחים 3 שחקנים למשחק
         const selectedFromPosition = shuffledPosition.slice(0, 3);
         selectedPlayers.push(...selectedFromPosition);
-        
-        // שומרים את כל השאר במאגר הרזרבות עבור כפתור "החלף"
-        availablePool[position] = shuffledPosition.slice(3);
     }
 
     playersDB = shuffleArray(selectedPlayers);
@@ -266,8 +263,7 @@ function startNextAuction() {
             highestBidder: null,
             activeBidders: orderedBidders,
             currentTurnId: startingId,
-            timeLeft: 15,
-            swapUsed: false // מתאפס בתחילת כל מכרז
+            timeLeft: 15
         };
         
         setTurnTimer(); 
@@ -296,10 +292,30 @@ function executeFold(socketId) {
 }
 
 io.on('connection', (socket) => {
-    socket.on('joinGame', (playerName) => {
-        const cleanName = playerName.trim();
+    socket.on('joinGame', (credentials) => {
+        const { username, password } = credentials;
+        const cleanName = username.trim();
+
+        if (!cleanName || !password) {
+            socket.emit('error', 'נא להזין שם משתמש וסיסמה.');
+            return;
+        }
+
+        // מערכת אימות סיסמאות
+        if (usersDB[cleanName]) {
+            if (usersDB[cleanName] !== password.trim()) {
+                socket.emit('error', 'סיסמה שגויה!');
+                return;
+            }
+        } else {
+            // יצירת משתמש חדש
+            usersDB[cleanName] = password.trim();
+            fs.writeFileSync(usersPath, JSON.stringify(usersDB));
+        }
+
         const existingPlayer = gameState.participants.find(p => p.name === cleanName);
 
+        // חיבור מחדש למשתמש קיים במשחק
         if (existingPlayer) {
             const oldId = existingPlayer.id;
             existingPlayer.id = socket.id; 
@@ -320,7 +336,7 @@ io.on('connection', (socket) => {
         }
 
         if (gameState.gameStarted) {
-            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע.');
+            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע (אלא אם אתה מנסה להתחבר לשחקן שכבר נמצא במשחק).');
             return;
         }
 
@@ -361,7 +377,7 @@ io.on('connection', (socket) => {
         
         gameState.gameStarted = false;
         gameState.auctionIndex = 0;
-        gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15, swapUsed: false };
+        gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15 };
         gameState.leaderboard = leaderboard;
         
         gameState.participants = gameState.participants.filter(p => p.connected);
@@ -378,33 +394,6 @@ io.on('connection', (socket) => {
         });
 
         io.emit('updateState', gameState);
-    });
-
-    // === לוגיקת החלפת שחקן ===
-    socket.on('swapPlayer', () => {
-        // מותר רק אם: המשחק פעיל, זה התור שלך, זו ההצעה הראשונה, ועדיין לא הוחלף
-        if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
-        if (gameState.currentAuction.highestBid !== -1) return;
-        if (gameState.currentAuction.swapUsed) return;
-
-        const currentPos = gameState.currentAuction.player.position;
-        const pool = availablePool[currentPos];
-        
-        // מוודאים שיש לפחות שחקן אחד פנוי במאגר
-        if (pool && pool.length > 0) {
-            // שולפים שחקן רנדומלי מהמאגר הפנוי ומוחקים אותו משם
-            const randomIndex = Math.floor(Math.random() * pool.length);
-            const newPlayer = pool.splice(randomIndex, 1)[0];
-            
-            // מכניסים אותו למשחק במקום השחקן הנוכחי (זה מבטיח שיהיו בדיוק 15 בסוף)
-            playersDB[gameState.auctionIndex] = newPlayer;
-            gameState.currentAuction.player = newPlayer;
-            gameState.currentAuction.swapUsed = true;
-            
-            // מאפסים את השעון
-            setTurnTimer();
-            io.emit('updateState', gameState);
-        }
     });
 
     socket.on('placeBid', (bidAmount) => {
@@ -462,7 +451,7 @@ io.on('connection', (socket) => {
             gameState.gameStarted = false;
             gameState.participants = [];
             gameState.auctionIndex = 0;
-            gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15, swapUsed: false };
+            gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15 };
         }
 
         io.emit('updateState', gameState);
