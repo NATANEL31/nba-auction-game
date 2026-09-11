@@ -124,27 +124,31 @@ for (const position in rawPlayersData) {
 }
 
 let playersDB = [];
+let availablePool = { PG: [], SG: [], SF: [], PF: [], C: [] }; // מאגר רזרבות להחלפות
+
 let gameState = {
     gameStarted: false,
     participants: [],
     auctionIndex: 0,
     currentAuction: {
         player: null,
-        highestBid: -1, // שונה ל-1 כדי לאפשר הצעה ראשונה של 0$
+        highestBid: -1, 
         highestBidder: null,
         activeBidders: [], 
         currentTurnId: null,
-        turnEndTime: null 
+        timeLeft: 15,
+        swapUsed: false // האם השתמשו כבר בכפתור החלף בסיבוב הזה
     },
     leaderboard: leaderboard 
 };
 
-let turnTimer = null;
+// שעון מדויק שרץ בשרת
+let turnTimerInterval = null;
 
 function clearTurnTimer() {
-    if (turnTimer) {
-        clearTimeout(turnTimer);
-        turnTimer = null;
+    if (turnTimerInterval) {
+        clearInterval(turnTimerInterval);
+        turnTimerInterval = null;
     }
 }
 
@@ -152,24 +156,38 @@ function setTurnTimer() {
     clearTurnTimer();
     if (!gameState.gameStarted || !gameState.currentAuction || !gameState.currentAuction.player) return;
 
-    gameState.currentAuction.turnEndTime = Date.now() + 15000;
+    gameState.currentAuction.timeLeft = 15;
+    io.emit('timerUpdate', gameState.currentAuction.timeLeft);
     
-    turnTimer = setTimeout(() => {
-        const turnId = gameState.currentAuction.currentTurnId;
-        if (turnId) {
-            executeFold(turnId);
+    turnTimerInterval = setInterval(() => {
+        gameState.currentAuction.timeLeft--;
+        io.emit('timerUpdate', gameState.currentAuction.timeLeft);
+        
+        if (gameState.currentAuction.timeLeft <= 0) {
+            const turnId = gameState.currentAuction.currentTurnId;
+            if (turnId) {
+                executeFold(turnId);
+            }
         }
-    }, 15000);
+    }, 1000);
 }
 
 function initializeGamePlayers() {
     let selectedPlayers = [];
     const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
 
+    // איפוס מאגר הרזרבות
+    availablePool = { PG: [], SG: [], SF: [], PF: [], C: [] };
+
     for (const position in rawPlayersDB) {
         const shuffledPosition = shuffleArray([...rawPlayersDB[position]]);
+        
+        // לוקחים 3 שחקנים למשחק
         const selectedFromPosition = shuffledPosition.slice(0, 3);
         selectedPlayers.push(...selectedFromPosition);
+        
+        // שומרים את כל השאר במאגר הרזרבות עבור כפתור "החלף"
+        availablePool[position] = shuffledPosition.slice(3);
     }
 
     playersDB = shuffleArray(selectedPlayers);
@@ -244,11 +262,12 @@ function startNextAuction() {
         
         gameState.currentAuction = {
             player: playersDB[gameState.auctionIndex],
-            highestBid: -1, // איפוס ל-1 כדי לאפשר הצעת 0$
+            highestBid: -1, 
             highestBidder: null,
             activeBidders: orderedBidders,
             currentTurnId: startingId,
-            turnEndTime: null
+            timeLeft: 15,
+            swapUsed: false // מתאפס בתחילת כל מכרז
         };
         
         setTurnTimer(); 
@@ -342,7 +361,7 @@ io.on('connection', (socket) => {
         
         gameState.gameStarted = false;
         gameState.auctionIndex = 0;
-        gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
+        gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15, swapUsed: false };
         gameState.leaderboard = leaderboard;
         
         gameState.participants = gameState.participants.filter(p => p.connected);
@@ -361,6 +380,33 @@ io.on('connection', (socket) => {
         io.emit('updateState', gameState);
     });
 
+    // === לוגיקת החלפת שחקן ===
+    socket.on('swapPlayer', () => {
+        // מותר רק אם: המשחק פעיל, זה התור שלך, זו ההצעה הראשונה, ועדיין לא הוחלף
+        if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
+        if (gameState.currentAuction.highestBid !== -1) return;
+        if (gameState.currentAuction.swapUsed) return;
+
+        const currentPos = gameState.currentAuction.player.position;
+        const pool = availablePool[currentPos];
+        
+        // מוודאים שיש לפחות שחקן אחד פנוי במאגר
+        if (pool && pool.length > 0) {
+            // שולפים שחקן רנדומלי מהמאגר הפנוי ומוחקים אותו משם
+            const randomIndex = Math.floor(Math.random() * pool.length);
+            const newPlayer = pool.splice(randomIndex, 1)[0];
+            
+            // מכניסים אותו למשחק במקום השחקן הנוכחי (זה מבטיח שיהיו בדיוק 15 בסוף)
+            playersDB[gameState.auctionIndex] = newPlayer;
+            gameState.currentAuction.player = newPlayer;
+            gameState.currentAuction.swapUsed = true;
+            
+            // מאפסים את השעון
+            setTurnTimer();
+            io.emit('updateState', gameState);
+        }
+    });
+
     socket.on('placeBid', (bidAmount) => {
         if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
         
@@ -368,7 +414,6 @@ io.on('connection', (socket) => {
         const participant = gameState.participants.find(p => p.id === socket.id);
         
         if (participant) {
-            // ביטול דרישת השמירה (Reserve). המקסימום הוא כל התקציב.
             const maxAllowedBid = participant.budget;
 
             if (numericBid > gameState.currentAuction.highestBid && numericBid <= maxAllowedBid) {
@@ -417,7 +462,7 @@ io.on('connection', (socket) => {
             gameState.gameStarted = false;
             gameState.participants = [];
             gameState.auctionIndex = 0;
-            gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
+            gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15, swapUsed: false };
         }
 
         io.emit('updateState', gameState);
