@@ -13,10 +13,8 @@ function App() {
   const [myEditableRoster, setMyEditableRoster] = useState(null);
   const [soldNotification, setSoldNotification] = useState(null);
   
-  // סטייט חדש לניהול הזמן שנשאר
   const [timeLeft, setTimeLeft] = useState(0);
 
-  // אפקט חישוב הטיימר (רץ כל 100 מילי-שניות כדי להיות מדויק)
   useEffect(() => {
     let interval;
     if (gameState?.gameStarted && gameState?.currentAuction?.turnEndTime) {
@@ -260,22 +258,23 @@ function App() {
     );
   }
 
-  // --- מסך המכרז הפעיל ---
   const isMyTurn = gameState?.currentAuction?.currentTurnId === socket.id;
   const currentTurnPlayer = gameState?.participants.find(p => p.id === gameState?.currentAuction?.currentTurnId);
-  const currentHighest = gameState?.currentAuction?.highestBid || 0;
   
+  // מתייחס למצב -1 כתחילת מכרז
+  const currentHighest = gameState?.currentAuction?.highestBid !== undefined ? gameState.currentAuction.highestBid : -1;
+  const isFirstBid = currentHighest === -1;
+  
+  // המקסימום החדש שווה פשוט לתקציב! (ללא שמירת דולר לכל עמדה)
   let maxAllowedBid = 0;
   if (me) {
-    const emptySlots = 5 - me.roster.filter(s => s.player !== null).length;
-    const requiredReserve = emptySlots > 0 ? emptySlots - 1 : 0;
-    maxAllowedBid = me.budget - requiredReserve;
+    maxAllowedBid = me.budget;
   }
 
-  // חישוב לוגיקה לכפתור ה+1$ 
-  const plusOneBid = currentHighest === 0 ? 1 : currentHighest + 1;
+  const plusOneBid = currentHighest === -1 ? 1 : currentHighest + 1;
   const canPlusOne = isMyTurn && plusOneBid <= maxAllowedBid;
-  const isValidCustom = Number(customBid) > currentHighest && Number(customBid) <= maxAllowedBid;
+  
+  const isValidCustom = customBid !== '' && Number(customBid) > currentHighest && Number(customBid) <= maxAllowedBid;
 
   const activeBiddersIds = gameState?.currentAuction?.activeBidders || [];
   const currentTurnIdx = activeBiddersIds.indexOf(gameState?.currentAuction?.currentTurnId);
@@ -368,10 +367,10 @@ function App() {
               
               <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#fff', borderRadius: '8px' }}>
                 <h4 style={{ fontSize: '1.5em', color: '#2e7d32', margin: '0 0 10px 0' }}>
-                  הצעה נוכחית: ${currentHighest}
+                  הצעה נוכחית: {isFirstBid ? 'טרם הוגשה' : `$${currentHighest}`}
                 </h4>
                 <p style={{ fontSize: '1em', margin: 0 }}>
-                  מוביל: {gameState.currentAuction.highestBidder ? gameState.currentAuction.highestBidder : 'אין עדיין הצעות'}
+                  מוביל: {gameState.currentAuction.highestBidder ? gameState.currentAuction.highestBidder : 'הצע 0$ כדי להשתלט על השחקן'}
                 </p>
               </div>
 
@@ -387,8 +386,6 @@ function App() {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                   
                   <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '5px' }}>
-                    
-                    {/* הכפתור החדש - מהיר ונוח */}
                     <button 
                       disabled={!canPlusOne}
                       onClick={() => handleBid(plusOneBid)}
@@ -412,23 +409,37 @@ function App() {
                     </button>
                   </div>
 
+                  {/* אם זאת ההצעה הראשונה, הכפתור הוא הצעה על 0$. אם לא, זה פרישה. */}
                   <button 
                     disabled={!isMyTurn}
-                    onClick={handleFold}
-                    style={{ opacity: isMyTurn ? 1 : 0.5, padding: '10px 20px', fontSize: '16px', backgroundColor: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: isMyTurn ? 'pointer' : 'not-allowed', width: '100%', maxWidth: '200px', marginTop: '10px' }}>
-                    פרוש (Fold)
+                    onClick={() => isFirstBid ? handleBid(0) : handleFold()}
+                    style={{ 
+                      opacity: isMyTurn ? 1 : 0.5, 
+                      padding: '10px 20px', 
+                      fontSize: '16px', 
+                      backgroundColor: isFirstBid ? '#2196f3' : '#f44336', 
+                      color: 'white', 
+                      border: 'none', 
+                      borderRadius: '4px', 
+                      cursor: isMyTurn ? 'pointer' : 'not-allowed', 
+                      width: '100%', 
+                      maxWidth: '200px', 
+                      marginTop: '10px',
+                      fontWeight: isFirstBid ? 'bold' : 'normal'
+                    }}>
+                    {isFirstBid ? 'הצע $0' : 'פרוש (Fold)'}
                   </button>
                 </div>
 
                 {isMyTurn && (
                   <div style={{ marginTop: '15px' }}>
-                    {currentHighest === 0 && (
+                    {isFirstBid && (
                       <p style={{ fontSize: '0.9em', color: '#ff9800', fontWeight: 'bold', margin: '5px 0' }}>
-                        ⚠️ זהו תחילת המכרז, עליך להציע לפחות $1 או לפרוש.
+                        ⚠️ המכרז נפתח! לחץ על "הצע $0" כדי להעביר את התור ללא עלות.
                       </p>
                     )}
                     <p style={{ fontSize: '0.85em', color: '#e91e63', fontWeight: 'bold', margin: '5px 0' }}>
-                      הצעה מקסימלית עבורך כרגע: ${maxAllowedBid}
+                      הצעה מקסימלית: ${maxAllowedBid} (ניתן לרכוש שחקנים גם ב-$0)
                     </p>
                   </div>
                 )}

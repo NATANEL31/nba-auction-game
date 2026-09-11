@@ -24,7 +24,6 @@ if (fs.existsSync(leaderboardPath)) {
     leaderboard = JSON.parse(fs.readFileSync(leaderboardPath, 'utf8'));
 }
 
-// === המאגר המעודכן שלך עם כל השחקנים החדשים והדירוגים ===
 const rawPlayersData = {
     PG: [
         { name: "לוקה דונצ'יץ'", rating: 97 }, { name: "סטף קרי", rating: 96 }, { name: "שיי גילג'ס-אלכסנדר", rating: 96 }, { name: "ג'יילן ברנסון", rating: 93 }, 
@@ -131,7 +130,7 @@ let gameState = {
     auctionIndex: 0,
     currentAuction: {
         player: null,
-        highestBid: 0,
+        highestBid: -1, // שונה ל-1 כדי לאפשר הצעה ראשונה של 0$
         highestBidder: null,
         activeBidders: [], 
         currentTurnId: null,
@@ -184,7 +183,7 @@ function handleAuctionEnd() {
         const winnerId = active[0];
         const winner = gameState.participants.find(p => p.id === winnerId);
         
-        const finalBid = gameState.currentAuction.highestBid > 0 ? gameState.currentAuction.highestBid : 1;
+        const finalBid = Math.max(0, gameState.currentAuction.highestBid);
 
         if (winner && winner.budget >= finalBid) {
             winner.budget -= finalBid;
@@ -218,7 +217,7 @@ function startNextAuction() {
     if (gameState.auctionIndex < playersDB.length) {
         const validParticipants = gameState.participants.filter(p => {
             const filledSpots = p.roster.filter(slot => slot.player !== null).length;
-            return p.budget > 0 && filledSpots < 5;
+            return p.budget >= 0 && filledSpots < 5;
         });
         
         let orderedBidders = [];
@@ -245,7 +244,7 @@ function startNextAuction() {
         
         gameState.currentAuction = {
             player: playersDB[gameState.auctionIndex],
-            highestBid: 0,
+            highestBid: -1, // איפוס ל-1 כדי לאפשר הצעת 0$
             highestBidder: null,
             activeBidders: orderedBidders,
             currentTurnId: startingId,
@@ -343,7 +342,7 @@ io.on('connection', (socket) => {
         
         gameState.gameStarted = false;
         gameState.auctionIndex = 0;
-        gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
+        gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
         gameState.leaderboard = leaderboard;
         
         gameState.participants = gameState.participants.filter(p => p.connected);
@@ -369,9 +368,8 @@ io.on('connection', (socket) => {
         const participant = gameState.participants.find(p => p.id === socket.id);
         
         if (participant) {
-            const emptySlots = 5 - participant.roster.filter(slot => slot.player !== null).length;
-            const requiredReserve = emptySlots > 0 ? emptySlots - 1 : 0;
-            const maxAllowedBid = participant.budget - requiredReserve;
+            // ביטול דרישת השמירה (Reserve). המקסימום הוא כל התקציב.
+            const maxAllowedBid = participant.budget;
 
             if (numericBid > gameState.currentAuction.highestBid && numericBid <= maxAllowedBid) {
                 gameState.currentAuction.highestBid = numericBid;
@@ -419,7 +417,7 @@ io.on('connection', (socket) => {
             gameState.gameStarted = false;
             gameState.participants = [];
             gameState.auctionIndex = 0;
-            gameState.currentAuction = { player: null, highestBid: 0, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
+            gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, turnEndTime: null };
         }
 
         io.emit('updateState', gameState);
