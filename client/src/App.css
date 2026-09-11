@@ -1,0 +1,153 @@
+/* ייבוא פונט מודרני ונקי של גוגל (Heebo) */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
+
+/* משתני צבעים - אם תרצה לשנות צבע לאתר, משנים רק כאן! */
+:root {
+  --bg-color: #f0f2f5;
+  --card-bg: #ffffff;
+  --primary: #ff9800; /* כתום כדורסל */
+  --primary-hover: #e68a00;
+  --secondary: #2e7d32; /* ירוק */
+  --danger: #f44336; /* אדום */
+  --danger-hover: #d32f2f;
+  --blue: #2196f3;
+  --blue-hover: #1976d2;
+  --text-dark: #202124;
+  --text-light: #5f6368;
+  --border-color: #e0e0e0;
+  --radius: 12px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* הגדרות כלליות לדף */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Heebo', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  direction: rtl;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* כותרות */
+.main-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-weight: 900;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.sub-title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+/* כרטיסיות (עיצוב מודרני צף) */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 25px;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* כפתורים */
+.btn {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-2px); }
+.btn-success { background: var(--secondary); color: #fff; }
+.btn-success:hover:not(:disabled) { background: #1b5e20; transform: translateY(-2px); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover:not(:disabled) { background: var(--danger-hover); transform: translateY(-2px); }
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-blue:hover:not(:disabled) { background: var(--blue-hover); transform: translateY(-2px); }
+.btn-gold { background: #ffd54f; color: #333; border: 2px solid #ffb300; }
+.btn-gold:hover:not(:disabled) { background: #ffca28; transform: translateY(-2px); }
+
+.full-width { width: 100%; }
+
+/* שדות טקסט והזנה */
+.input-field {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.input-field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
+/* פריסות מסך (Layout) */
+.flex-center { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.arena-layout { display: flex; flex-wrap: wrap-reverse; gap: 25px; margin-top: 20px; }
+.sidebar { flex: 1 1 300px; }
+.main-stage { flex: 2 1 400px; border: 3px solid var(--primary); background: #fffcf8; text-align: center;}
+
+/* הרכבי הקבוצות (Roster) */
+.roster-list { background: #fafafa; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 15px; }
+.roster-slot { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
+.roster-slot:last-child { border-bottom: none; }
+.pos-badge { width: 40px; color: var(--primary); font-weight: 900; font-size: 1.1rem; }
+.player-info { flex: 1; }
+.player-price { color: var(--secondary); font-weight: bold; }
+.player-rating-small { font-size: 0.85em; color: var(--text-light); margin: 0 5px; }
+
+/* טיימר זירה */
+.timer-display { font-size: 3.5rem; font-weight: 900; margin: 15px 0; color: var(--primary); text-shadow: 1px 1px 2px rgba(0,0,0,0.1);}
+.timer-danger { color: var(--danger); animation: pulse 1s infinite; }
+
+/* תגים מיוחדים והתראות */
+.rating-badge { background: #ffd54f; color: #333; padding: 6px 18px; border-radius: 20px; font-weight: bold; border: 2px solid #ffb300; display: inline-block; font-size: 1.2rem;}
+.order-alert { background: #e3f2fd; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 1.1rem; border: 1px solid #bbdefb; }
+.status-indicator { margin-left: 8px; }
+
+/* פופ אפ קופץ - שחקן נמכר */
+.toast-notification {
+  position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+  background: var(--secondary); color: white; padding: 15px 40px;
+  border-radius: 30px; box-shadow: 0 10px 30px rgba(46, 125, 50, 0.4); 
+  font-size: 1.3rem; font-weight: bold; z-index: 1000; text-align: center;
+  animation: slideDown 0.5s ease-out;
+}
+
+/* אנימציות */
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+@keyframes slideDown { from { top: -50px; opacity: 0; } to { top: 30px; opacity: 1; } }
+
+/* עיצוב טבלה */
+table.leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.leaderboard-table tr { border-bottom: 1px solid #f5ca99; }
+.leaderboard-table td { padding: 12px; font-size: 1.2rem;}

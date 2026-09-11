@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import './App.css'; // מייבאים את קובץ העיצוב החדש!
 
 const socket = io();
 
 function App() {
   const [gameState, setGameState] = useState(null);
   
-  // ניהול שם משתמש וסיסמה בזיכרון הלקוח
   const [username, setUsername] = useState(() => localStorage.getItem('michrazUsername') || '');
   const [password, setPassword] = useState(() => localStorage.getItem('michrazPassword') || '');
   
@@ -39,7 +39,7 @@ function App() {
     
     socket.on('error', (msg) => {
       setErrorMsg(msg);
-      setHasJoined(false); // מחזיר למסך התחברות במקרה של שגיאה (כמו סיסמה לא נכונה)
+      setHasJoined(false);
     });
 
     socket.on('playerSold', (data) => {
@@ -63,7 +63,6 @@ function App() {
       localStorage.setItem('michrazUsername', username.trim()); 
       localStorage.setItem('michrazPassword', password.trim()); 
       setErrorMsg('');
-      // שולחים את פרטי ההתחברות לשרת
       socket.emit('joinGame', { username: username.trim(), password: password.trim() });
       setHasJoined(true);
     } else {
@@ -84,32 +83,41 @@ function App() {
     }
   };
 
+  // מציג את ההתראה הקופצת (Toast)
+  const NotificationPopup = () => soldNotification ? (
+    <div className="toast-notification">{soldNotification}</div>
+  ) : null;
+
+  // --- מסך התחברות ---
   if (!hasJoined) {
     return (
-      <div style={{ textAlign: 'center', direction: 'rtl', marginTop: '50px', padding: '20px', fontFamily: 'sans-serif' }}>
-        <h1>מכרז 🏀</h1>
-        {errorMsg && <p style={{ color: 'red', fontWeight: 'bold' }}>{errorMsg}</p>}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', marginTop: '30px' }}>
+      <div className="app-container">
+        <div className="card" style={{ maxWidth: '400px', margin: '50px auto' }}>
+          <h1 className="main-title">מכרז 🏀</h1>
+          {errorMsg && <p style={{ color: 'var(--danger)', fontWeight: 'bold', textAlign: 'center' }}>{errorMsg}</p>}
           
-          <input 
-            type="text" 
-            placeholder="שם משתמש" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)}
-            style={{ padding: '12px', fontSize: '18px', width: '100%', maxWidth: '300px', borderRadius: '8px', border: '1px solid #ccc' }}
-          />
-          <input 
-            type="password" 
-            placeholder="סיסמה" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ padding: '12px', fontSize: '18px', width: '100%', maxWidth: '300px', borderRadius: '8px', border: '1px solid #ccc' }}
-          />
-          
-          <button onClick={handleJoin} style={{ padding: '12px 30px', fontSize: '18px', backgroundColor: '#ff9800', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', width: '100%', maxWidth: '300px' }}>
-            הכנס למשחק
-          </button>
-          <p style={{ color: '#555', fontSize: '0.9em', maxWidth: '300px' }}>* בפעם הראשונה המערכת תשמור את הסיסמה שבחרת. מאותו רגע, רק אתה תוכל להתחבר לשם הזה.</p>
+          <div className="flex-center" style={{ marginTop: '20px' }}>
+            <input 
+              type="text" 
+              placeholder="שם משתמש" 
+              value={username} 
+              onChange={(e) => setUsername(e.target.value)}
+              className="input-field"
+            />
+            <input 
+              type="password" 
+              placeholder="סיסמה" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)}
+              className="input-field"
+            />
+            <button onClick={handleJoin} className="btn btn-primary full-width">
+              הכנס למשחק
+            </button>
+            <p style={{ color: 'var(--text-light)', fontSize: '0.9em', textAlign: 'center', margin: 0 }}>
+              * בפעם הראשונה המערכת תשמור את הסיסמה. מאותו רגע, רק אתה תוכל להתחבר לשם זה.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -120,48 +128,47 @@ function App() {
     const sortedLeaderboard = Object.entries(gameState.leaderboard || {}).sort((a, b) => b[1] - a[1]);
 
     return (
-      <div style={{ textAlign: 'center', direction: 'rtl', padding: '20px', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2.5em', color: '#ff9800' }}>מכרז 🏀 - חדר המתנה</h1>
+      <div className="app-container">
+        <h1 className="main-title">מכרז 🏀 - חדר המתנה</h1>
         
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center', marginTop: '30px' }}>
+        <div className="grid-container" style={{ marginTop: '30px' }}>
           
-          <div style={{ flex: '1 1 300px', backgroundColor: '#fff', padding: '20px', borderRadius: '8px', border: '1px solid #ddd' }}>
-            <h2>שחקנים מחוברים כרגע:</h2>
+          <div className="card">
+            <h2 className="sub-title">שחקנים מחוברים:</h2>
             <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.2em' }}>
               {gameState.participants.map(p => (
-                <li key={p.id} style={{ margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '8px', opacity: p.connected === false ? 0.5 : 1 }}>
-                  {p.connected === false ? '🔴' : '🟢'} {p.name} {p.id === socket.id ? '(אתה)' : ''} {p.connected === false ? '(מנותק)' : ''}
+                <li key={p.id} style={{ margin: '10px 0', backgroundColor: '#f9f9f9', padding: '12px', borderRadius: '8px', opacity: p.connected === false ? 0.5 : 1 }}>
+                  <span className="status-indicator">{p.connected === false ? '🔴' : '🟢'}</span> 
+                  <strong>{p.name}</strong> {p.id === socket.id ? '(אתה)' : ''} {p.connected === false ? '(מנותק)' : ''}
                 </li>
               ))}
             </ul>
             {gameState.participants.length >= 2 ? (
               <div style={{ marginTop: '30px' }}>
-                <button 
-                  onClick={handleStartGame}
-                  style={{ padding: '15px 30px', fontSize: '1.2em', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', width: '100%' }}>
+                <button onClick={handleStartGame} className="btn btn-success full-width">
                   התחל משחק!
                 </button>
               </div>
             ) : (
-              <p style={{ color: 'gray', marginTop: '30px', fontSize: '1.1em' }}>ממתין לשחקנים נוספים... (דרושים 2 לפחות)</p>
+              <p style={{ color: 'var(--text-light)', marginTop: '20px', textAlign: 'center' }}>ממתין לשחקנים נוספים... (דרושים 2 לפחות)</p>
             )}
           </div>
 
           {sortedLeaderboard.length > 0 && (
-            <div style={{ flex: '1 1 300px', backgroundColor: '#fff8f0', padding: '20px', borderRadius: '8px', border: '2px solid #ff9800' }}>
-              <h2>🏆 טבלת אלופים 🏆</h2>
-              <table style={{ width: '100%', fontSize: '1.2em', borderCollapse: 'collapse', marginTop: '10px' }}>
+            <div className="card" style={{ borderColor: 'var(--primary)', backgroundColor: '#fffcf8' }}>
+              <h2 className="sub-title" style={{ borderColor: '#ffb300' }}>🏆 טבלת אלופים 🏆</h2>
+              <table className="leaderboard-table">
                 <tbody>
                   {sortedLeaderboard.map(([name, score], idx) => (
-                    <tr key={name} style={{ borderBottom: '1px solid #f5ca99' }}>
-                      <td style={{ padding: '10px', textAlign: 'right', fontWeight: idx === 0 ? 'bold' : 'normal' }}>
+                    <tr key={name}>
+                      <td style={{ fontWeight: idx === 0 ? 'bold' : 'normal' }}>
                         {idx === 0 && '🥇 '} 
                         {idx === 1 && '🥈 '} 
                         {idx === 2 && '🥉 '}
                         {idx > 2 && `${idx + 1}. `} 
                         {name}
                       </td>
-                      <td style={{ padding: '10px', textAlign: 'left', fontWeight: 'bold', color: '#2e7d32' }}>
+                      <td style={{ fontWeight: 'bold', color: 'var(--secondary)' }}>
                         {score} נק'
                       </td>
                     </tr>
@@ -176,6 +183,7 @@ function App() {
     );
   }
 
+  // לוגיקות משחק
   const isGameOver = gameState?.auctionIndex > 0 && !gameState?.currentAuction?.player;
   const me = gameState?.participants.find(p => p.id === socket.id);
   
@@ -202,41 +210,39 @@ function App() {
     }
   };
 
+  // --- מסך סיכום המשחק ---
   if (isGameOver) {
     return (
-      <div style={{ direction: 'rtl', padding: '15px', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto' }}>
-        
-        {soldNotification && (
-          <div style={{ position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)', backgroundColor: '#4caf50', color: 'white', padding: '15px 30px', borderRadius: '30px', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', fontSize: '1.2em', fontWeight: 'bold', zIndex: 1000, textAlign: 'center', animation: 'fadeIn 0.5s ease-in-out' }}>
-            {soldNotification}
-          </div>
-        )}
+      <div className="app-container">
+        <NotificationPopup />
 
-        <h1 style={{ textAlign: 'center', fontSize: '2.2em', color: '#ff9800' }}>המשחק הסתיים! 🎉</h1>
+        <h1 className="main-title">המשחק הסתיים! 🎉</h1>
         <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>סיכום קבוצות והכרזת מנצח</h2>
         
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+        <div className="grid-container">
           {gameState?.participants.map(p => {
             const isMe = p.id === socket.id;
             const displayRoster = (isMe && myEditableRoster) ? myEditableRoster : p.roster;
             
             return (
-              <div key={p.id} style={{ flex: '1 1 300px', maxWidth: '350px', border: isMe ? '3px solid #4caf50' : '1px solid #ccc', padding: '15px', borderRadius: '8px', backgroundColor: isMe ? '#f1f8e9' : '#fff' }}>
+              <div key={p.id} className="card" style={{ borderColor: isMe ? 'var(--secondary)' : 'var(--border-color)', backgroundColor: isMe ? '#f1f8e9' : 'var(--card-bg)' }}>
                 <h3 style={{ margin: '0 0 10px 0', opacity: p.connected === false ? 0.5 : 1 }}>
                   {p.connected === false && '🔴 '}
                   {p.name} {isMe ? '(הקבוצה שלך)' : ''}
                 </h3>
-                <p style={{ color: 'green', fontWeight: 'bold' }}>עודף בקופה: ${p.budget}</p>
+                <p style={{ color: 'var(--secondary)', fontWeight: 'bold' }}>עודף בקופה: ${p.budget}</p>
                 
-                <div style={{ marginTop: '15px', backgroundColor: '#fafafa', padding: '10px', borderRadius: '4px', border: '1px solid #eee' }}>
+                <div className="roster-list">
                   {displayRoster.map((slot, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', padding: '8px 0', borderBottom: idx < 4 ? '1px dashed #ddd' : 'none' }}>
-                      <strong style={{ width: '40px', color: '#ff9800' }}>{slot.pos}</strong>
+                    <div key={idx} className="roster-slot">
+                      <div className="pos-badge">{slot.pos}</div>
                       
-                      <div style={{ flex: 1 }}>
+                      <div className="player-info">
                         {slot.player ? (
                           <span>
-                            {slot.player.name} <span style={{ fontSize: '0.85em', color: '#555' }}>(⭐ {slot.player.rating})</span> <span style={{ color: '#2e7d32', fontWeight: 'bold' }}>(${slot.player.boughtFor})</span>
+                            {slot.player.name} 
+                            <span className="player-rating-small">(⭐ {slot.player.rating})</span> 
+                            <span className="player-price">(${slot.player.boughtFor})</span>
                           </span>
                         ) : (
                           <span style={{ color: '#aaa' }}>-</span>
@@ -245,8 +251,8 @@ function App() {
 
                       {isMe && (
                         <div style={{ display: 'flex', gap: '5px' }}>
-                          <button onClick={() => movePlayer(idx, -1)} disabled={idx === 0} style={{ padding: '5px', cursor: idx === 0 ? 'not-allowed' : 'pointer' }}>⬆️</button>
-                          <button onClick={() => movePlayer(idx, 1)} disabled={idx === 4} style={{ padding: '5px', cursor: idx === 4 ? 'not-allowed' : 'pointer' }}>⬇️</button>
+                          <button onClick={() => movePlayer(idx, -1)} disabled={idx === 0} className="btn" style={{padding: '5px'}}>⬆️</button>
+                          <button onClick={() => movePlayer(idx, 1)} disabled={idx === 4} className="btn" style={{padding: '5px'}}>⬇️</button>
                         </div>
                       )}
                     </div>
@@ -254,14 +260,14 @@ function App() {
                 </div>
 
                 {isMe && (
-                  <button onClick={saveRoster} style={{ width: '100%', marginTop: '15px', padding: '10px', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '4px', fontSize: '16px', cursor: 'pointer' }}>
+                  <button onClick={saveRoster} className="btn btn-success full-width" style={{ marginTop: '15px' }}>
                     שמור הרכב מעודכן
                   </button>
                 )}
 
                 <button 
                   onClick={() => handleDeclareWinner(p.name)} 
-                  style={{ width: '100%', marginTop: '10px', padding: '10px', backgroundColor: '#ffd54f', color: '#333', border: '2px solid #ffb300', borderRadius: '4px', fontSize: '16px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  className="btn btn-gold full-width" style={{ marginTop: '10px' }}>
                   🏆 הכתר כזוכה
                 </button>
               </div>
@@ -272,6 +278,7 @@ function App() {
     );
   }
 
+  // --- מסך המכרז הפעיל ---
   const isMyTurn = gameState?.currentAuction?.currentTurnId === socket.id;
   const currentTurnPlayer = gameState?.participants.find(p => p.id === gameState?.currentAuction?.currentTurnId);
   
@@ -279,13 +286,10 @@ function App() {
   const isFirstBid = currentHighest === -1;
   
   let maxAllowedBid = 0;
-  if (me) {
-    maxAllowedBid = me.budget;
-  }
+  if (me) { maxAllowedBid = me.budget; }
 
   const plusOneBid = currentHighest === -1 ? 1 : currentHighest + 1;
   const canPlusOne = isMyTurn && plusOneBid <= maxAllowedBid;
-  
   const isValidCustom = customBid !== '' && Number(customBid) > currentHighest && Number(customBid) <= maxAllowedBid;
 
   const activeBiddersIds = gameState?.currentAuction?.activeBidders || [];
@@ -301,42 +305,40 @@ function App() {
   }
 
   return (
-    <div style={{ direction: 'rtl', padding: '10px', fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
-      
-      {soldNotification && (
-        <div style={{ position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)', backgroundColor: '#4caf50', color: 'white', padding: '15px 30px', borderRadius: '30px', boxShadow: '0 4px 12px rgba(0,0,0,0.3)', fontSize: '1.2em', fontWeight: 'bold', zIndex: 1000, textAlign: 'center', animation: 'fadeIn 0.5s ease-in-out' }}>
-          {soldNotification}
-        </div>
-      )}
+    <div className="app-container">
+      <NotificationPopup />
 
-      <h1 style={{ textAlign: 'center', fontSize: '2em' }}>זירת המכרז 🏀</h1>
+      <h1 className="main-title">זירת המכרז 🏀</h1>
       
-      <div style={{ display: 'flex', flexWrap: 'wrap-reverse', gap: '20px', marginTop: '20px' }}>
+      <div className="arena-layout">
         
-        <div style={{ flex: '1 1 300px', border: '1px solid #ddd', padding: '15px', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-          <h2 style={{ fontSize: '1.5em', marginTop: 0 }}>משתתפים מחוברים</h2>
+        {/* סיידבר - המשתתפים */}
+        <div className="sidebar card">
+          <h2 className="sub-title">משתתפים מחוברים</h2>
           {gameState?.participants.map(p => {
             const filledCount = p.roster.filter(s => s.player !== null).length;
             
             return (
-              <div key={p.id} style={{ borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '10px', opacity: p.connected === false ? 0.6 : 1 }}>
+              <div key={p.id} style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '15px', marginBottom: '15px', opacity: p.connected === false ? 0.6 : 1 }}>
                 <strong style={{ fontSize: '1.2em' }}>
                   {p.connected === false && '🔴 '}
                   {p.name} {p.id === socket.id ? '(אתה)' : ''}
-                  {p.connected === false && <span style={{ color: 'red', fontSize: '0.8em' }}> (מנותק)</span>}
+                  {p.connected === false && <span style={{ color: 'var(--danger)', fontSize: '0.8em' }}> (מנותק)</span>}
                 </strong>
-                <p style={{ margin: '5px 0', color: 'green', fontWeight: 'bold' }}>תקציב נותר: ${p.budget}</p>
-                <p style={{ margin: 0, fontSize: '0.9em', color: '#555' }}>שחקנים ({filledCount}/5):</p>
+                <p style={{ margin: '5px 0', color: 'var(--secondary)', fontWeight: 'bold' }}>תקציב נותר: ${p.budget}</p>
+                <p style={{ margin: 0, fontSize: '0.9em', color: 'var(--text-light)' }}>שחקנים ({filledCount}/5):</p>
                 
-                <div style={{ marginTop: '10px', fontSize: '0.95em', backgroundColor: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}>
+                <div className="roster-list">
                   {p.roster.map((slot, idx) => (
-                    <div key={idx} style={{ padding: '4px 0', borderBottom: idx < 4 ? '1px dashed #eee' : 'none', display: 'flex' }}>
-                      <strong style={{ width: '35px', color: '#ff9800' }}>{slot.pos}</strong> 
-                      <div style={{ flex: 1 }}>
+                    <div key={idx} className="roster-slot" style={{ padding: '4px 0' }}>
+                      <div className="pos-badge" style={{ fontSize: '0.9rem', width: '35px' }}>{slot.pos}</div> 
+                      <div className="player-info" style={{ fontSize: '0.95rem' }}>
                         {slot.player ? (
                           <span>
-                            {slot.player.name} <span style={{ fontSize: '0.85em', color: '#555' }}>(⭐ {slot.player.rating})</span> <span style={{ color: '#2e7d32', fontWeight: 'bold' }}>(${slot.player.boughtFor})</span>
-                            {slot.pos !== slot.player.position && <span style={{ fontSize: '0.75em', color: 'gray' }}> (היה {slot.player.position})</span>}
+                            {slot.player.name} 
+                            <span className="player-rating-small">(⭐ {slot.player.rating})</span> 
+                            <span className="player-price">(${slot.player.boughtFor})</span>
+                            {slot.pos !== slot.player.position && <span style={{ fontSize: '0.75em', color: 'var(--text-light)' }}> (היה {slot.player.position})</span>}
                           </span>
                         ) : (
                           <span style={{ color: '#aaa' }}>פנוי</span>
@@ -350,15 +352,16 @@ function App() {
           })}
         </div>
 
-        <div style={{ flex: '2 1 300px', border: '2px solid #ff9800', padding: '20px', borderRadius: '8px', textAlign: 'center', backgroundColor: '#fff8f0' }}>
+        {/* הזירה המרכזית */}
+        <div className="main-stage card">
           {gameState?.currentAuction.player ? (
             <div>
               {upcomingTurns.length > 0 && (
-                <div style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '8px', fontSize: '1em' }}>
+                <div className="order-alert">
                   <strong>סדר הצעות: </strong>
                   {upcomingTurns.map((name, idx) => (
                     <span key={idx}>
-                      <span style={{ color: idx === 0 ? 'green' : '#333', fontWeight: idx === 0 ? 'bold' : 'normal' }}>
+                      <span style={{ color: idx === 0 ? 'var(--secondary)' : 'var(--text-dark)', fontWeight: idx === 0 ? 'bold' : 'normal' }}>
                         {name} {idx === 0 && '(עכשיו)'}
                       </span>
                       {idx < upcomingTurns.length - 1 && ' ⬅️ '}
@@ -367,40 +370,42 @@ function App() {
                 </div>
               )}
 
-              <h2 style={{ color: '#ff9800', margin: '0', fontSize: '1.3em' }}>סיבוב {gameState.auctionIndex + 1}</h2>
-              <p style={{ fontSize: '1.1em', margin: '5px 0 0 0', fontWeight: 'bold' }}>עמדה: {gameState.currentAuction.player.position}</p>
+              <h2 className="sub-title">סיבוב {gameState.auctionIndex + 1}</h2>
+              <p style={{ fontSize: '1.2rem', margin: '10px 0 0 0', fontWeight: 'bold' }}>עמדה: {gameState.currentAuction.player.position}</p>
               
-              <h3 style={{ fontSize: '2.5em', margin: '15px 0 5px 0' }}>
+              <h3 style={{ fontSize: '3rem', margin: '20px 0 10px 0', textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
                 {gameState.currentAuction.player.name} {gameState.currentAuction.player.image}
               </h3>
-              <div style={{ fontSize: '1.3em', backgroundColor: '#ffd54f', display: 'inline-block', padding: '5px 15px', borderRadius: '20px', fontWeight: 'bold', border: '2px solid #ffb300' }}>
+              
+              <div className="rating-badge">
                 ⭐ דירוג 2K27: {gameState.currentAuction.player.rating}
               </div>
               
-              <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#fff', borderRadius: '8px' }}>
-                <h4 style={{ fontSize: '1.5em', color: '#2e7d32', margin: '0 0 10px 0' }}>
+              <div className="card" style={{ margin: '30px 0', backgroundColor: '#fff', border: '1px solid var(--border-color)' }}>
+                <h4 style={{ fontSize: '1.8rem', color: 'var(--secondary)', margin: '0 0 10px 0' }}>
                   הצעה נוכחית: {isFirstBid ? 'טרם הוגשה' : `$${currentHighest}`}
                 </h4>
-                <p style={{ fontSize: '1em', margin: 0 }}>
-                  מוביל: {gameState.currentAuction.highestBidder ? gameState.currentAuction.highestBidder : 'הצע 0$ כדי להשתלט על השחקן'}
+                <p style={{ fontSize: '1.1rem', margin: 0, color: 'var(--text-light)' }}>
+                  מוביל: <strong style={{color: 'var(--text-dark)'}}>{gameState.currentAuction.highestBidder ? gameState.currentAuction.highestBidder : 'הצע 0$ כדי להשתלט על השחקן'}</strong>
                 </p>
               </div>
 
-              <div style={{ padding: '15px', border: isMyTurn ? '2px solid green' : '1px solid transparent', borderRadius: '8px' }}>
-                <h3 style={{ color: isMyTurn ? 'green' : 'gray', margin: '0 0 5px 0', fontSize: '1.2em' }}>
+              <div className="card" style={{ border: isMyTurn ? '2px solid var(--secondary)' : '1px solid transparent', backgroundColor: isMyTurn ? '#f1f8e9' : 'transparent', boxShadow: 'none' }}>
+                <h3 style={{ color: isMyTurn ? 'var(--secondary)' : 'var(--text-light)', margin: '0 0 5px 0', fontSize: '1.4rem' }}>
                   {isMyTurn ? 'התור שלך!' : `ממתין להחלטה של ${currentTurnPlayer?.name || '...'}`}
                 </h3>
                 
-                <div style={{ fontSize: '2.2em', fontWeight: 'bold', color: timeLeft <= 5 ? 'red' : '#ff9800', margin: '5px 0 15px 0' }}>
+                {/* הטיימר מקבל קלאס של סכנה בשניות האחרונות */}
+                <div className={`timer-display ${timeLeft <= 5 ? 'timer-danger' : ''}`}>
                   ⏳ {timeLeft}
                 </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '5px' }}>
+                <div className="flex-center">
+                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
                     <button 
                       disabled={!canPlusOne}
                       onClick={() => handleBid(plusOneBid)}
-                      style={{ opacity: canPlusOne ? 1 : 0.5, padding: '10px 15px', fontSize: '16px', backgroundColor: '#2196f3', color: 'white', border: 'none', borderRadius: '4px', cursor: canPlusOne ? 'pointer' : 'not-allowed', fontWeight: 'bold' }}>
+                      className="btn btn-blue">
                       +1$ 
                     </button>
 
@@ -410,45 +415,34 @@ function App() {
                       onChange={(e) => setCustomBid(e.target.value)}
                       placeholder="הקלד סכום..."
                       disabled={!isMyTurn}
-                      style={{ width: '110px', padding: '10px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ccc' }}
+                      className="input-field"
+                      style={{ width: '130px' }}
                     />
                     <button 
                       disabled={!isMyTurn || !isValidCustom}
                       onClick={() => handleBid(Number(customBid))}
-                      style={{ opacity: (isMyTurn && isValidCustom) ? 1 : 0.5, padding: '10px 15px', fontSize: '16px', backgroundColor: '#4caf50', color: 'white', border: 'none', borderRadius: '4px', cursor: (isMyTurn && isValidCustom) ? 'pointer' : 'not-allowed' }}>
+                      className="btn btn-success">
                       הצע סכום
                     </button>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '10px', width: '100%', maxWidth: '250px' }}>
-                    <button 
-                      disabled={!isMyTurn}
-                      onClick={() => isFirstBid ? handleBid(0) : handleFold()}
-                      style={{ 
-                        flex: 1,
-                        opacity: isMyTurn ? 1 : 0.5, 
-                        padding: '10px', 
-                        fontSize: '16px', 
-                        backgroundColor: isFirstBid ? '#2196f3' : '#f44336', 
-                        color: 'white', 
-                        border: 'none', 
-                        borderRadius: '4px', 
-                        cursor: isMyTurn ? 'pointer' : 'not-allowed', 
-                        fontWeight: isFirstBid ? 'bold' : 'normal'
-                      }}>
-                      {isFirstBid ? 'הצע $0' : 'פרוש'}
-                    </button>
-                  </div>
+                  <button 
+                    disabled={!isMyTurn}
+                    onClick={() => isFirstBid ? handleBid(0) : handleFold()}
+                    className={`btn full-width ${isFirstBid ? 'btn-blue' : 'btn-danger'}`}
+                    style={{ maxWidth: '250px' }}>
+                    {isFirstBid ? 'הצע $0' : 'פרוש'}
+                  </button>
                 </div>
 
                 {isMyTurn && (
-                  <div style={{ marginTop: '15px' }}>
+                  <div style={{ marginTop: '20px' }}>
                     {isFirstBid && (
-                      <p style={{ fontSize: '0.9em', color: '#ff9800', fontWeight: 'bold', margin: '5px 0' }}>
+                      <p style={{ fontSize: '1rem', color: 'var(--primary)', fontWeight: 'bold', margin: '5px 0' }}>
                         ⚠️ המכרז נפתח! לחץ "הצע $0" כדי להעביר את התור ללא עלות.
                       </p>
                     )}
-                    <p style={{ fontSize: '0.85em', color: '#e91e63', fontWeight: 'bold', margin: '5px 0' }}>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--danger)', fontWeight: 'bold', margin: '5px 0' }}>
                       הצעה מקסימלית: ${maxAllowedBid}
                     </p>
                   </div>
