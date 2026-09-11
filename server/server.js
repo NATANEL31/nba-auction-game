@@ -18,14 +18,12 @@ app.use((req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
-// טעינת טבלת הדירוג
 const leaderboardPath = path.join(__dirname, 'leaderboard.json');
 let leaderboard = {};
 if (fs.existsSync(leaderboardPath)) {
     leaderboard = JSON.parse(fs.readFileSync(leaderboardPath, 'utf8'));
 }
 
-// טעינת בסיס נתוני המשתמשים (שם משתמש וסיסמה)
 const usersPath = path.join(__dirname, 'users.json');
 let usersDB = {};
 if (fs.existsSync(usersPath)) {
@@ -177,13 +175,17 @@ function setTurnTimer() {
     }, 1000);
 }
 
+// === הפונקציה שעודכנה: חיתוך דינמי לפי כמות משתתפים ===
 function initializeGamePlayers() {
     let selectedPlayers = [];
     const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
+    
+    // לוקחים N שחקנים מכל עמדה, בהתאם לכמות המשתתפים שחוברו
+    const numPlayersPerPosition = gameState.participants.length;
 
     for (const position in rawPlayersDB) {
         const shuffledPosition = shuffleArray([...rawPlayersDB[position]]);
-        const selectedFromPosition = shuffledPosition.slice(0, 3);
+        const selectedFromPosition = shuffledPosition.slice(0, numPlayersPerPosition);
         selectedPlayers.push(...selectedFromPosition);
     }
 
@@ -301,21 +303,18 @@ io.on('connection', (socket) => {
             return;
         }
 
-        // מערכת אימות סיסמאות
         if (usersDB[cleanName]) {
             if (usersDB[cleanName] !== password.trim()) {
                 socket.emit('error', 'סיסמה שגויה!');
                 return;
             }
         } else {
-            // יצירת משתמש חדש
             usersDB[cleanName] = password.trim();
             fs.writeFileSync(usersPath, JSON.stringify(usersDB));
         }
 
         const existingPlayer = gameState.participants.find(p => p.name === cleanName);
 
-        // חיבור מחדש למשתמש קיים במשחק
         if (existingPlayer) {
             const oldId = existingPlayer.id;
             existingPlayer.id = socket.id; 
