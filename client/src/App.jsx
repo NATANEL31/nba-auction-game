@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import './App.css'; // מייבאים את קובץ העיצוב החדש!
+import './App.css'; 
 
 const socket = io();
 
@@ -18,6 +18,13 @@ function App() {
   const [soldNotification, setSoldNotification] = useState(null);
   
   const [timeLeft, setTimeLeft] = useState(15);
+  const [selectedDB, setSelectedDB] = useState('nba');
+
+  // מחליף את העיצוב בזמן אמת לפי מה שנבחר
+  const currentTheme = gameState?.gameStarted ? gameState.activeDB : selectedDB;
+  useEffect(() => {
+    document.body.className = currentTheme === 'maccabi' ? 'theme-maccabi' : 'theme-nba';
+  }, [currentTheme]);
 
   useEffect(() => {
     socket.on('updateState', (newState) => {
@@ -71,7 +78,7 @@ function App() {
   };
 
   const handleStartGame = () => {
-    socket.emit('startGame');
+    socket.emit('startGame', selectedDB);
   };
 
   const handleBid = (amount) => socket.emit('placeBid', amount);
@@ -83,12 +90,10 @@ function App() {
     }
   };
 
-  // מציג את ההתראה הקופצת (Toast)
   const NotificationPopup = () => soldNotification ? (
     <div className="toast-notification">{soldNotification}</div>
   ) : null;
 
-  // --- מסך התחברות ---
   if (!hasJoined) {
     return (
       <div className="app-container">
@@ -123,7 +128,6 @@ function App() {
     );
   }
 
-  // --- חדר המתנה וטבלת דירוג ---
   if (gameState && !gameState.gameStarted) {
     const sortedLeaderboard = Object.entries(gameState.leaderboard || {}).sort((a, b) => b[1] - a[1]);
 
@@ -145,6 +149,19 @@ function App() {
             </ul>
             {gameState.participants.length >= 2 ? (
               <div style={{ marginTop: '30px' }}>
+                
+                <div style={{ marginBottom: '15px', backgroundColor: 'var(--bg-color)', padding: '15px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                  <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px' }}>בחר מאגר ועיצוב:</label>
+                  <select 
+                    value={selectedDB} 
+                    onChange={(e) => setSelectedDB(e.target.value)}
+                    className="input-field"
+                  >
+                    <option value="nba">ליגת ה-NBA</option>
+                    <option value="maccabi">מכבי (ישראל)</option>
+                  </select>
+                </div>
+
                 <button onClick={handleStartGame} className="btn btn-success full-width">
                   התחל משחק!
                 </button>
@@ -155,8 +172,8 @@ function App() {
           </div>
 
           {sortedLeaderboard.length > 0 && (
-            <div className="card" style={{ borderColor: 'var(--primary)', backgroundColor: '#fffcf8' }}>
-              <h2 className="sub-title" style={{ borderColor: '#ffb300' }}>🏆 טבלת אלופים 🏆</h2>
+            <div className="card" style={{ borderColor: 'var(--primary)', backgroundColor: 'var(--bg-color)' }}>
+              <h2 className="sub-title" style={{ borderColor: 'var(--primary)' }}>🏆 טבלת אלופים 🏆</h2>
               <table className="leaderboard-table">
                 <tbody>
                   {sortedLeaderboard.map(([name, score], idx) => (
@@ -168,7 +185,7 @@ function App() {
                         {idx > 2 && `${idx + 1}. `} 
                         {name}
                       </td>
-                      <td style={{ fontWeight: 'bold', color: 'var(--secondary)' }}>
+                      <td style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
                         {score} נק'
                       </td>
                     </tr>
@@ -183,7 +200,6 @@ function App() {
     );
   }
 
-  // לוגיקות משחק
   const isGameOver = gameState?.auctionIndex > 0 && !gameState?.currentAuction?.player;
   const me = gameState?.participants.find(p => p.id === socket.id);
   
@@ -210,7 +226,6 @@ function App() {
     }
   };
 
-  // --- מסך סיכום המשחק ---
   if (isGameOver) {
     return (
       <div className="app-container">
@@ -225,12 +240,12 @@ function App() {
             const displayRoster = (isMe && myEditableRoster) ? myEditableRoster : p.roster;
             
             return (
-              <div key={p.id} className="card" style={{ borderColor: isMe ? 'var(--secondary)' : 'var(--border-color)', backgroundColor: isMe ? '#f1f8e9' : 'var(--card-bg)' }}>
+              <div key={p.id} className="card" style={{ borderColor: isMe ? 'var(--primary)' : 'var(--border-color)' }}>
                 <h3 style={{ margin: '0 0 10px 0', opacity: p.connected === false ? 0.5 : 1 }}>
                   {p.connected === false && '🔴 '}
                   {p.name} {isMe ? '(הקבוצה שלך)' : ''}
                 </h3>
-                <p style={{ color: 'var(--secondary)', fontWeight: 'bold' }}>עודף בקופה: ${p.budget}</p>
+                <p className="budget-text">עודף בקופה: ${p.budget}</p>
                 
                 <div className="roster-list">
                   {displayRoster.map((slot, idx) => (
@@ -278,7 +293,6 @@ function App() {
     );
   }
 
-  // --- מסך המכרז הפעיל ---
   const isMyTurn = gameState?.currentAuction?.currentTurnId === socket.id;
   const currentTurnPlayer = gameState?.participants.find(p => p.id === gameState?.currentAuction?.currentTurnId);
   
@@ -312,7 +326,6 @@ function App() {
       
       <div className="arena-layout">
         
-        {/* סיידבר - המשתתפים */}
         <div className="sidebar card">
           <h2 className="sub-title">משתתפים מחוברים</h2>
           {gameState?.participants.map(p => {
@@ -325,7 +338,7 @@ function App() {
                   {p.name} {p.id === socket.id ? '(אתה)' : ''}
                   {p.connected === false && <span style={{ color: 'var(--danger)', fontSize: '0.8em' }}> (מנותק)</span>}
                 </strong>
-                <p style={{ margin: '5px 0', color: 'var(--secondary)', fontWeight: 'bold' }}>תקציב נותר: ${p.budget}</p>
+                <p className="budget-text" style={{ margin: '5px 0' }}>תקציב נותר: ${p.budget}</p>
                 <p style={{ margin: 0, fontSize: '0.9em', color: 'var(--text-light)' }}>שחקנים ({filledCount}/5):</p>
                 
                 <div className="roster-list">
@@ -352,7 +365,6 @@ function App() {
           })}
         </div>
 
-        {/* הזירה המרכזית */}
         <div className="main-stage card">
           {gameState?.currentAuction.player ? (
             <div>
@@ -378,11 +390,11 @@ function App() {
               </h3>
               
               <div className="rating-badge">
-                ⭐ דירוג 2K27: {gameState.currentAuction.player.rating}
+                ⭐ דירוג משוער: {gameState.currentAuction.player.rating}
               </div>
               
-              <div className="card" style={{ margin: '30px 0', backgroundColor: '#fff', border: '1px solid var(--border-color)' }}>
-                <h4 style={{ fontSize: '1.8rem', color: 'var(--secondary)', margin: '0 0 10px 0' }}>
+              <div className="card" style={{ margin: '30px 0', backgroundColor: 'var(--card-bg)', border: '1px solid var(--border-color)' }}>
+                <h4 style={{ fontSize: '1.8rem', color: 'var(--primary)', margin: '0 0 10px 0' }}>
                   הצעה נוכחית: {isFirstBid ? 'טרם הוגשה' : `$${currentHighest}`}
                 </h4>
                 <p style={{ fontSize: '1.1rem', margin: 0, color: 'var(--text-light)' }}>
@@ -390,12 +402,11 @@ function App() {
                 </p>
               </div>
 
-              <div className="card" style={{ border: isMyTurn ? '2px solid var(--secondary)' : '1px solid transparent', backgroundColor: isMyTurn ? '#f1f8e9' : 'transparent', boxShadow: 'none' }}>
+              <div className="card" style={{ border: isMyTurn ? '2px solid var(--secondary)' : '1px solid transparent', backgroundColor: isMyTurn ? 'var(--bg-color)' : 'transparent', boxShadow: 'none' }}>
                 <h3 style={{ color: isMyTurn ? 'var(--secondary)' : 'var(--text-light)', margin: '0 0 5px 0', fontSize: '1.4rem' }}>
                   {isMyTurn ? 'התור שלך!' : `ממתין להחלטה של ${currentTurnPlayer?.name || '...'}`}
                 </h3>
                 
-                {/* הטיימר מקבל קלאס של סכנה בשניות האחרונות */}
                 <div className={`timer-display ${timeLeft <= 5 ? 'timer-danger' : ''}`}>
                   ⏳ {timeLeft}
                 </div>
@@ -454,8 +465,7 @@ function App() {
           )}
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
 export default App;
