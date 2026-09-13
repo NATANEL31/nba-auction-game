@@ -18,6 +18,7 @@ function App() {
   const [soldNotification, setSoldNotification] = useState(null);
   
   const [timeLeft, setTimeLeft] = useState(15);
+  const [selectedPack, setSelectedPack] = useState('nba');
 
   useEffect(() => {
     socket.on('updateState', (newState) => {
@@ -71,7 +72,7 @@ function App() {
   };
 
   const handleStartGame = () => {
-    socket.emit('startGame');
+    socket.emit('startGame', selectedPack);
   };
 
   const handleBid = (amount) => socket.emit('placeBid', amount);
@@ -145,6 +146,21 @@ function App() {
             </ul>
             {gameState.participants.length >= 2 ? (
               <div style={{ marginTop: '30px' }}>
+                <div style={{ marginBottom: '15px', textAlign: 'center' }}>
+                  <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
+                    בחר חבילת שחקנים:
+                  </label>
+                  <select 
+                    value={selectedPack} 
+                    onChange={(e) => setSelectedPack(e.target.value)}
+                    className="input-field"
+                    style={{ width: '100%', cursor: 'pointer' }}
+                  >
+                    <option value="nba">ליגת ה-NBA 🏀</option>
+                    <option value="maccabi">מכבי תל אביב (הווה ואגדות עבר) 🟡</option>
+                  </select>
+                </div>
+                
                 <button onClick={handleStartGame} className="btn btn-success full-width">
                   התחל משחק!
                 </button>

@@ -30,7 +30,7 @@ if (fs.existsSync(usersPath)) {
     usersDB = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
 }
 
-const rawPlayersData = {
+const rawPlayersDataNBA = {
     PG: [
         { name: "לוקה דונצ'יץ'", rating: 97 }, { name: "סטף קרי", rating: 96 }, { name: "שיי גילג'ס-אלכסנדר", rating: 96 }, { name: "ג'יילן ברנסון", rating: 93 }, 
         { name: "טייריס הליברטון", rating: 90 }, { name: "ג'ה מוראנט", rating: 92 }, { name: "דמיאן לילארד", rating: 89 }, { name: "טריי יאנג", rating: 89 }, 
@@ -115,21 +115,58 @@ const rawPlayersData = {
         { name: "אל הורפורד", rating: 79 }, { name: "אייזאה סטיוארט", rating: 78 }, { name: "מרווין באגלי", rating: 77 }, { name: "ייבס מיסי", rating: 76 }
     ]
 };
-
-const rawPlayersDB = {};
-let globalId = 1;
-
-for (const position in rawPlayersData) {
-    rawPlayersDB[position] = rawPlayersData[position].map(player => ({
-        id: globalId++,
-        name: player.name,
-        rating: player.rating,
-        position: position,
-        image: "🏀" 
-    }));
-}
+const rawPlayersDataMaccabi = {
+    PG: [
+        { name: "טייריס רייס", rating: 92 }, { name: "יוגב אוחיון", rating: 85 }, { name: "יובל נעימי", rating: 78 }, { name: "ג'ורדן פארמר", rating: 89 }, { name: "טיילור רוצ'סטי", rating: 88 }, { name: "גל מקל", rating: 83 }, { name: "נוריס קול", rating: 87 }, { name: "פייר ג'קסון", rating: 86 }, { name: "סקוטי וילבקין", rating: 94 }, { name: "נייט וולטרס", rating: 82 }, { name: "ארון ג'קסון", rating: 84 }, { name: "כריס ג'ונס", rating: 86 }, { name: "קינן אוונס", rating: 91 }, { name: "יפתח זיו", rating: 79 }, { name: "לורנזו בראון", rating: 93 }, { name: "תמיר בלאט", rating: 85 }, { name: "רוקאס יוקובאיטיס", rating: 83 }, { name: "סייבן לי", rating: 82 }, { name: "עומר מאייר", rating: 76 }
+    ],
+    SG: [
+        { name: "ריקי היקמן", rating: 90 }, { name: "סילבן לנדסברג", rating: 84 }, { name: "ג'רמי פארגו", rating: 91 }, { name: "אנדרו גאודלוק", rating: 88 }, { name: "די.ג'יי. סילי", rating: 82 }, { name: "דגן יבזורי", rating: 78 }, { name: "ג'ון דיברתולומיאו", rating: 87 }, { name: "מייקל רול", rating: 85 }, { name: "קנדריק ריי", rating: 80 }, { name: "טיילר דורסי", rating: 88 }, { name: "פרדריק בורדיון", rating: 77 }, { name: "קיירי תומאס", rating: 79 }, { name: "ווייד בולדווין", rating: 94 }, { name: "דארן היליארד", rating: 83 }, { name: "אוסטין הולינס", rating: 80 }, { name: "ג'יילן אדאמס", rating: 82 }, { name: "ג'ו תומאסון", rating: 78 }
+    ],
+    SF: [
+        { name: "ליוואי רנדולף", rating: 85 }, { name: "דווין סמית'", rating: 93 }, { name: "ג'ו אינגלס", rating: 88 }, { name: "גיא פניני", rating: 87 }, { name: "נייט לינהארט", rating: 80 }, { name: "סוני ווימס", rating: 85 }, { name: "דיאנדרה קיין", rating: 86 }, { name: "יובל זוסמן", rating: 82 }, { name: "כארם משעור", rating: 78 }, { name: "דני אבדיה", rating: 89 }, { name: "אלייז'ה בראיינט", rating: 88 }, { name: "סנדי כהן", rating: 77 }, { name: "ג'יימס נאנלי", rating: 88 }, { name: "בונזי קולסון", rating: 91 }, { name: "רפי מנקו", rating: 81 }, { name: "אנטוניוס קליבלנד", rating: 83 }, { name: "מריאל שאיוק", rating: 84 }, { name: "קית לנגפורד", rating: 92 }
+    ],
+    PF: [
+        { name: "דייוויד בלו", rating: 91 }, { name: "ג'ייק כהן", rating: 84 }, { name: "בריאן רנדל", rating: 89 }, { name: "ג'ו אלכסנדר", rating: 82 }, { name: "דראגן בנדר", rating: 79 }, { name: "ויקטור ראד", rating: 83 }, { name: "קווינסי מילר", rating: 85 }, { name: "ג'ונה בולדן", rating: 84 }, { name: "ג'וני אובראיינט", rating: 86 }, { name: "אנג'לו קלויארו", rating: 83 }, { name: "עומרי כספי", rating: 89 }, { name: "קווינסי אייסי", rating: 80 }, { name: "עוז בלייזר", rating: 79 }, { name: "טי.ג'יי. קליין", rating: 78 }, { name: "דריק ויליאמס", rating: 85 }, { name: "אלכס פוית'רס", rating: 86 }, { name: "ג'רל מרטין", rating: 84 }, { name: "סולימאן בריימו", rating: 81 }, { name: "ג'יימס ווב", rating: 83 }, { name: "ג'יילן הורד", rating: 86 }, { name: "וויל ריימן", rating: 77 }
+    ],
+    C: [
+        { name: "שון ג'יימס", rating: 89 }, { name: "סופוקליס שחורציאניטיס", rating: 91 }, { name: "אלכס טיוס", rating: 90 }, { name: "אנדריאה ז'יז'יץ'", rating: 82 }, { name: "בן אלטיט", rating: 74 }, { name: "טרבור אמבקווה", rating: 83 }, { name: "ויטור פאבראני", rating: 80 }, { name: "איתי שגב", rating: 77 }, { name: "ריצ'רד הנדריקס", rating: 88 }, { name: "ארינזה אונואקו", rating: 79 }, { name: "סדריק סימונס", rating: 78 }, { name: "קולטון אייברסון", rating: 82 }, { name: "מאיק צירבס", rating: 84 }, { name: "נמרוד לוי", rating: 79 }, { name: "טאריק בלאק", rating: 86 }, { name: "אותלו האנטר", rating: 88 }, { name: "ג'יילן ריינולדס", rating: 87 }, { name: "אמארה סטודמאייר", rating: 86 }, { name: "אנטה ז'יז'יץ'", rating: 88 }, { name: "מת'יאס לסור", rating: 87 }, { name: "רומן סורקין", rating: 89 }, { name: "ג'וש ניבו", rating: 91 }, { name: "חסיאל ריברו", rating: 85 }, { name: "ווניין גבריאל", rating: 84 }
+    ]
+};
 
 let playersDB = [];
+
+function initializeGamePlayers(selectedPack) {
+    let selectedPlayers = [];
+    const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
+    
+    // קובע איזה מאגר נטען - מכבי או NBA
+    const dataSource = selectedPack === 'maccabi' ? rawPlayersDataMaccabi : rawPlayersDataNBA;
+    const playerImage = selectedPack === 'maccabi' ? "🟡" : "🏀";
+
+    // בונה מאגר זמני בהתאם לבחירה
+    const tempDB = {};
+    let tempGlobalId = 1;
+    for (const position in dataSource) {
+        tempDB[position] = dataSource[position].map(player => ({
+            id: tempGlobalId++,
+            name: player.name,
+            rating: player.rating,
+            position: position,
+            image: playerImage
+        }));
+    }
+
+    const numPlayersPerPosition = gameState.participants.length;
+
+    for (const position in tempDB) {
+        const shuffledPosition = shuffleArray([...tempDB[position]]);
+        const selectedFromPosition = shuffledPosition.slice(0, numPlayersPerPosition);
+        selectedPlayers.push(...selectedFromPosition);
+    }
+
+    playersDB = shuffleArray(selectedPlayers);
+}
+
 
 let gameState = {
     gameStarted: false,
@@ -176,21 +213,7 @@ function setTurnTimer() {
 }
 
 // === הפונקציה שעודכנה: חיתוך דינמי לפי כמות משתתפים ===
-function initializeGamePlayers() {
-    let selectedPlayers = [];
-    const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
-    
-    // לוקחים N שחקנים מכל עמדה, בהתאם לכמות המשתתפים שחוברו
-    const numPlayersPerPosition = gameState.participants.length;
 
-    for (const position in rawPlayersDB) {
-        const shuffledPosition = shuffleArray([...rawPlayersDB[position]]);
-        const selectedFromPosition = shuffledPosition.slice(0, numPlayersPerPosition);
-        selectedPlayers.push(...selectedFromPosition);
-    }
-
-    playersDB = shuffleArray(selectedPlayers);
-}
 
 function handleAuctionEnd() {
     clearTurnTimer(); 
@@ -356,11 +379,11 @@ io.on('connection', (socket) => {
         io.emit('updateState', gameState);
     });
 
-    socket.on('startGame', () => {
+    socket.on('startGame', (selectedPack) => {
         if (!gameState.gameStarted && gameState.participants.length > 0) {
             gameState.gameStarted = true;
             gameState.auctionIndex = 0;
-            initializeGamePlayers();
+            initializeGamePlayers(selectedPack || 'nba'); 
             startNextAuction();
         }
     });
