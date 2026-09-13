@@ -1,3 +1,4 @@
+import React from 'react';
 import SquadCard from '../components/SquadCard';
 
 const TURN_SECONDS = 15;
@@ -13,6 +14,8 @@ export default function ArenaScreen({
   onCustomBidChange,
   onBid,
   onFold,
+  isHost,
+  onEndGame
 }) {
   const auction = gameState.currentAuction;
   const player = auction.player;
@@ -33,7 +36,6 @@ export default function ArenaScreen({
     Number(customBid) > currentHighest &&
     Number(customBid) <= maxAllowedBid;
 
-  // סדר ההצעות, מסודר כך שהתור הנוכחי ראשון
   const activeBidderIds = auction.activeBidders || [];
   const currentTurnIdx = activeBidderIds.indexOf(auction.currentTurnId);
   const upcomingTurns = [];
@@ -60,16 +62,20 @@ export default function ArenaScreen({
     <div className="app-shell">
       <header className="masthead">
         <h1 className="masthead__title">זירת המכרז</h1>
-        <div className="masthead__meta">
+        <div className="masthead__meta" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <span className="pill pill--accent tnum">
             סיבוב {gameState.auctionIndex + 1}
           </span>
           {me && <span className="pill pill--money tnum">התקציב שלי ${me.budget}</span>}
+          {isHost && (
+             <button className="btn btn--danger btn--sm" onClick={onEndGame}>
+                סגור משחק ❌
+             </button>
+          )}
         </div>
       </header>
 
       <div className="arena">
-        {/* ================= הבמה: השחקן + המכרז ================= */}
         <div className="arena__stage">
           {upcomingTurns.length > 0 && (
             <div className="turn-strip">
@@ -92,7 +98,6 @@ export default function ArenaScreen({
             </div>
           )}
 
-          {/* --- כרטיס השחקן שעל המגרש --- */}
           <section className="panel">
             <header className="panel__head">
               <h2 className="panel__title">השחקן במכרז</h2>
@@ -122,7 +127,6 @@ export default function ArenaScreen({
             </div>
           </section>
 
-          {/* --- כרטיס המכרז: הצעה, מוביל, טיימר, פעולות --- */}
           <section className={`panel ${isMyTurn ? 'panel--accent' : ''}`}>
             <header className="panel__head">
               <h2 className="panel__title">המכרז</h2>
@@ -213,11 +217,11 @@ export default function ArenaScreen({
 
                   <button
                     type="button"
-                    className={`btn ${isFirstBid ? 'btn--ghost' : 'btn--danger'}`}
+                    className={`btn ${isFirstBid ? 'btn--success' : 'btn--danger'}`}
                     disabled={!isMyTurn}
                     onClick={() => (isFirstBid ? onBid(0) : onFold())}
                   >
-                    {isFirstBid ? 'העבר תור ($0)' : 'פרוש'}
+                    {isFirstBid ? 'הצע 0$' : 'פרוש'}
                   </button>
                 </div>
               </form>
@@ -229,7 +233,7 @@ export default function ArenaScreen({
                   </p>
                   {isFirstBid && (
                     <p className="bid-note">
-                      המכרז נפתח — "העבר תור" מעביר הלאה ללא עלות.
+                      המכרז נפתח — לחץ על <strong>"הצע 0$"</strong> כדי להגיש הצעת פתיחה על סך $0 ולהעביר את התור.
                     </p>
                   )}
                 </>
@@ -238,7 +242,6 @@ export default function ArenaScreen({
           </section>
         </div>
 
-        {/* ================= החמישייה שלי ================= */}
         <div className="arena__mine">
           {me && myRoster && (
             <SquadCard
@@ -250,7 +253,6 @@ export default function ArenaScreen({
           )}
         </div>
 
-        {/* ================= יריבים ================= */}
         <div className="arena__rivals">
           <div className="rivals-list">
             {rivals.map((p) => (

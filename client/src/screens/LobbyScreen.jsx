@@ -1,3 +1,5 @@
+import React from 'react';
+
 const MEDALS = ['🥇', '🥈', '🥉'];
 const MIN_PLAYERS = 2;
 
@@ -8,9 +10,12 @@ export default function LobbyScreen({
   onPackChange,
   onStartGame,
   myId,
+  hostId,
+  onKick
 }) {
   const ranked = Object.entries(leaderboard || {}).sort((a, b) => b[1] - a[1]);
   const canStart = participants.length >= MIN_PLAYERS;
+  const isHost = myId === hostId;
 
   return (
     <div className="app-shell">
@@ -44,42 +49,59 @@ export default function LobbyScreen({
                   />
                   <span>{p.name}</span>
                   {p.id === myId && <span className="player-row__you">אתה</span>}
-                  {isOffline && <span className="player-row__tag">מנותק</span>}
+                  {p.id === hostId && <span className="pill pill--accent" style={{marginLeft: '8px'}}>👑 מנהל</span>}
+                  {isOffline && <span className="player-row__tag" style={{marginLeft: '8px'}}>מנותק</span>}
+                  
+                  {isHost && p.id !== myId && (
+                      <button 
+                          className="btn btn--danger btn--sm" 
+                          style={{marginRight: 'auto'}} 
+                          onClick={() => onKick(p.id)}
+                      >
+                          הוצא
+                      </button>
+                  )}
                 </li>
               );
             })}
           </ul>
 
           <div className="panel__section" style={{ borderTop: '1px solid var(--border)' }}>
-            {canStart ? (
-              <div className="stack">
-                <div className="field">
-                  <label className="field__label" htmlFor="pack">
-                    חבילת שחקנים
-                  </label>
-                  <select
-                    id="pack"
-                    className="input select"
-                    value={selectedPack}
-                    onChange={(e) => onPackChange(e.target.value)}
-                  >
-                    <option value="nba">ליגת ה-NBA 🏀</option>
-                    <option value="maccabi">מכבי תל אביב — הווה ואגדות 💛</option>
-                  </select>
-                </div>
+            {isHost ? (
+              canStart ? (
+                <div className="stack">
+                  <div className="field">
+                    <label className="field__label" htmlFor="pack">
+                      חבילת שחקנים
+                    </label>
+                    <select
+                      id="pack"
+                      className="input select"
+                      value={selectedPack}
+                      onChange={(e) => onPackChange(e.target.value)}
+                    >
+                      <option value="nba">ליגת ה-NBA 🏀</option>
+                      <option value="maccabi">מכבי תל אביב — הווה ואגדות 💛</option>
+                    </select>
+                  </div>
 
-                <button
-                  type="button"
-                  className="btn btn--primary btn--lg btn--block"
-                  onClick={onStartGame}
-                >
-                  התחל משחק
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    className="btn btn--primary btn--lg btn--block"
+                    onClick={onStartGame}
+                  >
+                    התחל משחק
+                  </button>
+                </div>
+              ) : (
+                <p className="empty-note">
+                  ממתין לשחקנים נוספים… (דרושים {MIN_PLAYERS} לפחות כדי להתחיל)
+                </p>
+              )
             ) : (
-              <p className="empty-note">
-                ממתין לשחקנים נוספים… (דרושים {MIN_PLAYERS} לפחות)
-              </p>
+                <p className="empty-note">
+                  ממתין למנהל המשחק ({participants.find(p => p.id === hostId)?.name}) שיתחיל את המכרז...
+                </p>
             )}
           </div>
         </section>

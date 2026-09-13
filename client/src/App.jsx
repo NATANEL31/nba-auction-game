@@ -30,13 +30,11 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(15);
   const [selectedPack, setSelectedPack] = useState('nba');
 
-  // --- ערכת נושא: מוחלת על <html> כדי שכל הטוקנים יתחלפו ---
   useEffect(() => {
     const theme = gameState?.currentPack === 'maccabi' ? 'maccabi' : 'nba';
     document.documentElement.dataset.theme = theme;
   }, [gameState?.currentPack]);
 
-  // --- חיבור לשרת ---
   useEffect(() => {
     let timeoutId;
 
@@ -59,6 +57,13 @@ function App() {
       setErrorMsg(msg);
       setHasJoined(false);
     });
+    
+    // מאזין לאירוע זריקה על ידי מנהל המשחק
+    socket.on('kicked', (msg) => {
+      setErrorMsg(msg);
+      setHasJoined(false);
+      setGameState(null);
+    });
 
     socket.on('playerSold', (data) => {
       setSoldNotification(`${data.playerName} נחתם על ידי ${data.winnerName}! 🎉`);
@@ -71,21 +76,18 @@ function App() {
       socket.off('updateState');
       socket.off('timerUpdate');
       socket.off('error');
+      socket.off('kicked');
       socket.off('playerSold');
       clearTimeout(timeoutId);
     };
   }, []);
 
-  // --- נגזרות מצב ---
   const isGameOver =
     gameState?.auctionIndex > 0 && !gameState?.currentAuction?.player;
   const me = gameState?.participants.find((p) => p.id === socket.id);
 
-  // החמישייה שלי לעריכה: myEditableRoster הוא override בלבד,
-  // כל עוד לא סידרתי מחדש מציגים את מה שהגיע מהשרת.
   const myRoster = myEditableRoster ?? me?.roster ?? null;
 
-  // --- פעולות ---
   const handleJoin = () => {
     if (username.trim() === '' || password.trim() === '') {
       setErrorMsg('נא למלא שם משתמש וסיסמה');
@@ -105,6 +107,14 @@ function App() {
   const handleStartGame = () => socket.emit('startGame', selectedPack);
   const handleBid = (amount) => socket.emit('placeBid', amount);
   const handleFold = () => socket.emit('fold');
+  
+  // פעולות של מנהל בלבד
+  const handleKick = (playerId) => socket.emit('kickPlayer', playerId);
+  const handleEndGameEarly = () => {
+    if (window.confirm('האם אתה בטוח שברצונך לסיים את המשחק עבור כולם ולחזור ללובי?')) {
+      socket.emit('endGameEarly');
+    }
+  };
 
   const handleDeclareWinner = (winnerName) => {
     if (window.confirm(`האם אתם מסכימים להכתיר את ${winnerName} כזוכה של המשחק הזה?`)) {
@@ -128,7 +138,6 @@ function App() {
     if (myRoster) socket.emit('rearrangeRoster', myRoster);
   };
 
-  // --- ניתוב מסכים ---
   if (!hasJoined) {
     return (
       <LoginScreen
@@ -160,6 +169,8 @@ function App() {
         onPackChange={setSelectedPack}
         onStartGame={handleStartGame}
         myId={socket.id}
+        hostId={gameState.hostId}
+        onKick={handleKick}
       />
     );
   }
@@ -202,6 +213,8 @@ function App() {
         onCustomBidChange={setCustomBid}
         onBid={handleBid}
         onFold={handleFold}
+        isHost={gameState.hostId === socket.id}
+        onEndGame={handleEndGameEarly}
       />
     </>
   );
