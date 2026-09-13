@@ -163,3 +163,48 @@ body.theme-maccabi .rating-badge { background: var(--secondary); border: 2px sol
 table.leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
 .leaderboard-table tr { border-bottom: 1px solid var(--border-color); }
 .leaderboard-table td { padding: 12px; font-size: 1.2rem;}
+
+/* --- ערכת נושא: מכבי תל אביב --- */
+.theme-maccabi {
+  --primary: #0033a0;       /* כחול כהה מכבי */
+  --secondary: #ffb300;     /* צהוב מכבי */
+  --card-bg: #fdfdff;       /* רקע לבן כמעט נקי */
+  --text-dark: #002277;
+  --border-color: #ffb300;
+  --bg-color: #eef2f9;      /* רקע כללי של האפליקציה ברוח כחלחלה-לבנה */
+}
+
+/* עיצובי טקסט מיוחדים למכבי */
+.theme-maccabi .main-title {
+  color: #0033a0;
+  text-shadow: 2px 2px 0px #ffb300;
+}
+
+/* כפתורים מותאמים */
+.theme-maccabi .btn-primary,
+.theme-maccabi .btn-success {
+  background-color: #0033a0;
+  color: #ffffff;
+  border: 2px solid #ffb300;
+}
+
+.theme-maccabi .btn-primary:hover,
+.theme-maccabi .btn-success:hover {
+  background-color: #002277;
+  border-color: #e6a200;
+}
+
+.theme-maccabi .btn-blue {
+  background-color: #ffb300;
+  color: #0033a0;
+  font-weight: bold;
+}
+
+.theme-maccabi .btn-blue:hover {
+  background-color: #e6a200;
+}
+
+.theme-maccabi .leaderboard-table th {
+  background-color: #0033a0;
+  color: #ffb300;
+}

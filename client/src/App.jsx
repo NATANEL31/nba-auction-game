@@ -20,7 +20,12 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(15);
   const [selectedPack, setSelectedPack] = useState('nba');
 
+  const isMaccabiTheme = gameState?.currentPack === 'maccabi';
+  const themeClass = isMaccabiTheme ? 'theme-maccabi' : '';
+
   useEffect(() => {
+    let timeoutId; // <-- נוסיף משתנה מקומי לשמירת הטיימר
+
     socket.on('updateState', (newState) => {
       setGameState(newState);
       setCustomBid('');
@@ -44,9 +49,10 @@ function App() {
     });
 
     socket.on('playerSold', (data) => {
-      setSoldNotification(`${data.playerName} נדגם על ידי ${data.winnerName}! 🏀`);
+      setSoldNotification(`${data.playerName} נדגם על ידי ${data.winnerName}! 🎉`);
       
-      setTimeout(() => {
+      clearTimeout(timeoutId); // <-- מנקה את הטיימר הקודם (מונע קפיצות כפולות)
+      timeoutId = setTimeout(() => {
         setSoldNotification(null);
       }, 4000); 
     });
@@ -56,6 +62,7 @@ function App() {
       socket.off('timerUpdate');
       socket.off('error');
       socket.off('playerSold');
+      clearTimeout(timeoutId); // למקרה שהקומפוננטה יוצאת
     };
   }, []);
 
@@ -92,7 +99,7 @@ function App() {
   // --- מסך התחברות ---
   if (!hasJoined) {
     return (
-      <div className="app-container">
+      <div className={`app-container ${themeClass}`}>
         <div className="card" style={{ maxWidth: '400px', margin: '50px auto' }}>
           <h1 className="main-title">מכרז 🏀</h1>
           {errorMsg && <p style={{ color: 'var(--danger)', fontWeight: 'bold', textAlign: 'center' }}>{errorMsg}</p>}
@@ -129,7 +136,7 @@ function App() {
     const sortedLeaderboard = Object.entries(gameState.leaderboard || {}).sort((a, b) => b[1] - a[1]);
 
     return (
-      <div className="app-container">
+      <div className={`app-container ${themeClass}`}>
         <h1 className="main-title">מכרז 🏀 - חדר המתנה</h1>
         
         <div className="grid-container" style={{ marginTop: '30px' }}>
@@ -229,7 +236,7 @@ function App() {
   // --- מסך סיכום המשחק ---
   if (isGameOver) {
     return (
-      <div className="app-container">
+      <div className={`app-container ${themeClass}`}>
         <NotificationPopup />
 
         <h1 className="main-title">המשחק הסתיים! 🎉</h1>
@@ -321,7 +328,7 @@ function App() {
   }
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${themeClass}`}>
       <NotificationPopup />
 
       <h1 className="main-title">זירת המכרז 🏀</h1>

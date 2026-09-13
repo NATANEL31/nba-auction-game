@@ -170,6 +170,7 @@ function initializeGamePlayers(selectedPack) {
 
 let gameState = {
     gameStarted: false,
+    currentPack: 'nba',
     participants: [],
     auctionIndex: 0,
     currentAuction: {
@@ -382,8 +383,9 @@ io.on('connection', (socket) => {
     socket.on('startGame', (selectedPack) => {
         if (!gameState.gameStarted && gameState.participants.length > 0) {
             gameState.gameStarted = true;
+            gameState.currentPack = selectedPack || 'nba'; // <-- מעדכן את החבילה בסטייט
             gameState.auctionIndex = 0;
-            initializeGamePlayers(selectedPack || 'nba'); 
+            initializeGamePlayers(selectedPack || 'nba');
             startNextAuction();
         }
     });
