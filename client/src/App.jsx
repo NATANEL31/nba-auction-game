@@ -91,6 +91,10 @@ function App() {
     }
   };
 
+  // מציג את ההתראה הקופצת (Toast)
+  const NotificationPopup = () => soldNotification ? (
+    <div className="toast-notification">{soldNotification}</div>
+  ) : null;
 
   // --- מסך התחברות ---
   if (!hasJoined) {
@@ -233,7 +237,7 @@ function App() {
   if (isGameOver) {
     return (
       <div className={`app-container ${themeClass}`}>
-        {soldNotification && <div className="toast-notification">{soldNotification}</div>}
+        <NotificationPopup />
 
         <h1 className="main-title">המשחק הסתיים! 🎉</h1>
         <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>סיכום קבוצות והכרזת מנצח</h2>
@@ -325,7 +329,7 @@ function App() {
 
   return (
     <div className={`app-container ${themeClass}`}>
-      {soldNotification && <div className="toast-notification">{soldNotification}</div>}
+      <NotificationPopup />
 
       <h1 className="main-title">זירת המכרז 🏀</h1>
       
