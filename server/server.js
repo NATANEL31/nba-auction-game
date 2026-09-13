@@ -117,7 +117,7 @@ const rawPlayersDataNBA = {
 };
 const rawPlayersDataMaccabi = {
     PG: [
-        { name: "טייריס רייס", rating: 92 }, { name: "יוגב אוחיון", rating: 85 }, { name: "יובל נעימי", rating: 78 }, { name: "ג'ורדן פארמר", rating: 89 }, { name: "טיילור רוצ'סטי", rating: 88 }, { name: "גל מקל", rating: 83 }, { name: "נוריס קול", rating: 87 }, { name: "פייר ג'קסון", rating: 86 }, { name: "סקוטי וילבקין", rating: 94 }, { name: "נייט וולטרס", rating: 82 }, { name: "ארון ג'קסון", rating: 84 }, { name: "כריס ג'ונס", rating: 86 }, { name: "קינן אוונס", rating: 91 }, { name: "יפתח זיו", rating: 79 }, { name: "לורנזו בראון", rating: 93 }, { name: "תמיר בלאט", rating: 85 }, { name: "רוקאס יוקובאיטיס", rating: 83 }, { name: "סייבן לי", rating: 82 }, { name: "עומר מאייר", rating: 76 }
+        { name: "טייריס רייס", rating: 92 }, { name: "יוגב אוחיון", rating: 85 }, { name: "יובל נעימי", rating: 78 }, { name: "ג'ורדן פארמר", rating: 89 }, { name: "טיילור רוצ'סטי", rating: 88 }, { name: "גל מקל", rating: 83 }, { name: "נוריס קול", rating: 87 }, { name: "פייר ג'קסון", rating: 86 }, { name: "סקוטי וילבקין", rating: 94 }, { name: "נייט וולטרס", rating: 82 }, { name: "ארון ג'קסון", rating: 84 }, { name: "כריס ג'ונס", rating: 86 }, { name: "קינן אוונס", rating: 91 }, { name: "יפתח זיו", rating: 79 }, { name: "לורנזו בראון", rating: 93 }, { name: "תמיר בלאט", rating: 85 }, { name: "רוקאס יוקובאיטיס", rating: 83 }, { name: "עומר מאייר", rating: 76 }
     ],
     SG: [
         { name: "ריקי היקמן", rating: 90 }, { name: "סילבן לנדסברג", rating: 84 }, { name: "ג'רמי פארגו", rating: 91 }, { name: "אנדרו גאודלוק", rating: 88 }, { name: "די.ג'יי. סילי", rating: 82 }, { name: "דגן יבזורי", rating: 78 }, { name: "ג'ון דיברתולומיאו", rating: 87 }, { name: "מייקל רול", rating: 85 }, { name: "קנדריק ריי", rating: 80 }, { name: "טיילר דורסי", rating: 88 }, { name: "פרדריק בורדיון", rating: 77 }, { name: "קיירי תומאס", rating: 79 }, { name: "ווייד בולדווין", rating: 94 }, { name: "דארן היליארד", rating: 83 }, { name: "אוסטין הולינס", rating: 80 }, { name: "ג'יילן אדאמס", rating: 82 }, { name: "ג'ו תומאסון", rating: 78 }
@@ -137,13 +137,20 @@ let playersDB = [];
 
 function initializeGamePlayers(selectedPack) {
     let selectedPlayers = [];
-    const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
     
-    // קובע איזה מאגר נטען - מכבי או NBA
+    // פונקציית ערבוב מתמטית אמיתית (Fisher-Yates Shuffle)
+    const shuffleArray = (array) => {
+        let newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+    };
+    
     const dataSource = selectedPack === 'maccabi' ? rawPlayersDataMaccabi : rawPlayersDataNBA;
     const playerImage = selectedPack === 'maccabi' ? "🟡" : "🏀";
 
-    // בונה מאגר זמני בהתאם לבחירה
     const tempDB = {};
     let tempGlobalId = 1;
     for (const position in dataSource) {
