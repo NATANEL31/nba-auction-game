@@ -220,10 +220,18 @@ function handleAuctionEnd() {
     clearTurnTimer(); 
     const active = gameState.currentAuction.activeBidders;
     
-    if (active.length === 1) {
+    let isEndingAuction = false; // משתנה דגל שמונע קריאות כפולות
+
+function handleAuctionEnd() {
+    if (isEndingAuction) return; // אם אנחנו כבר באמצע סיום מכרז, אל תיכנס שוב
+    isEndingAuction = true;
+
+    clearTurnTimer(); 
+    const active = gameState.currentAuction.activeBidders;
+    
+    if (active.length === 1 && gameState.currentAuction.player) {
         const winnerId = active[0];
         const winner = gameState.participants.find(p => p.id === winnerId);
-        
         const finalBid = Math.max(0, gameState.currentAuction.highestBid);
 
         if (winner && winner.budget >= finalBid) {
@@ -249,6 +257,15 @@ function handleAuctionEnd() {
             });
         }
     }
+    
+    gameState.auctionIndex++;
+    
+    // מאפשרים סיום למכרז הבא
+    setTimeout(() => {
+        isEndingAuction = false;
+        startNextAuction();
+    }, 100);
+}
     
     gameState.auctionIndex++;
     startNextAuction();
