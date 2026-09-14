@@ -23,7 +23,7 @@ export default function LoginScreen({
         <p className="brandmark__tagline">אנא זכור: דגמת מרובה לא דגמת כלל</p>
       </div>
 
-      <div className="panel">
+      <div className="panel" style={{ maxWidth: '800px', margin: '0 auto' }}>
         <header className="panel__head">
           <h2 className="panel__title">בחר דמות</h2>
         </header>
@@ -34,32 +34,47 @@ export default function LoginScreen({
             </p>
           )}
 
+          {/* תצוגת הבלוקים (קלפים) */}
           <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', margin: '1rem 0' }}>
             {AVATARS.map((avatar) => (
               <div 
                 key={avatar.id} 
-                style={{ cursor: 'pointer', textAlign: 'center', transition: 'transform 0.2s', padding: '10px' }}
+                className="panel" // נותן לבלוק את הרקע והמסגרת של האפליקציה
+                style={{ 
+                  cursor: 'pointer', 
+                  textAlign: 'center', 
+                  transition: 'transform 0.2s, box-shadow 0.2s', 
+                  padding: '12px',
+                  width: '160px', 
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
                 onClick={() => onJoin(avatar.name)}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '';
+                }}
               >
                 <img 
                   src={avatar.img} 
                   alt={avatar.name} 
                   style={{ 
-                    width: '90px', 
-                    height: '90px', 
-                    objectFit: 'cover', 
-                    borderRadius: '50%', 
-                    border: '3px solid var(--accent)',
-                    backgroundColor: 'var(--surface-hover)'
+                    width: '100%', 
+                    height: '200px', // גובה המלבן
+                    objectFit: 'contain', // מבטיח שכל התמונה תיכנס ללא חיתוך
+                    borderRadius: '8px', 
+                    backgroundColor: 'var(--surface-hover)', // רקע עדין למקרה שהתמונה קטנה מדי
+                    marginBottom: '12px'
                   }} 
                   onError={(e) => {
-                    // יוצר תמונת גיבוי עם השם במקרה שהקובץ עדיין לא נמצא בתיקיית images
-                    e.target.src = `https://ui-avatars.com/api/?name=${avatar.name}&background=random&color=fff&size=90`;
+                    e.target.src = `https://ui-avatars.com/api/?name=${avatar.name}&background=random&color=fff&size=200`;
                   }}
                 />
-                <h3 style={{ margin: '10px 0 0 0', fontSize: '1.1rem' }}>{avatar.name}</h3>
+                <h3 style={{ margin: '0', fontSize: '1.2rem', color: 'var(--text)' }}>{avatar.name}</h3>
               </div>
             ))}
           </div>
