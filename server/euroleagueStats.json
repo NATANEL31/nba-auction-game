@@ -4,15 +4,15 @@
 "pts": 19.0,
 "reb": 6.4
 },
-"Andreas Obst": {
-"ast": 2.0,
-"pts": 14.5,
-"reb": 2.1
-},
 "Amit Ebo": {
 "ast": 3.0,
 "pts": 3.0,
 "reb": 1.0
+},
+"Andreas Obst": {
+"ast": 2.0,
+"pts": 14.5,
+"reb": 2.1
 },
 "Antonio Blakeney": {
 "ast": 1.0,
@@ -48,6 +48,11 @@
 "ast": 2.3,
 "pts": 17.3,
 "reb": 2.2
+},
+"Chima Moneke": {
+"ast": 2.0,
+"pts": 13.9,
+"reb": 6.5
 },
 "Chuma Okeke": {
 "ast": 0.8,
@@ -149,6 +154,16 @@
 "pts": 9.4,
 "reb": 2.8
 },
+"Ish Wainright": {
+"ast": 1.1,
+"pts": 4.2,
+"reb": 2.6
+},
+"Jan Veselý": {
+"ast": 1.4,
+"pts": 8.7,
+"reb": 3.3
+},
 "Jaron Blossomgame": {
 "ast": 0.8,
 "pts": 9.8,
@@ -179,6 +194,11 @@
 "pts": 11.4,
 "reb": 2.5
 },
+"Jordan Nwora": {
+"ast": 1.6,
+"pts": 16.9,
+"reb": 4.4
+},
 "Josh Nebo": {
 "ast": 0.5,
 "pts": 10.2,
@@ -188,6 +208,11 @@
 "ast": 0.8,
 "pts": 8.0,
 "reb": 4.4
+},
+"Justin Robinson": {
+"ast": 4.5,
+"pts": 14.6,
+"reb": 1.5
 },
 "Kai Jones": {
 "ast": 0.5,
@@ -254,6 +279,11 @@
 "pts": 18.9,
 "reb": 2.3
 },
+"Nando de Colo": {
+"ast": 3.4,
+"pts": 11.5,
+"reb": 1.7
+},
 "Nikola Milutinov": {
 "ast": 1.4,
 "pts": 10.2,
@@ -284,6 +314,11 @@
 "pts": 12.7,
 "reb": 3.2
 },
+"Sylvain Francisco": {
+"ast": 6.5,
+"pts": 16.5,
+"reb": 2.9
+},
 "T. J. Leaf": {
 "ast": 1.1,
 "pts": 9.1,
@@ -313,6 +348,11 @@
 "ast": 2.9,
 "pts": 9.4,
 "reb": 2.2
+},
+"Tomáš Satoranský": {
+"ast": 4.3,
+"pts": 7.0,
+"reb": 3.4
 },
 "Tornike Shengelia": {
 "ast": 2.6,
