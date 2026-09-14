@@ -95,6 +95,7 @@ export default function LobbyScreen({
                   >
                     <option value="nba">ליגת ה-NBA 🏀</option>
                     <option value="maccabi">מכבי תל אביב — הווה ואגדות 💛</option>
+                    <option value="euroleague">יורוליג 🏆</option>
                   </select>
                 </div>
 

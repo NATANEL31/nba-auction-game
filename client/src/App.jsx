@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import './App.css';
 
 import Toast from './components/Toast';
+import Background from './components/Background';
 import { setScene } from './audio/musicManager';
 import LoginScreen from './screens/LoginScreen';
 import LobbyScreen from './screens/LobbyScreen';
@@ -38,7 +39,9 @@ function App() {
       ? 'lobby'
       : gameState.currentPack === 'maccabi'
         ? 'game-maccabi'
-        : 'game-nba';
+        : gameState.currentPack === 'euroleague'
+          ? 'game-euroleague'
+          : 'game-nba';
 
   useEffect(() => {
     setScene(musicScene);
@@ -46,7 +49,9 @@ function App() {
 
   // --- ערכת נושא: מוחלת על <html> כדי שכל הטוקנים יתחלפו ---
   useEffect(() => {
-    const theme = gameState?.currentPack === 'maccabi' ? 'maccabi' : 'nba';
+    const pack = gameState?.currentPack;
+    const theme =
+      pack === 'maccabi' ? 'maccabi' : pack === 'euroleague' ? 'euroleague' : 'nba';
     document.documentElement.dataset.theme = theme;
   }, [gameState?.currentPack]);
 
@@ -172,29 +177,37 @@ function App() {
   // --- ניתוב מסכים ---
   if (!hasJoined) {
     return (
-      <LoginScreen
+      <>
+        <Background />
+        <LoginScreen
         username={username}
         password={password}
         onUsernameChange={setUsername}
         onPasswordChange={setPassword}
         onJoin={handleJoin}
         errorMsg={errorMsg}
-      />
+        />
+      </>
     );
   }
 
   if (!gameState) {
     return (
-      <div className="loading">
+      <>
+        <Background />
+        <div className="loading">
         <div className="spinner" aria-hidden="true" />
         <p>מתחבר לזירה…</p>
-      </div>
+        </div>
+      </>
     );
   }
 
   if (!gameState.gameStarted) {
     return (
-      <LobbyScreen
+      <>
+        <Background />
+        <LobbyScreen
         participants={gameState.participants}
         leaderboard={gameState.leaderboard}
         selectedPack={selectedPack}
@@ -204,13 +217,15 @@ function App() {
         myId={socket.id}
         hostId={gameState.hostId}
         onKick={handleKick}
-      />
+        />
+      </>
     );
   }
 
   if (isGameOver) {
     return (
       <>
+        <Background />
         <Toast message={soldNotification} />
         <SummaryScreen
           participants={gameState.participants}
@@ -227,15 +242,19 @@ function App() {
 
   if (!gameState.currentAuction?.player) {
     return (
-      <div className="loading">
+      <>
+        <Background />
+        <div className="loading">
         <div className="spinner" aria-hidden="true" />
         <p>טוען את השחקן הבא…</p>
-      </div>
+        </div>
+      </>
     );
   }
 
   return (
     <>
+      <Background />
       <Toast message={soldNotification} />
       <ArenaScreen
         gameState={gameState}

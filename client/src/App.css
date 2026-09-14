@@ -2,6 +2,40 @@
    Components. Tokens live in index.css — never hardcode a color here.
    ========================================================================== */
 
+/* --- background watermark ---------------------------------------------
+   הלוגו נצבע בצבע ההדגשה של הערכה דרך mask, כך שכל קובץ סילואטה
+   שתפילו ל-public/logos יקבל אוטומטית את הגוון הנכון.
+   ------------------------------------------------------------------- */
+
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.app-bg::after {
+  content: '';
+  width: min(115vw, 115vh, 1150px);
+  aspect-ratio: 1;
+  background-color: var(--accent);
+  opacity: var(--logo-opacity, 0.06);
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+  transition:
+    background-color 0.5s var(--ease),
+    opacity 0.5s var(--ease);
+}
+
+/* התוכן תמיד מעל הרקע */
+.app-shell {
+  position: relative;
+  z-index: 1;
+}
+
 /* --- shell ------------------------------------------------------------- */
 
 .app-shell {

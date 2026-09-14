@@ -6,29 +6,29 @@
 :root {
   color-scheme: dark;
 
-  /* --- surfaces --- */
-  --bg: #0b0d13;
-  --bg-tint: rgba(255, 106, 26, 0.05);
-  --surface: #151822;
-  --surface-2: #1c202c;
-  --surface-3: #262b39;
+  /* --- surfaces: NBA navy --- */
+  --bg: #080c18;
+  --bg-tint: rgba(200, 16, 46, 0.07);
+  --surface: #111827;
+  --surface-2: #172033;
+  --surface-3: #212c44;
 
   /* borders are load-bearing here — they must be visible */
-  --border: rgba(255, 255, 255, 0.12);
-  --border-strong: rgba(255, 255, 255, 0.22);
+  --border: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.26);
 
   /* --- text --- */
   --text: #edeff5;
   --text-muted: #9ba2b5;
   --text-dim: #6b7286;
 
-  /* --- brand accent --- */
-  --accent: #ff6a1a;
-  --accent-soft: #ff8c4d;
-  --accent-2: #ffb020;
-  --on-accent: #1a0a00;
-  --accent-glow: rgba(255, 106, 26, 0.3);
-  --accent-wash: rgba(255, 106, 26, 0.1);
+  /* --- brand accent: NBA red on navy, white text --- */
+  --accent: #c8102e;
+  --accent-soft: #e63950;
+  --accent-2: #1d428a;
+  --on-accent: #ffffff;
+  --accent-glow: rgba(200, 16, 46, 0.34);
+  --accent-wash: rgba(200, 16, 46, 0.12);
 
   /* --- semantic --- */
   --success: #2fd07a;
@@ -73,15 +73,19 @@
   --fs-xs: 0.72rem;
 
   --ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+
+  /* לוגו הרקע הענק. החלפת הקובץ מחליפה את הסמל. */
+  --logo: url('/logos/nba.svg');
+  --logo-opacity: 0.06;
 }
 
 /* --- Maccabi Tel Aviv: deep navy + yellow --- */
 [data-theme='maccabi'] {
-  --bg: #060d20;
-  --bg-tint: rgba(255, 199, 44, 0.05);
-  --surface: #0d1735;
-  --surface-2: #141f45;
-  --surface-3: #1d2a58;
+  --bg: #04091c;
+  --bg-tint: rgba(255, 199, 44, 0.09);
+  --surface: #0b1636;
+  --surface-2: #122048;
+  --surface-3: #1b2c60;
 
   --border: rgba(255, 199, 44, 0.18);
   --border-strong: rgba(255, 199, 44, 0.34);
@@ -99,6 +103,38 @@
 
   --info: #5aa0ff;
   --gold: #ffc72c;
+
+  --logo: url('/logos/maccabi.svg');
+  --logo-opacity: 0.07;
+}
+
+/* --- Euroleague: black court + signature orange --- */
+[data-theme='euroleague'] {
+  --bg: #0c0a09;
+  --bg-tint: rgba(255, 122, 0, 0.06);
+  --surface: #17130f;
+  --surface-2: #211b16;
+  --surface-3: #2d251d;
+
+  --border: rgba(255, 160, 60, 0.16);
+  --border-strong: rgba(255, 160, 60, 0.32);
+
+  --text: #f6f1ea;
+  --text-muted: #b0a396;
+  --text-dim: #7d7266;
+
+  --accent: #ff7a00;
+  --accent-soft: #ff9d3f;
+  --accent-2: #ffd166;
+  --on-accent: #1a0c00;
+  --accent-glow: rgba(255, 122, 0, 0.32);
+  --accent-wash: rgba(255, 122, 0, 0.11);
+
+  --info: #5aa0ff;
+  --gold: #ffd166;
+
+  --logo: url('/logos/euroleague.svg');
+  --logo-opacity: 0.07;
 }
 
 /* ==========================================================================
