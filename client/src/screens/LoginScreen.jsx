@@ -21,8 +21,8 @@ export default function LoginScreen({
 
       <div className="brandmark">
         <div className="brandmark__logo">🏀</div>
-        <h1 className="brandmark__name">מכרז</h1>
-        <p className="brandmark__tagline">בנו את החמישייה הפותחת. התקציב מוגבל.</p>
+        <h1 className="brandmark__name">המכרז</h1>
+        <p className="brandmark__tagline">אנא זכור: דגמת מרובה לא דגמת כלל</p>
       </div>
 
       <form className="panel" onSubmit={handleSubmit}>
