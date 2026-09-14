@@ -92,6 +92,12 @@ function writeJsonSafe(filePath, data) {
 // שחקן שאינו ברשימה מקבל אווטאר ראשי תיבות בצד הלקוח.
 const playerPhotos = readJsonSafe(path.join(__dirname, 'playerPhotos.json'), {});
 
+// ממוצעים למשחק. כרגע קיימים רק ליורוליג — שאר החבילות פשוט
+// לא יציגו את השורה הזו עד שיסופקו נתונים.
+const playerStats = {
+    euroleague: readJsonSafe(path.join(__dirname, 'euroleagueStats.json'), {})
+};
+
 const leaderboardPath = path.join(dataDir, 'leaderboard.json');
 let leaderboard = readJsonSafe(leaderboardPath, {});
 
@@ -307,7 +313,8 @@ function initializeGamePlayers(selectedPack) {
             rating: player.rating,
             position: position,
             image: playerImage,
-            photo: playerPhotos[player.name] || null
+            photo: playerPhotos[player.name] || null,
+            stats: (playerStats[selectedPack] || {})[player.name] || null
         }));
     }
 

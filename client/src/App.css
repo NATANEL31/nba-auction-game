@@ -560,6 +560,7 @@
 .player-card__body {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--s-4);
   padding: var(--s-4);
 }
@@ -583,6 +584,50 @@
   height: 100%;
   object-fit: cover;
   object-position: top center;
+}
+
+/* --- per-game averages, pinned to the far end of the card --- */
+
+.player-stats {
+  margin: 0;
+  margin-inline-start: auto;
+  flex: none;
+  display: flex;
+  gap: var(--s-2);
+  align-self: stretch;
+  align-items: center;
+}
+
+.player-stats__item {
+  min-width: 62px;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  text-align: center;
+}
+
+.player-stats__item dt {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.player-stats__item dd {
+  margin: 2px 0 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+@media (max-width: 760px) {
+  .player-stats {
+    margin-inline-start: 0;
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* --- avatar: photo or initials fallback --- */

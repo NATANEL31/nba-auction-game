@@ -132,6 +132,23 @@ export default function ArenaScreen({
                 </div>
                 <h3 className="player-card__name">{player.name}</h3>
               </div>
+
+              {player.stats && (
+                <dl className="player-stats" aria-label="ממוצעים למשחק">
+                  <div className="player-stats__item">
+                    <dt>נק'</dt>
+                    <dd className="tnum">{player.stats.pts}</dd>
+                  </div>
+                  <div className="player-stats__item">
+                    <dt>ריב'</dt>
+                    <dd className="tnum">{player.stats.reb}</dd>
+                  </div>
+                  <div className="player-stats__item">
+                    <dt>אס'</dt>
+                    <dd className="tnum">{player.stats.ast}</dd>
+                  </div>
+                </dl>
+              )}
             </div>
           </section>
 
