@@ -74,6 +74,13 @@ function App() {
       setHasJoined(false);
     });
 
+    // הוצאה על ידי מנהל המשחק
+    socket.on('kicked', (msg) => {
+      setErrorMsg(msg);
+      setHasJoined(false);
+      setGameState(null);
+    });
+
     socket.on('playerSold', (data) => {
       setSoldNotification(`${data.playerName} נחתם על ידי ${data.winnerName}! 🎉`);
 
@@ -85,6 +92,7 @@ function App() {
       socket.off('updateState');
       socket.off('timerUpdate');
       socket.off('error');
+      socket.off('kicked');
       socket.off('playerSold');
       clearTimeout(timeoutId);
     };
@@ -129,6 +137,15 @@ function App() {
   };
   const handleBid = (amount) => socket.emit('placeBid', amount);
   const handleFold = () => socket.emit('fold');
+
+  // פעולות מנהל בלבד
+  const handleKick = (playerId) => socket.emit('kickPlayer', playerId);
+
+  const handleEndGameEarly = () => {
+    if (window.confirm('לסיים את המשחק עבור כולם ולחזור ללובי?')) {
+      socket.emit('endGameEarly');
+    }
+  };
 
   const handleDeclareWinner = (winnerName) => {
     if (window.confirm(`האם אתם מסכימים להכתיר את ${winnerName} כזוכה של המשחק הזה?`)) {
@@ -185,6 +202,8 @@ function App() {
         onStartGame={handleStartGame}
         onLeave={handleLeaveGame}
         myId={socket.id}
+        hostId={gameState.hostId}
+        onKick={handleKick}
       />
     );
   }
@@ -229,6 +248,8 @@ function App() {
         onBid={handleBid}
         onFold={handleFold}
         onLeave={handleLeaveGame}
+        isHost={gameState.hostId === socket.id}
+        onEndGame={handleEndGameEarly}
       />
     </>
   );

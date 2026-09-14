@@ -16,6 +16,8 @@ export default function ArenaScreen({
   onBid,
   onFold,
   onLeave,
+  isHost,
+  onEndGame,
 }) {
   const auction = gameState.currentAuction;
   const player = auction.player;
@@ -69,6 +71,15 @@ export default function ArenaScreen({
           </span>
           {me && <span className="pill pill--money tnum">התקציב שלי ${me.budget}</span>}
           <MusicToggle />
+          {isHost && (
+            <button
+              type="button"
+              className="btn btn--danger btn--sm"
+              onClick={onEndGame}
+            >
+              סגור משחק
+            </button>
+          )}
           <LeaveButton onLeave={onLeave} />
         </div>
       </header>

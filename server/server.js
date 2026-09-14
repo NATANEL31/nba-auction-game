@@ -185,18 +185,18 @@ const rawPlayersDataMaccabi = {
         { name: "תיאו פאפאלוקאס", rating: 82 }, { name: "מורן רות", rating: 75 }, { name: "עמית עבו", rating: 69 }, { name: "ים מדר", rating: 83 }, { name: "רמון סשנס", rating: 81 }, { name: "ג'רמי פארגו", rating: 92 }
     ],
     SG: [
-        { name: "ריקי היקמן", rating: 88 }, { name: "סילבן לנדסברג", rating: 81 }, { name: "אנדרו גאודלוק", rating: 86 }, { name: "די.ג'יי. סילי", rating: 73 }, { name: "דגן יבזורי", rating: 75 }, { name: "ג'ון דיברתולומיאו", rating: 84 }, { name: "קנדריק ריי", rating: 73 }, { name: "טיילר דורסי", rating: 87 }, { name: "פרדריק בורדיון", rating: 71 }, { name: "קיירי תומאס", rating: 73 }, { name: "ווייד בולדווין", rating: 92 }, { name: "אוסטין הולינס", rating: 74 }, { name: "ג'יילן אדאמס", rating: 79 }, { name: "ג'ו תומאסון", rating: 70 },
-        { name: "טל בורשטיין", rating: 83 }, { name: "דיוויד לוגאן", rating: 85 }, { name: "לוני ווקר", rating: 83 }, { name: "ג'ימי קלארק", rating: 87 }, { name: "סייבן לי", rating: 80 }, { name: "סקוטי וילבקין", rating: 91 }, { name: "ג'ף דאוטין", rating: 75 }, { name: "גבריאל איפה לונדברג", rating: 84 }, { name: "קית לנגפורד", rating: 88 }
+        { name: "ריקי היקמן", rating: 88 }, { name: "סילבן לנדסברג", rating: 81 }, { name: "אנדרו גאודלוק", rating: 86 }, { name: "די.ג'יי. סילי", rating: 73 }, { name: "דגן יבזורי", rating: 75 }, { name: "ג'ון דיברתולומיאו", rating: 84 }, { name: "קנדריק ריי", rating: 73 }, { name: "טיילר דורסי", rating: 87 }, { name: "קיירי תומאס", rating: 73 }, { name: "ווייד בולדווין", rating: 92 }, { name: "אוסטין הולינס", rating: 74 }, { name: "ג'יילן אדאמס", rating: 79 }, { name: "ג'ו תומאסון", rating: 70 },
+        { name: "טל בורשטיין", rating: 83 }, { name: "דיוויד לוגאן", rating: 85 }, { name: "לוני ווקר", rating: 83 }, { name: "ג'ימי קלארק", rating: 87 }, { name: "סקוטי וילבקין", rating: 91 }, { name: "ג'ף דאוטין", rating: 75 }, { name: "גבריאל איפה לונדברג", rating: 84 }, { name: "קית לנגפורד", rating: 88 }
     ],
     SF: [
-        { name: "ליוואי רנדולף", rating: 82 }, { name: "דווין סמית'", rating: 89 }, { name: "ג'ו אינגלס", rating: 77 }, { name: "גיא פניני", rating: 80 }, { name: "נייט לינהארט", rating: 76 }, { name: "סוני ווימס", rating: 88 }, { name: "דיאנדרה קיין", rating: 80 }, { name: "יובל זוסמן", rating: 77 }, { name: "כארם משעור", rating: 70 }, { name: "דני אבדיה", rating: 86 }, { name: "אלייז'ה בראיינט", rating: 86 }, { name: "סנדי כהן", rating: 72 }, { name: "ג'יימס נאנלי", rating: 80 }, { name: "בונזי קולסון", rating: 85 }, { name: "רפי מנקו", rating: 74 }, { name: "אנטוניוס קליבלנד", rating: 76 }, { name: "מריאל שאיוק", rating: 73 },         { name: "צ'אק אידסון", rating: 83 }, { name: "אושה בריסט", rating: 83 }, { name: "עוז בלייזר", rating: 74 }, { name: "מייקל רול", rating: 79 }, { name: "דארן היליארד", rating: 78 }, { name: "ניק קיינר מדלי", rating: 76 }
+        { name: "ליוואי רנדולף", rating: 82 }, { name: "דווין סמית'", rating: 89 }, { name: "ג'ו אינגלס", rating: 77 }, { name: "גיא פניני", rating: 80 }, { name: "סוני ווימס", rating: 88 }, { name: "דיאנדרה קיין", rating: 80 }, { name: "יובל זוסמן", rating: 77 }, { name: "כארם משעור", rating: 70 }, { name: "דני אבדיה", rating: 86 }, { name: "אלייז'ה בראיינט", rating: 86 }, { name: "סנדי כהן", rating: 72 }, { name: "ג'יימס נאנלי", rating: 80 }, { name: "בונזי קולסון", rating: 85 }, { name: "רפי מנקו", rating: 74 }, { name: "אנטוניוס קליבלנד", rating: 76 }, { name: "מריאל שאיוק", rating: 73 },         { name: "צ'אק אידסון", rating: 83 }, { name: "אושה בריסט", rating: 83 }, { name: "עוז בלייזר", rating: 74 }, { name: "מייקל רול", rating: 79 }, { name: "דארן היליארד", rating: 78 }, { name: "ניק קיינר מדלי", rating: 76 }
     ],
     PF: [
         { name: "דייוויד בלו", rating: 88 }, { name: "ג'ייק כהן", rating: 80 }, { name: "בריאן רנדל", rating: 87 }, { name: "ג'ו אלכסנדר", rating: 75 }, { name: "דראגן בנדר", rating: 71 }, { name: "ויקטור ראד", rating: 73 }, { name: "קווינסי מילר", rating: 78 }, { name: "ג'ונה בולדן", rating: 79 }, { name: "ג'וני אובראיינט", rating: 80 }, { name: "אנג'לו קלויארו", rating: 82 }, { name: "עומרי כספי", rating: 85 }, { name: "קווינסי אייסי", rating: 82 }, { name: "טי.ג'יי. קליין", rating: 72 }, { name: "דריק ויליאמס", rating: 82 }, { name: "אלכס פוית'רס", rating: 81 }, { name: "ג'רל מרטין", rating: 78 }, { name: "סולימאן בריימו", rating: 71 }, { name: "ג'יימס ווב", rating: 75 }, { name: "ג'יילן הורד", rating: 88 }, { name: "וויל ריימן", rating: 77 },
         { name: "טי ג'יי ליף", rating: 81 }, { name: "ריצ'רד הנדריקס", rating: 85 }, { name: "איתי שגב", rating: 72 }, { name: "רומן סורקין", rating: 87 }
     ],
     C: [
-        { name: "שון ג'יימס", rating: 84 }, { name: "סופוקליס שחורציאניטיס", rating: 93 }, { name: "אלכס טיוס", rating: 87 }, { name: "בן אלטיט", rating: 69 }, { name: "טרבור אמבקווה", rating: 83 }, { name: "ויטור פאבראני", rating: 76 }, { name: "ארינזה אונואקו", rating: 79 }, { name: "סדריק סימונס", rating: 73 }, { name: "קולטון אייברסון", rating: 72 }, { name: "מאיק צירבס", rating: 74 }, { name: "נמרוד לוי", rating: 68 }, { name: "טאריק בלאק", rating: 86 }, { name: "אותלו האנטר", rating: 84 }, { name: "ג'יילן ריינולדס", rating: 79 }, { name: "אמארה סטודמאייר", rating: 86 }, { name: "אנטה ז'יז'יץ'", rating: 81 }, { name: "מת'יאס לסור", rating: 82 }, { name: "ג'וש ניבו", rating: 87 }, { name: "חסיאל ריברו", rating: 84 }, { name: "ווניין גבריאל", rating: 73 },
+        { name: "שון ג'יימס", rating: 84 }, { name: "סופוקליס שחורציאניטיס", rating: 93 }, { name: "אלכס טיוס", rating: 87 }, { name: "בן אלטיט", rating: 69 }, { name: "ארינזה אונואקו", rating: 79 }, { name: "קולטון אייברסון", rating: 72 }, { name: "מאיק צירבס", rating: 74 }, { name: "נמרוד לוי", rating: 68 }, { name: "טאריק בלאק", rating: 86 }, { name: "אותלו האנטר", rating: 84 }, { name: "ג'יילן ריינולדס", rating: 79 }, { name: "אמארה סטודמאייר", rating: 86 }, { name: "אנטה ז'יז'יץ'", rating: 81 }, { name: "מת'יאס לסור", rating: 82 }, { name: "ג'וש ניבו", rating: 87 }, { name: "חסיאל ריברו", rating: 84 }, { name: "ווניין גבריאל", rating: 73 },
         { name: "יניב גרין", rating: 77 }, { name: "עידן זלמנסון", rating: 73 }, { name: "זאק הנקינס", rating: 74 }, { name: "מרסיו סנטוס", rating: 76 }
     ]
 };
@@ -250,6 +250,7 @@ function initializeGamePlayers(selectedPack) {
 let gameState = {
     gameStarted: false,
     currentPack: 'nba',
+    hostId: null, // שומר מי מנהל המשחק
     participants: [],
     auctionIndex: 0,
     currentAuction: {
@@ -416,10 +417,12 @@ function leaveGame(socketId) {
     if (idx === -1) return;
 
     gameState.participants.splice(idx, 1);
+    ensureHost(); // בלי זה חדר נתקע בלי מנהל כשהמנהל יוצא
 
     if (gameState.participants.length === 0) {
         clearTurnTimer();
         gameState.gameStarted = false;
+        gameState.hostId = null;
         gameState.auctionIndex = 0;
         gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15 };
         io.emit('updateState', gameState);
@@ -445,6 +448,39 @@ function leaveGame(socketId) {
     }
 
     io.emit('updateState', gameState);
+}
+
+// מחזיר את כולם ללובי ומאפס קבוצות. משמש גם בהכתרת זוכה
+// וגם בסיום יזום על ידי המנהל.
+function resetGameToLobby() {
+    clearTurnTimer();
+    gameState.gameStarted = false;
+    gameState.auctionIndex = 0;
+    gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15 };
+    gameState.leaderboard = leaderboard;
+
+    gameState.participants = gameState.participants.filter(p => p.connected);
+    gameState.participants.forEach(p => {
+        p.budget = 20;
+        p.roster = [
+            { pos: 'PG', player: null },
+            { pos: 'SG', player: null },
+            { pos: 'SF', player: null },
+            { pos: 'PF', player: null },
+            { pos: 'C', player: null }
+        ];
+    });
+
+    ensureHost();
+    io.emit('updateState', gameState);
+}
+
+// המנהל חייב להיות שחקן שקיים בחדר. אם הוא עזב/הועף/התנתק —
+// הניהול עובר לראשון ברשימה.
+function ensureHost() {
+    if (gameState.participants.some(p => p.id === gameState.hostId)) return;
+    const next = gameState.participants[0];
+    gameState.hostId = next ? next.id : null;
 }
 
 function executeFold(socketId) {
@@ -492,6 +528,11 @@ io.on('connection', (socket) => {
             existingPlayer.id = socket.id; 
             existingPlayer.connected = true; 
 
+            // עדכון מזהה המנהל אם הוא התחבר מחדש
+            if (gameState.hostId === oldId) {
+                gameState.hostId = socket.id;
+            }
+
             if (gameState.currentAuction) {
                 const activeIndex = gameState.currentAuction.activeBidders.indexOf(oldId);
                 if (activeIndex !== -1) {
@@ -525,11 +566,17 @@ io.on('connection', (socket) => {
             ] 
         };
         gameState.participants.push(newPlayer);
+
+        // השחקן הראשון שמצטרף הוא המנהל
+        if (!gameState.hostId) {
+            gameState.hostId = socket.id;
+        }
+
         io.emit('updateState', gameState);
     });
 
     socket.on('startGame', (selectedPack) => {
-        if (!gameState.gameStarted && gameState.participants.length > 0) {
+        if (!gameState.gameStarted && gameState.participants.length > 0 && socket.id === gameState.hostId) {
             gameState.gameStarted = true;
             gameState.currentPack = selectedPack || 'nba'; // <-- מעדכן את החבילה בסטייט
             gameState.auctionIndex = 0;
@@ -539,33 +586,48 @@ io.on('connection', (socket) => {
     });
 
     socket.on('declareWinner', (winnerName) => {
-        clearTurnTimer();
         if (!leaderboard[winnerName]) {
             leaderboard[winnerName] = 0;
         }
         leaderboard[winnerName] += 1;
-        
         writeJsonSafe(leaderboardPath, leaderboard);
-        
-        gameState.gameStarted = false;
-        gameState.auctionIndex = 0;
-        gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15 };
-        gameState.leaderboard = leaderboard;
-        
-        gameState.participants = gameState.participants.filter(p => p.connected);
-        
-        gameState.participants.forEach(p => {
-            p.budget = 20;
-            p.roster = [
-                { pos: 'PG', player: null },
-                { pos: 'SG', player: null },
-                { pos: 'SF', player: null },
-                { pos: 'PF', player: null },
-                { pos: 'C', player: null }
-            ];
-        });
 
-        io.emit('updateState', gameState);
+        resetGameToLobby();
+    });
+
+    // סיום משחק יזום — מנהל בלבד
+    socket.on('endGameEarly', () => {
+        if (socket.id !== gameState.hostId) return;
+        resetGameToLobby();
+    });
+
+    // הוצאת שחקן — מנהל בלבד
+    socket.on('kickPlayer', (targetId) => {
+        if (socket.id !== gameState.hostId) return;
+        if (targetId === gameState.hostId) return; // המנהל לא מעיף את עצמו
+
+        const targetIndex = gameState.participants.findIndex(p => p.id === targetId);
+        if (targetIndex === -1) return;
+
+        io.to(targetId).emit('kicked', 'הוצאת מהמשחק על ידי מנהל המשחק.');
+
+        // אם הוא באמצע תור, מקפלים אותו לפני ההסרה
+        if (gameState.gameStarted && gameState.currentAuction) {
+            const activeIndex = gameState.currentAuction.activeBidders.indexOf(targetId);
+            if (activeIndex !== -1) {
+                executeFold(targetId);
+            }
+        }
+
+        gameState.participants.splice(targetIndex, 1);
+        ensureHost();
+
+        // משחק פעיל שנשאר בלי מספיק שחקנים חוזר ללובי
+        if (gameState.gameStarted && gameState.participants.filter(p => p.connected).length < 1) {
+            resetGameToLobby();
+        } else {
+            io.emit('updateState', gameState);
+        }
     });
 
     socket.on('placeBid', (bidAmount) => {
@@ -600,6 +662,8 @@ io.on('connection', (socket) => {
 
         if (!gameState.gameStarted) {
             gameState.participants = gameState.participants.filter(p => p.connected);
+            // המנהל התנתק לפני שהמשחק התחיל — הניהול עובר הלאה
+            ensureHost();
         }
 
         const anyConnected = gameState.participants.some(p => p.connected);
@@ -607,6 +671,7 @@ io.on('connection', (socket) => {
             clearTurnTimer();
             gameState.gameStarted = false;
             gameState.participants = [];
+            gameState.hostId = null;
             gameState.auctionIndex = 0;
             gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15 };
         }

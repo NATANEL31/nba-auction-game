@@ -13,10 +13,13 @@ export default function LobbyScreen({
   onStartGame,
   onLeave,
   myId,
+  hostId,
+  onKick,
 }) {
   const ranked = Object.entries(leaderboard || {}).sort((a, b) => b[1] - a[1]);
   const canStart = participants.length >= MIN_PLAYERS;
   const isSolo = participants.length === 1;
+  const isHost = myId === hostId;
 
   return (
     <div className="app-shell">
@@ -52,14 +55,33 @@ export default function LobbyScreen({
                   />
                   <span>{p.name}</span>
                   {p.id === myId && <span className="player-row__you">אתה</span>}
+                  {p.id === hostId && (
+                    <span className="pill pill--accent">👑 מנהל</span>
+                  )}
                   {isOffline && <span className="player-row__tag">מנותק</span>}
+
+                  {isHost && p.id !== myId && (
+                    <button
+                      type="button"
+                      className="btn btn--danger btn--sm"
+                      style={{ marginInlineStart: 'auto' }}
+                      onClick={() => onKick(p.id)}
+                    >
+                      הוצא
+                    </button>
+                  )}
                 </li>
               );
             })}
           </ul>
 
           <div className="panel__section" style={{ borderTop: '1px solid var(--border)' }}>
-            {canStart ? (
+            {!isHost ? (
+              <p className="empty-note">
+                ממתין ש{participants.find((p) => p.id === hostId)?.name || 'המנהל'}{' '}
+                יתחיל את המשחק…
+              </p>
+            ) : canStart ? (
               <div className="stack">
                 <div className="field">
                   <label className="field__label" htmlFor="pack">
