@@ -241,7 +241,7 @@ const rawPlayersDataEuroleague = {
         { name: "Lonnie Walker IV", rating: 85 }, { name: "Andreas Obst", rating: 83 }, { name: "PJ Dozier", rating: 82 }, { name: "Élie Okobo", rating: 82 },
         { name: "Antonio Blakeney", rating: 82 }, { name: "Evan Fournier", rating: 82 }, { name: "Brancou Badio", rating: 81 }, { name: "Jordan Loyd", rating: 81 },
         { name: "Marko Gudurić", rating: 81 }, { name: "Isaïa Cordinier", rating: 80 }, { name: "Devon Hall", rating: 78 },         { name: "Panagiotis Kalaitzakis", rating: 73 },
-        { name: "Miki Berkovich", rating: 90 },
+        { name: "Miki Berkovich", rating: 92 },
         { name: "Doron Jamchi", rating: 86 },
         { name: "Tal Brody", rating: 85 },
         { name: "Anthony Parker", rating: 91 },
