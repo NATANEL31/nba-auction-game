@@ -1,5 +1,9 @@
+import LeaveButton from '../components/LeaveButton';
+import MusicToggle from '../components/MusicToggle';
+
 const MEDALS = ['🥇', '🥈', '🥉'];
-const MIN_PLAYERS = 2;
+// אפשר להתחיל גם לבד — שימושי לבדיקה בלי לחכות ליריב.
+const MIN_PLAYERS = 1;
 
 export default function LobbyScreen({
   participants,
@@ -7,10 +11,12 @@ export default function LobbyScreen({
   selectedPack,
   onPackChange,
   onStartGame,
+  onLeave,
   myId,
 }) {
   const ranked = Object.entries(leaderboard || {}).sort((a, b) => b[1] - a[1]);
   const canStart = participants.length >= MIN_PLAYERS;
+  const isSolo = participants.length === 1;
 
   return (
     <div className="app-shell">
@@ -20,6 +26,8 @@ export default function LobbyScreen({
           <span className="pill pill--accent tnum">
             {participants.length} מחוברים
           </span>
+          <MusicToggle />
+          <LeaveButton onLeave={onLeave} inGame={false} />
         </div>
       </header>
 
@@ -73,13 +81,18 @@ export default function LobbyScreen({
                   className="btn btn--primary btn--lg btn--block"
                   onClick={onStartGame}
                 >
-                  התחל משחק
+                  {isSolo ? 'התחל משחק סולו' : 'התחל משחק'}
                 </button>
+
+                {isSolo && (
+                  <p className="form-note">
+                    אתה לבד בחדר — המשחק ירוץ במצב בדיקה ותזכה בכל שחקן
+                    במחיר שתציע.
+                  </p>
+                )}
               </div>
             ) : (
-              <p className="empty-note">
-                ממתין לשחקנים נוספים… (דרושים {MIN_PLAYERS} לפחות)
-              </p>
+              <p className="empty-note">ממתין לשחקנים…</p>
             )}
           </div>
         </section>

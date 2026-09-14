@@ -1,2 +1,10 @@
 node_modules/
 .env
+
+# התוצר של Vite נבנה מקומית ואינו נשמר ב-git.
+# הרצה: npm run build (מהשורש) לפני npm start
+client/dist/
+
+# מצב ריצה של השרת
+server/users.json
+server/leaderboard.json

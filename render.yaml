@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: nba-auction-game
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+
+    # דיסק קבוע לטבלת האלופים ולמשתמשים.
+    # לא זמין בתוכנית החינמית — בלעדיו הנתונים מתאפסים בכל הפעלה מחדש.
+    # בתוכנית בתשלום: הסירו את ההערה מהבלוק הבא וגם הוסיפו
+    #   - key: DATA_DIR
+    #     value: /var/data
+    # לרשימת envVars למעלה.
+    #
+    # disk:
+    #   name: game-data
+    #   mountPath: /var/data
+    #   sizeGB: 1

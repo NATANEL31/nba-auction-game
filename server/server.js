@@ -8,27 +8,91 @@ const fs = require('fs');
 const app = express();
 app.use(cors());
 
+// בדיקת בריאות לשירותי הענן
+app.get('/healthz', (req, res) => res.json({ ok: true, uptime: process.uptime() }));
+
 const clientBuildPath = path.join(__dirname, '../client/dist');
 app.use(express.static(clientBuildPath));
 
+const indexHtmlPath = path.join(clientBuildPath, 'index.html');
+
+// כל נתיב שאינו קובץ מוחזר ל-SPA. בקשה לקובץ שלא קיים
+// (למשל טראק מוזיקה חסר) מחזירה 404 ולא HTML במסווה של קובץ.
 app.use((req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+    if (path.extname(req.path)) {
+        res.status(404).end();
+        return;
+    }
+
+    // client/dist אינו נשמר ב-git — הודעה ברורה במקום דף ריק
+    if (!fs.existsSync(indexHtmlPath)) {
+        res.status(503).send(
+            '<!doctype html><html lang="he" dir="rtl"><meta charset="utf-8">' +
+            '<body style="font-family:system-ui;padding:40px;line-height:1.7">' +
+            '<h1>הקליינט לא נבנה</h1>' +
+            '<p>התיקייה <code>client/dist</code> חסרה. הריצו מתיקיית השורש:</p>' +
+            '<pre style="background:#eee;padding:12px;border-radius:6px">' +
+            'npm run setup<br>npm run build<br>npm start</pre>' +
+            '<p>ואז <code>npm start</code>.</p></body></html>'
+        );
+        return;
+    }
+
+    res.sendFile(indexHtmlPath);
 });
 
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
-const leaderboardPath = path.join(__dirname, 'leaderboard.json');
-let leaderboard = {};
-if (fs.existsSync(leaderboardPath)) {
-    leaderboard = JSON.parse(fs.readFileSync(leaderboardPath, 'utf8'));
+// DATA_DIR מאפשר להצביע על דיסק קבוע בענן. בלעדיו הקבצים
+// נשמרים ליד server.js, וברוב שירותי הענן הם נמחקים בכל הפעלה מחדש.
+function resolveDataDir() {
+    const requested = process.env.DATA_DIR
+        ? path.resolve(process.env.DATA_DIR)
+        : __dirname;
+
+    try {
+        if (!fs.existsSync(requested)) {
+            fs.mkdirSync(requested, { recursive: true });
+        }
+        // מוודאים שאפשר באמת לכתוב לשם, לא רק שהתיקייה קיימת
+        fs.accessSync(requested, fs.constants.W_OK);
+        return requested;
+    } catch (err) {
+        console.error(
+            `DATA_DIR "${requested}" is not writable (${err.message}); ` +
+            `falling back to ${__dirname}. Data will reset on restart.`
+        );
+        return __dirname;
+    }
 }
 
-const usersPath = path.join(__dirname, 'users.json');
-let usersDB = {};
-if (fs.existsSync(usersPath)) {
-    usersDB = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+const dataDir = resolveDataDir();
+
+// קריאה עמידה: קובץ פגום לא יפיל את השרת
+function readJsonSafe(filePath, fallback) {
+    try {
+        if (!fs.existsSync(filePath)) return fallback;
+        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch (err) {
+        console.error(`Could not read ${filePath}, starting empty:`, err.message);
+        return fallback;
+    }
 }
+
+function writeJsonSafe(filePath, data) {
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(data));
+    } catch (err) {
+        console.error(`Could not write ${filePath}:`, err.message);
+    }
+}
+
+const leaderboardPath = path.join(dataDir, 'leaderboard.json');
+let leaderboard = readJsonSafe(leaderboardPath, {});
+
+const usersPath = path.join(dataDir, 'users.json');
+let usersDB = readJsonSafe(usersPath, {});
 
 const rawPlayersDataNBA = {
     PG: [
@@ -117,19 +181,23 @@ const rawPlayersDataNBA = {
 };
 const rawPlayersDataMaccabi = {
     PG: [
-        { name: "טייריס רייס", rating: 92 }, { name: "יוגב אוחיון", rating: 85 }, { name: "יובל נעימי", rating: 78 }, { name: "ג'ורדן פארמר", rating: 89 }, { name: "טיילור רוצ'סטי", rating: 88 }, { name: "גל מקל", rating: 83 }, { name: "נוריס קול", rating: 87 }, { name: "פייר ג'קסון", rating: 86 }, { name: "סקוטי וילבקין", rating: 94 }, { name: "נייט וולטרס", rating: 82 }, { name: "ארון ג'קסון", rating: 84 }, { name: "כריס ג'ונס", rating: 86 }, { name: "קינן אוונס", rating: 91 }, { name: "יפתח זיו", rating: 79 }, { name: "לורנזו בראון", rating: 93 }, { name: "תמיר בלאט", rating: 85 }, { name: "רוקאס יוקובאיטיס", rating: 83 }, { name: "סייבן לי", rating: 82 }, { name: "עומר מאייר", rating: 76 }
+        { name: "טייריס רייס", rating: 89 }, { name: "יוגב אוחיון", rating: 85 }, { name: "יובל נעימי", rating: 74 }, { name: "ג'ורדן פארמר", rating: 88 }, { name: "טיילור רוצ'סטי", rating: 80 }, { name: "גל מקל", rating: 86 }, { name: "נוריס קול", rating: 84 }, { name: "פייר ג'קסון", rating: 83 }, { name: "נייט וולטרס", rating: 79 }, { name: "ארון ג'קסון", rating: 83 }, { name: "כריס ג'ונס", rating: 82 }, { name: "קינן אוונס", rating: 81 }, { name: "יפתח זיו", rating: 71 }, { name: "לורנזו בראון", rating: 88 }, { name: "תמיר בלאט", rating: 85 }, { name: "רוקאס יוקובאיטיס", rating: 83 }, { name: "עומר מאייר", rating: 70 },
+        { name: "תיאו פאפאלוקאס", rating: 82 }, { name: "מורן רות", rating: 75 }, { name: "עמית עבו", rating: 69 }, { name: "ים מדר", rating: 83 }, { name: "רמון סשנס", rating: 81 }, { name: "ג'רמי פארגו", rating: 92 }
     ],
     SG: [
-        { name: "ריקי היקמן", rating: 90 }, { name: "סילבן לנדסברג", rating: 84 }, { name: "ג'רמי פארגו", rating: 91 }, { name: "אנדרו גאודלוק", rating: 88 }, { name: "די.ג'יי. סילי", rating: 82 }, { name: "דגן יבזורי", rating: 78 }, { name: "ג'ון דיברתולומיאו", rating: 87 }, { name: "מייקל רול", rating: 85 }, { name: "קנדריק ריי", rating: 80 }, { name: "טיילר דורסי", rating: 88 }, { name: "פרדריק בורדיון", rating: 77 }, { name: "קיירי תומאס", rating: 79 }, { name: "ווייד בולדווין", rating: 94 }, { name: "דארן היליארד", rating: 83 }, { name: "אוסטין הולינס", rating: 80 }, { name: "ג'יילן אדאמס", rating: 82 }, { name: "ג'ו תומאסון", rating: 78 }
+        { name: "ריקי היקמן", rating: 88 }, { name: "סילבן לנדסברג", rating: 81 }, { name: "אנדרו גאודלוק", rating: 86 }, { name: "די.ג'יי. סילי", rating: 73 }, { name: "דגן יבזורי", rating: 75 }, { name: "ג'ון דיברתולומיאו", rating: 84 }, { name: "קנדריק ריי", rating: 73 }, { name: "טיילר דורסי", rating: 87 }, { name: "פרדריק בורדיון", rating: 71 }, { name: "קיירי תומאס", rating: 73 }, { name: "ווייד בולדווין", rating: 92 }, { name: "אוסטין הולינס", rating: 74 }, { name: "ג'יילן אדאמס", rating: 79 }, { name: "ג'ו תומאסון", rating: 70 },
+        { name: "טל בורשטיין", rating: 83 }, { name: "דיוויד לוגאן", rating: 85 }, { name: "לוני ווקר", rating: 83 }, { name: "ג'ימי קלארק", rating: 87 }, { name: "סייבן לי", rating: 80 }, { name: "סקוטי וילבקין", rating: 91 }, { name: "ג'ף דאוטין", rating: 75 }, { name: "גבריאל איפה לונדברג", rating: 84 }, { name: "קית לנגפורד", rating: 88 }
     ],
     SF: [
-        { name: "ליוואי רנדולף", rating: 85 }, { name: "דווין סמית'", rating: 93 }, { name: "ג'ו אינגלס", rating: 88 }, { name: "גיא פניני", rating: 87 }, { name: "נייט לינהארט", rating: 80 }, { name: "סוני ווימס", rating: 85 }, { name: "דיאנדרה קיין", rating: 86 }, { name: "יובל זוסמן", rating: 82 }, { name: "כארם משעור", rating: 78 }, { name: "דני אבדיה", rating: 89 }, { name: "אלייז'ה בראיינט", rating: 88 }, { name: "סנדי כהן", rating: 77 }, { name: "ג'יימס נאנלי", rating: 88 }, { name: "בונזי קולסון", rating: 91 }, { name: "רפי מנקו", rating: 81 }, { name: "אנטוניוס קליבלנד", rating: 83 }, { name: "מריאל שאיוק", rating: 84 }, { name: "קית לנגפורד", rating: 92 }
+        { name: "ליוואי רנדולף", rating: 82 }, { name: "דווין סמית'", rating: 89 }, { name: "ג'ו אינגלס", rating: 77 }, { name: "גיא פניני", rating: 80 }, { name: "נייט לינהארט", rating: 76 }, { name: "סוני ווימס", rating: 88 }, { name: "דיאנדרה קיין", rating: 80 }, { name: "יובל זוסמן", rating: 77 }, { name: "כארם משעור", rating: 70 }, { name: "דני אבדיה", rating: 86 }, { name: "אלייז'ה בראיינט", rating: 86 }, { name: "סנדי כהן", rating: 72 }, { name: "ג'יימס נאנלי", rating: 80 }, { name: "בונזי קולסון", rating: 85 }, { name: "רפי מנקו", rating: 74 }, { name: "אנטוניוס קליבלנד", rating: 76 }, { name: "מריאל שאיוק", rating: 73 },         { name: "צ'אק אידסון", rating: 83 }, { name: "אושה בריסט", rating: 83 }, { name: "עוז בלייזר", rating: 74 }, { name: "מייקל רול", rating: 79 }, { name: "דארן היליארד", rating: 78 }, { name: "ניק קיינר מדלי", rating: 76 }
     ],
     PF: [
-        { name: "דייוויד בלו", rating: 91 }, { name: "ג'ייק כהן", rating: 84 }, { name: "בריאן רנדל", rating: 89 }, { name: "ג'ו אלכסנדר", rating: 82 }, { name: "דראגן בנדר", rating: 79 }, { name: "ויקטור ראד", rating: 83 }, { name: "קווינסי מילר", rating: 85 }, { name: "ג'ונה בולדן", rating: 84 }, { name: "ג'וני אובראיינט", rating: 86 }, { name: "אנג'לו קלויארו", rating: 83 }, { name: "עומרי כספי", rating: 89 }, { name: "קווינסי אייסי", rating: 80 }, { name: "עוז בלייזר", rating: 79 }, { name: "טי.ג'יי. קליין", rating: 78 }, { name: "דריק ויליאמס", rating: 85 }, { name: "אלכס פוית'רס", rating: 86 }, { name: "ג'רל מרטין", rating: 84 }, { name: "סולימאן בריימו", rating: 81 }, { name: "ג'יימס ווב", rating: 83 }, { name: "ג'יילן הורד", rating: 86 }, { name: "וויל ריימן", rating: 77 }
+        { name: "דייוויד בלו", rating: 88 }, { name: "ג'ייק כהן", rating: 80 }, { name: "בריאן רנדל", rating: 87 }, { name: "ג'ו אלכסנדר", rating: 75 }, { name: "דראגן בנדר", rating: 71 }, { name: "ויקטור ראד", rating: 73 }, { name: "קווינסי מילר", rating: 78 }, { name: "ג'ונה בולדן", rating: 79 }, { name: "ג'וני אובראיינט", rating: 80 }, { name: "אנג'לו קלויארו", rating: 82 }, { name: "עומרי כספי", rating: 85 }, { name: "קווינסי אייסי", rating: 82 }, { name: "טי.ג'יי. קליין", rating: 72 }, { name: "דריק ויליאמס", rating: 82 }, { name: "אלכס פוית'רס", rating: 81 }, { name: "ג'רל מרטין", rating: 78 }, { name: "סולימאן בריימו", rating: 71 }, { name: "ג'יימס ווב", rating: 75 }, { name: "ג'יילן הורד", rating: 88 }, { name: "וויל ריימן", rating: 77 },
+        { name: "טי ג'יי ליף", rating: 81 }, { name: "ריצ'רד הנדריקס", rating: 85 }, { name: "איתי שגב", rating: 72 }, { name: "רומן סורקין", rating: 87 }
     ],
     C: [
-        { name: "שון ג'יימס", rating: 89 }, { name: "סופוקליס שחורציאניטיס", rating: 91 }, { name: "אלכס טיוס", rating: 90 }, { name: "אנדריאה ז'יז'יץ'", rating: 82 }, { name: "בן אלטיט", rating: 74 }, { name: "טרבור אמבקווה", rating: 83 }, { name: "ויטור פאבראני", rating: 80 }, { name: "איתי שגב", rating: 77 }, { name: "ריצ'רד הנדריקס", rating: 88 }, { name: "ארינזה אונואקו", rating: 79 }, { name: "סדריק סימונס", rating: 78 }, { name: "קולטון אייברסון", rating: 82 }, { name: "מאיק צירבס", rating: 84 }, { name: "נמרוד לוי", rating: 79 }, { name: "טאריק בלאק", rating: 86 }, { name: "אותלו האנטר", rating: 88 }, { name: "ג'יילן ריינולדס", rating: 87 }, { name: "אמארה סטודמאייר", rating: 86 }, { name: "אנטה ז'יז'יץ'", rating: 88 }, { name: "מת'יאס לסור", rating: 87 }, { name: "רומן סורקין", rating: 89 }, { name: "ג'וש ניבו", rating: 91 }, { name: "חסיאל ריברו", rating: 85 }, { name: "ווניין גבריאל", rating: 84 }
+        { name: "שון ג'יימס", rating: 84 }, { name: "סופוקליס שחורציאניטיס", rating: 93 }, { name: "אלכס טיוס", rating: 87 }, { name: "בן אלטיט", rating: 69 }, { name: "טרבור אמבקווה", rating: 83 }, { name: "ויטור פאבראני", rating: 76 }, { name: "ארינזה אונואקו", rating: 79 }, { name: "סדריק סימונס", rating: 73 }, { name: "קולטון אייברסון", rating: 72 }, { name: "מאיק צירבס", rating: 74 }, { name: "נמרוד לוי", rating: 68 }, { name: "טאריק בלאק", rating: 86 }, { name: "אותלו האנטר", rating: 84 }, { name: "ג'יילן ריינולדס", rating: 79 }, { name: "אמארה סטודמאייר", rating: 86 }, { name: "אנטה ז'יז'יץ'", rating: 81 }, { name: "מת'יאס לסור", rating: 82 }, { name: "ג'וש ניבו", rating: 87 }, { name: "חסיאל ריברו", rating: 84 }, { name: "ווניין גבריאל", rating: 73 },
+        { name: "יניב גרין", rating: 77 }, { name: "עידן זלמנסון", rating: 73 }, { name: "זאק הנקינס", rating: 74 }, { name: "מרסיו סנטוס", rating: 76 }
     ]
 };
 
@@ -137,7 +205,18 @@ let playersDB = [];
 
 function initializeGamePlayers(selectedPack) {
     let selectedPlayers = [];
-    const shuffleArray = (array) => array.sort(() => 0.5 - Math.random());
+    // ערבוב Fisher-Yates: התפלגות אחידה אמיתית.
+    // הגרסה הקודמת, array.sort(() => 0.5 - Math.random()), החזירה
+    // השוואות לא עקביות ולכן שמרה שחקנים קרוב למקומם המקורי —
+    // שחקנים בתחילת הרשימה עלו פי 4 יותר מאלה שבסופה.
+    const shuffleArray = (array) => {
+        const out = [...array];
+        for (let i = out.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [out[i], out[j]] = [out[j], out[i]];
+        }
+        return out;
+    };
     
     // קובע איזה מאגר נטען - מכבי או NBA
     const dataSource = selectedPack === 'maccabi' ? rawPlayersDataMaccabi : rawPlayersDataNBA;
@@ -207,7 +286,13 @@ function setTurnTimer() {
         if (gameState.currentAuction.timeLeft <= 0) {
             const turnId = gameState.currentAuction.currentTurnId;
             if (turnId) {
-                executeFold(turnId);
+                // המציע הראשון לא יכול "לעבור" על שחקן: אם נגמר הזמן
+                // מגישים עבורו אוטומטית הצעה של $0 במקום לפרוש.
+                if (gameState.currentAuction.highestBid === -1) {
+                    applyBid(turnId, 0);
+                } else {
+                    executeFold(turnId);
+                }
             }
         }
     }, 1000);
@@ -299,6 +384,69 @@ function startNextAuction() {
     io.emit('updateState', gameState);
 }
 
+// מגיש הצעה בשם שחקן. מחזיר true אם ההצעה התקבלה.
+function applyBid(socketId, bidAmount) {
+    if (!gameState.gameStarted || !gameState.currentAuction || !gameState.currentAuction.player) return false;
+    if (gameState.currentAuction.currentTurnId !== socketId) return false;
+
+    const numericBid = Math.floor(Number(bidAmount));
+    const participant = gameState.participants.find(p => p.id === socketId);
+    if (!participant) return false;
+
+    if (numericBid <= gameState.currentAuction.highestBid || numericBid > participant.budget) return false;
+
+    gameState.currentAuction.highestBid = numericBid;
+    gameState.currentAuction.highestBidder = participant.name;
+
+    if (gameState.currentAuction.activeBidders.length === 1) {
+        handleAuctionEnd();
+    } else {
+        const currentIndex = gameState.currentAuction.activeBidders.indexOf(socketId);
+        const nextIndex = (currentIndex + 1) % gameState.currentAuction.activeBidders.length;
+        gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
+        setTurnTimer();
+        io.emit('updateState', gameState);
+    }
+    return true;
+}
+
+// מוציא שחקן מהמשחק לחלוטין (יציאה יזומה מהתפריט).
+function leaveGame(socketId) {
+    const idx = gameState.participants.findIndex(p => p.id === socketId);
+    if (idx === -1) return;
+
+    gameState.participants.splice(idx, 1);
+
+    if (gameState.participants.length === 0) {
+        clearTurnTimer();
+        gameState.gameStarted = false;
+        gameState.auctionIndex = 0;
+        gameState.currentAuction = { player: null, highestBid: -1, highestBidder: null, activeBidders: [], currentTurnId: null, timeLeft: 15 };
+        io.emit('updateState', gameState);
+        return;
+    }
+
+    if (gameState.gameStarted && gameState.currentAuction && gameState.currentAuction.player) {
+        const bidderIdx = gameState.currentAuction.activeBidders.indexOf(socketId);
+        if (bidderIdx !== -1) {
+            gameState.currentAuction.activeBidders.splice(bidderIdx, 1);
+
+            if (gameState.currentAuction.activeBidders.length <= 1) {
+                handleAuctionEnd();
+                return;
+            }
+
+            if (gameState.currentAuction.currentTurnId === socketId) {
+                const nextIndex = bidderIdx % gameState.currentAuction.activeBidders.length;
+                gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
+                setTurnTimer();
+            }
+        }
+    }
+
+    io.emit('updateState', gameState);
+}
+
 function executeFold(socketId) {
     if (!gameState.gameStarted || !gameState.currentAuction || !gameState.currentAuction.player) return;
     
@@ -334,7 +482,7 @@ io.on('connection', (socket) => {
             }
         } else {
             usersDB[cleanName] = password.trim();
-            fs.writeFileSync(usersPath, JSON.stringify(usersDB));
+            writeJsonSafe(usersPath, usersDB);
         }
 
         const existingPlayer = gameState.participants.find(p => p.name === cleanName);
@@ -397,7 +545,7 @@ io.on('connection', (socket) => {
         }
         leaderboard[winnerName] += 1;
         
-        fs.writeFileSync(leaderboardPath, JSON.stringify(leaderboard));
+        writeJsonSafe(leaderboardPath, leaderboard);
         
         gameState.gameStarted = false;
         gameState.auctionIndex = 0;
@@ -421,34 +569,19 @@ io.on('connection', (socket) => {
     });
 
     socket.on('placeBid', (bidAmount) => {
-        if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
-        
-        const numericBid = Math.floor(Number(bidAmount));
-        const participant = gameState.participants.find(p => p.id === socket.id);
-        
-        if (participant) {
-            const maxAllowedBid = participant.budget;
-
-            if (numericBid > gameState.currentAuction.highestBid && numericBid <= maxAllowedBid) {
-                gameState.currentAuction.highestBid = numericBid;
-                gameState.currentAuction.highestBidder = participant.name;
-                
-                if (gameState.currentAuction.activeBidders.length === 1) {
-                    handleAuctionEnd();
-                } else {
-                    const currentIndex = gameState.currentAuction.activeBidders.indexOf(socket.id);
-                    const nextIndex = (currentIndex + 1) % gameState.currentAuction.activeBidders.length;
-                    gameState.currentAuction.currentTurnId = gameState.currentAuction.activeBidders[nextIndex];
-                    setTurnTimer(); 
-                    io.emit('updateState', gameState);
-                }
-            }
-        }
+        applyBid(socket.id, bidAmount);
     });
 
     socket.on('fold', () => {
         if (!gameState.gameStarted || gameState.currentAuction.currentTurnId !== socket.id) return;
+        // אין אפשרות לפרוש לפני שהוגשה הצעה כלשהי — המציע הראשון
+        // חייב להציע $0 לפחות. פרישה אפשרית רק אחרי שמישהו העלה.
+        if (gameState.currentAuction.highestBid === -1) return;
         executeFold(socket.id);
+    });
+
+    socket.on('leaveGame', () => {
+        leaveGame(socket.id);
     });
 
     socket.on('rearrangeRoster', (newRoster) => {
@@ -483,6 +616,7 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
+    console.log(`Data directory: ${dataDir}`);
 });

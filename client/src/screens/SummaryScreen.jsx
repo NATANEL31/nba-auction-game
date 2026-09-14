@@ -1,4 +1,6 @@
 import SquadCard from '../components/SquadCard';
+import LeaveButton from '../components/LeaveButton';
+import MusicToggle from '../components/MusicToggle';
 
 export default function SummaryScreen({
   participants,
@@ -7,6 +9,7 @@ export default function SummaryScreen({
   onMovePlayer,
   onSaveRoster,
   onDeclareWinner,
+  onLeave,
 }) {
   return (
     <div className="app-shell">
@@ -14,6 +17,8 @@ export default function SummaryScreen({
         <h1 className="masthead__title">המשחק הסתיים</h1>
         <div className="masthead__meta">
           <span className="pill">סדרו את החמישייה והכתירו זוכה</span>
+          <MusicToggle />
+          <LeaveButton onLeave={onLeave} />
         </div>
       </header>
 

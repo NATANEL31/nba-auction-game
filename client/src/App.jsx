@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import './App.css';
 
 import Toast from './components/Toast';
+import { setScene } from './audio/musicManager';
 import LoginScreen from './screens/LoginScreen';
 import LobbyScreen from './screens/LobbyScreen';
 import ArenaScreen from './screens/ArenaScreen';
@@ -29,6 +30,19 @@ function App() {
 
   const [timeLeft, setTimeLeft] = useState(15);
   const [selectedPack, setSelectedPack] = useState('nba');
+
+  // --- מוזיקת רקע: טראק לכל שלב במשחק ---
+  const musicScene = !hasJoined
+    ? 'login'
+    : !gameState || !gameState.gameStarted
+      ? 'lobby'
+      : gameState.currentPack === 'maccabi'
+        ? 'game-maccabi'
+        : 'game-nba';
+
+  useEffect(() => {
+    setScene(musicScene);
+  }, [musicScene]);
 
   // --- ערכת נושא: מוחלת על <html> כדי שכל הטוקנים יתחלפו ---
   useEffect(() => {
@@ -103,6 +117,16 @@ function App() {
   };
 
   const handleStartGame = () => socket.emit('startGame', selectedPack);
+
+  const handleLeaveGame = () => {
+    socket.emit('leaveGame');
+    setHasJoined(false);
+    setGameState(null);
+    setMyEditableRoster(null);
+    setSoldNotification(null);
+    setCustomBid('');
+    setErrorMsg('');
+  };
   const handleBid = (amount) => socket.emit('placeBid', amount);
   const handleFold = () => socket.emit('fold');
 
@@ -159,6 +183,7 @@ function App() {
         selectedPack={selectedPack}
         onPackChange={setSelectedPack}
         onStartGame={handleStartGame}
+        onLeave={handleLeaveGame}
         myId={socket.id}
       />
     );
@@ -175,6 +200,7 @@ function App() {
           onMovePlayer={movePlayer}
           onSaveRoster={saveRoster}
           onDeclareWinner={handleDeclareWinner}
+          onLeave={handleLeaveGame}
         />
       </>
     );
@@ -202,6 +228,7 @@ function App() {
         onCustomBidChange={setCustomBid}
         onBid={handleBid}
         onFold={handleFold}
+        onLeave={handleLeaveGame}
       />
     </>
   );

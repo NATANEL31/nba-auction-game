@@ -1,3 +1,5 @@
+import MusicToggle from '../components/MusicToggle';
+
 export default function LoginScreen({
   username,
   password,
@@ -13,6 +15,10 @@ export default function LoginScreen({
 
   return (
     <div className="app-shell app-shell--narrow">
+      <div className="login-topbar">
+        <MusicToggle />
+      </div>
+
       <div className="brandmark">
         <div className="brandmark__logo">🏀</div>
         <h1 className="brandmark__name">מכרז</h1>

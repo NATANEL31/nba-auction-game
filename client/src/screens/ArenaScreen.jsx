@@ -1,4 +1,6 @@
 import SquadCard from '../components/SquadCard';
+import LeaveButton from '../components/LeaveButton';
+import MusicToggle from '../components/MusicToggle';
 
 const TURN_SECONDS = 15;
 const DANGER_AT = 5;
@@ -13,6 +15,7 @@ export default function ArenaScreen({
   onCustomBidChange,
   onBid,
   onFold,
+  onLeave,
 }) {
   const auction = gameState.currentAuction;
   const player = auction.player;
@@ -65,6 +68,8 @@ export default function ArenaScreen({
             סיבוב {gameState.auctionIndex + 1}
           </span>
           {me && <span className="pill pill--money tnum">התקציב שלי ${me.budget}</span>}
+          <MusicToggle />
+          <LeaveButton onLeave={onLeave} />
         </div>
       </header>
 
@@ -169,9 +174,11 @@ export default function ArenaScreen({
                       : `ממתין ל${currentTurnPlayer?.name || '…'}`}
                   </p>
                   <p className="turn-status__hint">
-                    {isMyTurn
-                      ? 'בחר הצעה לפני שהזמן נגמר'
-                      : 'ההצעה תעבור אליך מיד לאחר מכן'}
+                    {!isMyTurn
+                      ? 'ההצעה תעבור אליך מיד לאחר מכן'
+                      : isFirstBid
+                        ? 'אתה פותח את המכרז — אי אפשר לפרוש בשלב הזה'
+                        : 'בחר הצעה לפני שהזמן נגמר'}
                   </p>
                 </div>
               </div>
@@ -217,7 +224,7 @@ export default function ArenaScreen({
                     disabled={!isMyTurn}
                     onClick={() => (isFirstBid ? onBid(0) : onFold())}
                   >
-                    {isFirstBid ? 'העבר תור ($0)' : 'פרוש'}
+                    {isFirstBid ? 'הצע $0' : 'פרוש'}
                   </button>
                 </div>
               </form>
@@ -229,7 +236,8 @@ export default function ArenaScreen({
                   </p>
                   {isFirstBid && (
                     <p className="bid-note">
-                      המכרז נפתח — "העבר תור" מעביר הלאה ללא עלות.
+                      פתיחת המכרז — חובה להציע לפחות $0, אי אפשר לפרוש עדיין.
+                      אם הזמן ייגמר תוגש עבורך הצעה של $0.
                     </p>
                   )}
                 </>
