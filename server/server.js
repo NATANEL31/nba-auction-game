@@ -225,8 +225,7 @@ const rawPlayersDataEuroleague = {
         { name: "Talen Horton-Tucker", rating: 86 }, { name: "Markus Howard", rating: 86 }, { name: "Kevin Punter", rating: 85 }, { name: "Tyler Dorsey", rating: 85 },
         { name: "Lonnie Walker IV", rating: 85 }, { name: "Andreas Obst", rating: 83 }, { name: "PJ Dozier", rating: 82 }, { name: "Élie Okobo", rating: 82 },
         { name: "Antonio Blakeney", rating: 82 }, { name: "Evan Fournier", rating: 82 }, { name: "Brancou Badio", rating: 81 }, { name: "Jordan Loyd", rating: 81 },
-        { name: "Marko Gudurić", rating: 81 }, { name: "Isaïa Cordinier", rating: 80 }, { name: "Devon Hall", rating: 78 }, { name: "Donta Hall", rating: 78 },
-        { name: "Panagiotis Kalaitzakis", rating: 73 }
+        { name: "Marko Gudurić", rating: 81 }, { name: "Isaïa Cordinier", rating: 80 }, { name: "Devon Hall", rating: 78 },         { name: "Panagiotis Kalaitzakis", rating: 73 }
     ],
     SF: [
         { name: "Dwayne Bacon", rating: 87 }, { name: "Shavon Shields", rating: 84 }, { name: "Oshae Brissett", rating: 81 }, { name: "Isaac Bonga", rating: 81 },
@@ -246,8 +245,7 @@ const rawPlayersDataEuroleague = {
         { name: "Roman Sorkin", rating: 86 }, { name: "Nikola Milutinov", rating: 85 }, { name: "Edy Tavares", rating: 85 }, { name: "Josh Nebo", rating: 83 },
         { name: "Daniel Theis", rating: 83 }, { name: "Sam Hunter", rating: 83 }, { name: "Tyrique Jones", rating: 82 }, { name: "Mbaye Ndiaye", rating: 81 },
         { name: "Bruno Fernando", rating: 80 }, { name: "Georgios Papagiannis", rating: 80 }, { name: "Ante Žižić", rating: 80 }, { name: "Devin Booker", rating: 79 },
-        { name: "Mustapha Fall", rating: 78 }, { name: "Wenyen Gabriel", rating: 76 }, { name: "Tai Odiase", rating: 70 }, { name: "Armando Bacot Jr.", rating: 70 }
-    ]
+        { name: "Mustapha Fall", rating: 78 }, { name: "Wenyen Gabriel", rating: 76 }, { name: "Tai Odiase", rating: 70 }, { name: "Armando Bacot Jr.", rating: 70 }, { name: "Donta Hall", rating: 78 }]
 };
 
 let playersDB = [];
