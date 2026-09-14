@@ -1,6 +1,7 @@
 import SquadCard from '../components/SquadCard';
 import LeaveButton from '../components/LeaveButton';
 import MusicToggle from '../components/MusicToggle';
+import PlayerAvatar from '../components/PlayerAvatar';
 
 const TURN_SECONDS = 15;
 const DANGER_AT = 5;
@@ -119,11 +120,7 @@ export default function ArenaScreen({
 
             <div className="player-card__body">
               <div className="player-card__media">
-                {player.photo ? (
-                  <img src={player.photo} alt={player.name} />
-                ) : (
-                  <span aria-hidden="true">{player.image}</span>
-                )}
+                <PlayerAvatar player={player} />
               </div>
 
               <div className="player-card__info">

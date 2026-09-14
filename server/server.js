@@ -88,6 +88,10 @@ function writeJsonSafe(filePath, data) {
     }
 }
 
+// מיפוי שם שחקן -> תמונה. נוצר מוויקיפדיה העברית.
+// שחקן שאינו ברשימה מקבל אווטאר ראשי תיבות בצד הלקוח.
+const playerPhotos = readJsonSafe(path.join(__dirname, 'playerPhotos.json'), {});
+
 const leaderboardPath = path.join(dataDir, 'leaderboard.json');
 let leaderboard = readJsonSafe(leaderboardPath, {});
 
@@ -231,7 +235,8 @@ function initializeGamePlayers(selectedPack) {
             name: player.name,
             rating: player.rating,
             position: position,
-            image: playerImage
+            image: playerImage,
+            photo: playerPhotos[player.name] || null
         }));
     }
 
