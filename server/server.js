@@ -250,7 +250,8 @@ const rawPlayersDataEuroleague = {
         { name: "Bar Timor", rating: 78 },
         { name: "Juan Carlos Navarro", rating: 93 },
         { name: "Tal Burstein", rating: 80 },
-        { name: "Doron Perkins", rating: 79 }
+        { name: "Doron Perkins", rating: 79 },
+        { name: "Luwawu-Cabarrot", rating: 87 },
     ],
     SF: [
         { name: "Dwayne Bacon", rating: 87 }, { name: "Shavon Shields", rating: 84 }, { name: "Oshae Brissett", rating: 81 }, { name: "Isaac Bonga", rating: 81 },
