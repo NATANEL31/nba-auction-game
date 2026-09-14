@@ -606,56 +606,52 @@ function executeFold(socketId) {
 }
 
 io.on('connection', (socket) => {
-    socket.on('joinGame', (credentials) => {
-        const { username, password } = credentials;
-        const cleanName = username.trim();
+    socket.on('joinGame', (avatarName) => {
+        const cleanName = avatarName.trim();
 
-        if (!cleanName || !password) {
-            socket.emit('error', 'נא להזין שם משתמש וסיסמה.');
+        if (!cleanName) {
+            socket.emit('error', 'נא לבחור שחקן.');
             return;
-        }
-
-        if (usersDB[cleanName]) {
-            if (usersDB[cleanName] !== password.trim()) {
-                socket.emit('error', 'סיסמה שגויה!');
-                return;
-            }
-        } else {
-            usersDB[cleanName] = password.trim();
-            writeJsonSafe(usersPath, usersDB);
         }
 
         const existingPlayer = gameState.participants.find(p => p.name === cleanName);
 
         if (existingPlayer) {
-            const oldId = existingPlayer.id;
-            existingPlayer.id = socket.id; 
-            existingPlayer.connected = true; 
-
-            // עדכון מזהה המנהל אם הוא התחבר מחדש
-            if (gameState.hostId === oldId) {
-                gameState.hostId = socket.id;
-            }
-
-            if (gameState.currentAuction) {
-                const activeIndex = gameState.currentAuction.activeBidders.indexOf(oldId);
-                if (activeIndex !== -1) {
-                    gameState.currentAuction.activeBidders[activeIndex] = socket.id;
+            // בודק אם הדמות כבר נתפסה על ידי מישהו שכרגע מחובר למשחק
+            if (existingPlayer.connected) {
+                socket.emit('error', 'השחקן הזה כבר נתפס על ידי משתתף אחר! בחר דמות אחרת.');
+                return;
+            } else {
+                // המשתמש התנתק וחוזר למשחק - מתחבר מחדש לאותה דמות
+                const oldId = existingPlayer.id;
+                existingPlayer.id = socket.id; 
+                existingPlayer.connected = true; 
+                
+                if (gameState.hostId === oldId) {
+                    gameState.hostId = socket.id;
                 }
-                if (gameState.currentAuction.currentTurnId === oldId) {
-                    gameState.currentAuction.currentTurnId = socket.id;
+
+                if (gameState.currentAuction) {
+                    const activeIndex = gameState.currentAuction.activeBidders.indexOf(oldId);
+                    if (activeIndex !== -1) {
+                        gameState.currentAuction.activeBidders[activeIndex] = socket.id;
+                    }
+                    if (gameState.currentAuction.currentTurnId === oldId) {
+                        gameState.currentAuction.currentTurnId = socket.id;
+                    }
                 }
+                
+                io.emit('updateState', gameState);
+                return;
             }
-            
-            io.emit('updateState', gameState);
-            return;
         }
 
         if (gameState.gameStarted) {
-            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע (אלא אם אתה מנסה להתחבר לשחקן שכבר נמצא במשחק).');
+            socket.emit('error', 'המשחק כבר התחיל, לא ניתן להצטרף כרגע.');
             return;
         }
 
+        // משתתף חדש
         const newPlayer = { 
             id: socket.id, 
             name: cleanName, 
@@ -670,12 +666,11 @@ io.on('connection', (socket) => {
             ] 
         };
         gameState.participants.push(newPlayer);
-
-        // השחקן הראשון שמצטרף הוא המנהל
+        
         if (!gameState.hostId) {
             gameState.hostId = socket.id;
         }
-
+        
         io.emit('updateState', gameState);
     });
 
