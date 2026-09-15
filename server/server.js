@@ -294,6 +294,58 @@ const rawPlayersDataEuroleague = {
 
 let playersDB = [];
 
+// כמה שחקנים להגריל מכל עמדה.
+//
+// הסך הכל חייב להיות בדיוק 5 לכל משתתף — משבצת אחת לכל עמדה בסגל.
+// לכן כל פעולה כאן היא *העברה* של מכסה מעמדה אחת לאחרת, אף פעם לא
+// יצירה או מחיקה. כך הסך נשמר מתמטית ולא בזכות תיקון בסוף.
+//
+// כל עמדה מקבלת לפחות שחקן אחד ולכל היותר N+1, כך שהחלוקה משתנה
+// ממשחק למשחק (למשל 4 PF מול סנטר אחד) בלי שעמדה שלמה תיעלם.
+// רוב ההעברות נשארות בתוך הקבוצה — חוץ או גבוהים — כדי שהמאזן
+// בין גארדים לגבוהים לא יקרוס.
+const POSITION_GROUPS = [
+    ['PG', 'SG', 'SF'],   // חוץ
+    ['PF', 'C']           // גבוהים
+];
+const SAME_GROUP_BIAS = 0.8;
+
+function drawQuotas(participantCount, tempDB) {
+    const positions = Object.keys(tempDB);
+    const quotas = {};
+    for (const p of positions) quotas[p] = participantCount;
+
+    if (participantCount < 1) return quotas;
+
+    const floor = 1;
+    const ceiling = participantCount + 1;
+    const pickFrom = list => list[Math.floor(Math.random() * list.length)];
+
+    const attempts = participantCount * 9;
+    for (let i = 0; i < attempts; i++) {
+        let from, to;
+        if (Math.random() < SAME_GROUP_BIAS) {
+            const group = pickFrom(POSITION_GROUPS);
+            from = pickFrom(group);
+            to = pickFrom(group);
+        } else {
+            from = pickFrom(positions);
+            to = pickFrom(positions);
+        }
+
+        if (from === to) continue;
+        if (quotas[from] - 1 < floor) continue;
+        if (quotas[to] + 1 > ceiling) continue;
+        // אי אפשר להגריל יותר שחקנים ממה שיש בעמדה הזו בחבילה
+        if (quotas[to] + 1 > tempDB[to].length) continue;
+
+        quotas[from]--;
+        quotas[to]++;
+    }
+
+    return quotas;
+}
+
 function initializeGamePlayers(selectedPack) {
     let selectedPlayers = [];
     // ערבוב Fisher-Yates: התפלגות אחידה אמיתית.
@@ -334,12 +386,11 @@ function initializeGamePlayers(selectedPack) {
         }));
     }
 
-    const numPlayersPerPosition = gameState.participants.length;
+    const quotas = drawQuotas(gameState.participants.length, tempDB);
 
     for (const position in tempDB) {
         const shuffledPosition = shuffleArray([...tempDB[position]]);
-        const selectedFromPosition = shuffledPosition.slice(0, numPlayersPerPosition);
-        selectedPlayers.push(...selectedFromPosition);
+        selectedPlayers.push(...shuffledPosition.slice(0, quotas[position]));
     }
 
     playersDB = shuffleArray(selectedPlayers);
