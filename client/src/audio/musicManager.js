@@ -20,6 +20,7 @@ const NBA_PLAYLIST = [
   '/audio/nba-4.mp3',
   '/audio/nba-5.mp3',
   '/audio/haik.mp3',
+  '/audio/basketball.mp3',
 ];
 
 // מחרוזת = טראק אחד בלופ. מערך = פלייליסט מעורבב.
