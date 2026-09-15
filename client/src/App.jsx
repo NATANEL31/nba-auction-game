@@ -83,7 +83,7 @@ function App() {
     socket.on('gameStarted', () => {
       toast('Let the game begin!', {
         icon: '🏀',
-        duration: 3500,
+        duration: 2500,
         style: {
           background: '#333',
           color: '#fff',
@@ -94,20 +94,25 @@ function App() {
     });
 
     socket.on('playerSold', (data) => {
-      // ההודעה המקורית שלך נשארת
+      // ההודעה הרגילה
       setSoldNotification(`${data.playerName} נחתם על ידי ${data.winnerName}! 🎉`);
 
-      // 1. תנאי אוברול נמוך בסיבוב ראשון
-      if (data.isFirstPlayer && data.playerRating < 73) {
+      // מייצר ID ייחודי לכל הודעה כדי שהספרייה תמיד תקפיץ אותה כהודעה חדשה
+      const uniqueToastId = Date.now().toString() + Math.random().toString();
+
+      // תנאי שחקן גרוע - עכשיו קופץ תמיד כשמישהו קונה שחקן מתחת ל-73
+      if (data.playerRating < 73) {
         toast('איזה בתול 🤓', { 
+            id: `nerd-${uniqueToastId}`,
             icon: '🤦‍♂️', 
             duration: 4000 
         });
       }
 
-      // 2. תנאי שחקן מעל 90 אוברול
+      // תנאי שחקן מעל 90 אוברול 
       if (data.playerRating >= 90) {
         toast(`${data.winnerName} יצאת מלך 👑`, {
+          id: `king-${uniqueToastId}`,
           icon: '🔥',
           duration: 4000,
           style: {
