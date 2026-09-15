@@ -296,3 +296,10 @@ export function subscribe(fn) {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
+/** דילוג על השיר הנוכחי, ממשיך לשיר הבא */
+export function skipTrack() {
+  if (!currentScene) return;
+  // מעביר לשיר הבא ומודיע למערכת לעדכן את התצוגה
+  advance(currentScene);
+  notify();
+}

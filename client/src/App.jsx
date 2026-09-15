@@ -15,13 +15,6 @@ const socket = io();
 function App() {
   const [gameState, setGameState] = useState(null);
 
-  const [username, setUsername] = useState(
-    () => localStorage.getItem('michrazUsername') || '',
-  );
-  const [password, setPassword] = useState(
-    () => localStorage.getItem('michrazPassword') || '',
-  );
-
   const [hasJoined, setHasJoined] = useState(false);
   const [customBid, setCustomBid] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -113,19 +106,9 @@ function App() {
   const myRoster = myEditableRoster ?? me?.roster ?? null;
 
   // --- פעולות ---
-  const handleJoin = () => {
-    if (username.trim() === '' || password.trim() === '') {
-      setErrorMsg('נא למלא שם משתמש וסיסמה');
-      return;
-    }
-
-    localStorage.setItem('michrazUsername', username.trim());
-    localStorage.setItem('michrazPassword', password.trim());
+  const handleJoin = (selectedAvatar) => {
     setErrorMsg('');
-    socket.emit('joinGame', {
-      username: username.trim(),
-      password: password.trim(),
-    });
+    socket.emit('joinGame', selectedAvatar);
     setHasJoined(true);
   };
 
@@ -180,12 +163,8 @@ function App() {
       <>
         <Background />
         <LoginScreen
-        username={username}
-        password={password}
-        onUsernameChange={setUsername}
-        onPasswordChange={setPassword}
-        onJoin={handleJoin}
-        errorMsg={errorMsg}
+          onJoin={handleJoin}
+          errorMsg={errorMsg}
         />
       </>
     );
@@ -196,8 +175,8 @@ function App() {
       <>
         <Background />
         <div className="loading">
-        <div className="spinner" aria-hidden="true" />
-        <p>מתחבר לזירה…</p>
+          <div className="spinner" aria-hidden="true" />
+          <p>מתחבר לזירה…</p>
         </div>
       </>
     );
@@ -208,15 +187,15 @@ function App() {
       <>
         <Background />
         <LobbyScreen
-        participants={gameState.participants}
-        leaderboard={gameState.leaderboard}
-        selectedPack={selectedPack}
-        onPackChange={setSelectedPack}
-        onStartGame={handleStartGame}
-        onLeave={handleLeaveGame}
-        myId={socket.id}
-        hostId={gameState.hostId}
-        onKick={handleKick}
+          participants={gameState.participants}
+          leaderboard={gameState.leaderboard}
+          selectedPack={selectedPack}
+          onPackChange={setSelectedPack}
+          onStartGame={handleStartGame}
+          onLeave={handleLeaveGame}
+          myId={socket.id}
+          hostId={gameState.hostId}
+          onKick={handleKick}
         />
       </>
     );
@@ -245,8 +224,8 @@ function App() {
       <>
         <Background />
         <div className="loading">
-        <div className="spinner" aria-hidden="true" />
-        <p>טוען את השחקן הבא…</p>
+          <div className="spinner" aria-hidden="true" />
+          <p>טוען את השחקן הבא…</p>
         </div>
       </>
     );
