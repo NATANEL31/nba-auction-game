@@ -106,108 +106,108 @@ let usersDB = readJsonSafe(usersPath, {});
 
 const rawPlayersDataNBA = {
     PG: [
-        { name: "לוקה דונצ'יץ'", rating: 97 }, { name: "סטף קרי", rating: 96 }, { name: "שיי גילג'ס-אלכסנדר", rating: 96 }, { name: "ג'יילן ברנסון", rating: 93 }, 
-        { name: "טייריס הליברטון", rating: 90 }, { name: "ג'ה מוראנט", rating: 92 }, { name: "דמיאן לילארד", rating: 89 }, { name: "טריי יאנג", rating: 89 }, 
-        { name: "דיארון פוקס", rating: 88 }, { name: "ג'מאל מארי", rating: 87 }, { name: "דריוס גרלנד", rating: 86 }, { name: "לאמלו בול", rating: 88 }, 
-        { name: "טייריס מקסי", rating: 88 }, { name: "ג'רו הולידיי", rating: 86 }, { name: "פרד ואנווליט", rating: 83 }, { name: "ג'יילן סאגס", rating: 82 }, 
-        { name: "קייד קנינגהם", rating: 87 }, { name: "עמנואל קוויקלי", rating: 83 }, { name: "קובי וייט", rating: 84 }, { name: "ראיין רולינס", rating: 72 }, 
-        { name: "קווין פורטר ג'וניור", rating: 78 }, { name: "דיאנג'לו ראסל", rating: 81 }, { name: "מרקוס סמארט", rating: 80 }, { name: "סקוט הנדרסון", rating: 79 }, 
-        { name: "קיונטה ג'ורג'", rating: 81 }, { name: "טרה ג'ונס", rating: 78 }, { name: "טיוס ג'ונס", rating: 79 }, { name: "פייטון פריצ'ארד", rating: 78 }, 
-        { name: "טי.ג'יי מקונל", rating: 79 }, { name: "חוסה אלברדו", rating: 77 }, { name: "דניס שרודר", rating: 79 }, { name: "ג'רמי פירס", rating: 73 }, 
-        { name: "איגור דמין", rating: 78 }, { name: "בן שרף", rating: 78 }, { name: "איו דוסונמו", rating: 79 }, { name: "קולין סקסטון", rating: 82 }, 
-        { name: "ריד שפרד", rating: 79 }, { name: "רוב דילינגהאם", rating: 78 }, { name: "באב קרינגטון", rating: 76 }, { name: "ג'וש גידי", rating: 81 }, 
-        { name: "אנדרו נמבהארד", rating: 80 }, { name: "קולין גילספרי", rating: 73 }, { name: "אנתוני בלאק", rating: 76 }, { name: "אייזיאה קולייר", rating: 77 }, 
-        { name: "מיילס מקברייד", rating: 78 }, { name: "דז'ונטה מארי", rating: 86 }, { name: "קריס דאן", rating: 76 }, { name: "טרה מאן", rating: 76 }, 
-        { name: "בונז היילנד", rating: 75 }, { name: "ג'ארד מקיין", rating: 77 }, { name: "ברנדון וויליאמס", rating: 72 }, { name: "דניס ג'נקינס", rating: 70 }, 
-        { name: "דביון מיטשל", rating: 76 }, { name: "קמרון פיין", rating: 75 }, { name: "ארון הולידיי", rating: 74 }, { name: "דילן הארפר", rating: 80 }
+        { name: "לוקה דונצ'יץ'", rating: 95 }, { name: "סטף קרי", rating: 94 }, { name: "שיי גילג'ס-אלכסנדר", rating: 97 }, { name: "ג'יילן ברנסון", rating: 94 }, 
+        { name: "טייריס הליברטון", rating: 91 }, { name: "ג'ה מוראנט", rating: 86 }, { name: "דמיאן לילארד", rating: 86 }, { name: "טריי יאנג", rating: 87 }, 
+        { name: "דיארון פוקס", rating: 83 }, { name: "ג'מאל מארי", rating: 88 }, { name: "דריוס גרלנד", rating: 83 }, { name: "לאמלו בול", rating: 87 }, 
+        { name: "טייריס מקסי", rating: 90 }, { name: "ג'רו הולידיי", rating: 80 }, { name: "פרד ואנווליט", rating: 79 }, { name: "ג'יילן סאגס", rating: 79 }, 
+        { name: "קייד קנינגהם", rating: 92 }, { name: "עמנואל קוויקלי", rating: 79 }, { name: "קובי וייט", rating: 81 }, { name: "ראיין רולינס", rating: 77 }, 
+        { name: "קווין פורטר ג'וניור", rating: 77 }, { name: "דיאנג'לו ראסל", rating: 74 }, { name: "מרקוס סמארט", rating: 78 }, { name: "סקוט הנדרסון", rating: 77 }, 
+        { name: "קיונטה ג'ורג'", rating: 84 }, { name: "טרה ג'ונס", rating: 75 }, { name: "טיוס ג'ונס", rating: 69 }, { name: "פייטון פריצ'ארד", rating: 80 }, 
+        { name: "טי.ג'יי מקונל", rating: 77 }, { name: "חוסה אלברדו", rating: 77 }, { name: "דניס שרודר", rating: 77 }, { name: "ג'רמי פירס", rating: 76 }, 
+        { name: "איגור דמין", rating: 75 }, { name: "בן שרף", rating: 75 },  { name: "קולין סקסטון", rating: 78 }, 
+        { name: "ריד שפרד", rating: 78 }, { name: "רוב דילינגהאם", rating: 71 }, { name: "באב קרינגטון", rating: 73 }, { name: "ג'וש גידי", rating: 82 }, 
+        { name: "אנדרו נמבהארד", rating: 81 }, { name: "קולין גילספרי", rating: 78 }, { name: "אנתוני בלאק", rating: 75 }, { name: "אייזיאה קולייר", rating: 76 }, 
+        { name: "מיילס מקברייד", rating: 75 }, { name: "דז'ונטה מארי", rating: 80 }, { name: "קריס דאן", rating: 76 }, { name: "טרה מאן", rating: 72 }, 
+        { name: "בונז היילנד", rating: 73 }, { name: "אג'איי מיטשל", rating: 80 }, { name: "ברנדון וויליאמס", rating: 76 }, { name: "דניס ג'נקינס", rating: 79 }, 
+        { name: "דביון מיטשל", rating: 77 }, { name: "קמרון פיין", rating: 71 }, { name: "ארון הולידיי", rating: 72 }, { name: "דילן הארפר", rating: 83 }
     ],
     SG: [
-        { name: "אנתוני אדוארדס", rating: 95 }, { name: "דווין בוקר", rating: 95 }, { name: "דונובן מיטשל", rating: 92 }, { name: "ג'יילן בראון", rating: 92 }, 
-        { name: "קיירי אירווינג", rating: 93 }, { name: "דזמונד ביין", rating: 85 }, { name: "דריק וייט", rating: 86 }, { name: "סי.ג'יי מקולום", rating: 84 }, 
-        { name: "טיילר הירו", rating: 84 }, { name: "זאק לאבין", rating: 83 }, { name: "אמן תומפסון", rating: 81 }, { name: "ג'ורדן פול", rating: 78 }, 
-        { name: "ויג'יי אדג'קומבה", rating: 78 }, { name: "ברנדון מילר", rating: 84 }, { name: "קייסון וולאס", rating: 78 }, { name: "אנפרניי סימונס", rating: 83 }, 
-        { name: "בראדלי ביל", rating: 84 }, { name: "אוסטין ריבס", rating: 83 }, { name: "ג'יילן גרין", rating: 84 }, { name: "קאם תומאס", rating: 83 }, 
-        { name: "לאנדרי שאמט", rating: 74 }, { name: "מאליק מונק", rating: 82 }, { name: "סדריק קאוורד", rating: 75 }, { name: "ג'וש הארט", rating: 82 }, 
-        { name: "אלכס קארוסו", rating: 81 }, { name: "קליי תומפסון", rating: 81 }, { name: "קנטביוס קלדוול-פופ", rating: 80 }, { name: "גרייסון אלן", rating: 80 }, 
-        { name: "דונטה דיווינצ'נזו", rating: 82 }, { name: "מקס סטרוס", rating: 78 }, { name: "ברנדין פודז'מסקי", rating: 80 }, { name: "קאריס לוורט", rating: 80 }, 
-        { name: "באדי הילד", rating: 79 }, { name: "גארי טרנט ג'וניור", rating: 78 }, { name: "נורמן פאוול", rating: 81 }, { name: "לוגנט דורט", rating: 81 }, 
-        { name: "כריסטיאן בראון", rating: 78 }, { name: "קיאון אליס", rating: 77 }, { name: "דייסון דניאלס", rating: 77 }, { name: "ג'ורדן הוקינס", rating: 76 }, 
-        { name: "גריידי דיק", rating: 78 }, { name: "בנדיקט מת'ורין", rating: 81 }, { name: "בילאל קוליבאלי", rating: 77 }, { name: "סטפון קאסל", rating: 78 }, 
-        { name: "דלטון קנקט", rating: 78 }, { name: "טרנס שאנון ג'וניור", rating: 76 }, { name: "קוונטין גריימס", rating: 77 }, { name: "לוק קנארד", rating: 77 }, 
-        { name: "אייזיאה ג'ו", rating: 76 }, { name: "ניקיל אלכסנדר-ווקר", rating: 77 }, { name: "גארי האריס", rating: 75 }, { name: "סיאון ג'יימס", rating: 72 }, 
-        { name: "ג'ורדן קלארקסון", rating: 79 }, { name: "סם מריל", rating: 76 }, { name: "מקס כריסטי", rating: 75 }, { name: "זאיר ויליאמס", rating: 75 }, 
-        { name: "איי.ג'יי גרין", rating: 75 }, { name: "ג'וליאן סטראותר", rating: 76 }, { name: "טרה ג'ונסון", rating: 78 }, { name: "קווין הארטר", rating: 77 }, 
-        { name: "קלי אוברה ג'וניור", rating: 80 }, { name: "סת' קרי", rating: 74 }, { name: "טרנס מאן", rating: 77 }, { name: "מוזס מודי", rating: 76 }
+        { name: "אנתוני אדוארדס", rating: 94 }, { name: "דווין בוקר", rating: 91 }, { name: "ג'ארד מקיין", rating: 80 }, { name: "דונובן מיטשל", rating: 91 }, { name: "איו דוסונמו", rating: 81 },{ name: "ג'יילן בראון", rating: 92 }, 
+        { name: "קיירי אירווינג", rating: 86 }, { name: "דזמונד ביין", rating: 81 }, { name: "דריק וייט", rating: 82 }, { name: "סי.ג'יי מקולום", rating: 80 }, 
+        { name: "טיילר הירו", rating: 84 }, { name: "זאק לאבין", rating: 81 }, { name: "אמן תומפסון", rating: 85 }, { name: "ג'ורדן פול", rating: 76 }, 
+        { name: "ויג'יי אדג'קומבה", rating: 79 }, { name: "ברנדון מילר", rating: 83 }, { name: "קייסון וולאס", rating: 80 }, { name: "אנפרניי סימונס", rating: 79 }, 
+        { name: "בראדלי ביל", rating: 76 }, { name: "אוסטין ריבס", rating: 86 }, { name: "ג'יילן גרין", rating: 82 }, { name: "קאם תומאס", rating: 74 }, 
+        { name: "לאנדרי שאמט", rating: 78 }, { name: "מאליק מונק", rating: 78 }, { name: "סדריק קאוורד", rating: 77 }, { name: "ג'וש הארט", rating: 80 }, 
+        { name: "אלכס קארוסו", rating: 80 }, { name: "קליי תומפסון", rating: 78 }, { name: "קנטביוס קלדוול-פופ", rating: 75 }, { name: "גרייסון אלן", rating: 78 }, 
+        { name: "דונטה דיווינצ'נזו", rating: 81 }, { name: "מקס סטרוס", rating: 78 }, { name: "ברנדין פודז'מסקי", rating: 73 }, { name: "קאריס לוורט", rating: 77 }, 
+        { name: "באדי הילד", rating: 75 }, { name: "גארי טרנט ג'וניור", rating: 75 }, { name: "נורמן פאוול", rating: 84 }, { name: "לוגנץ דורט", rating: 79 }, 
+        { name: "כריסטיאן בראון", rating: 79 }, { name: "קיאון אליס", rating: 75 }, { name: "דייסון דניאלס", rating: 78 }, { name: "ג'ורדן הוקינס", rating: 70 }, 
+        { name: "גריידי דיק", rating: 75 }, { name: "בנדיקט מת'ורין", rating: 79 }, { name: "בילאל קוליבאלי", rating: 75 }, { name: "סטפון קאסל", rating: 85 }, 
+        { name: "דלטון קנקט", rating: 69 }, { name: "טרנס שאנון ג'וניור", rating: 75 }, { name: "קוונטין גריימס", rating: 79 }, { name: "לוק קנארד", rating: 77 }, 
+        { name: "אייזיאה ג'ו", rating: 78 }, { name: "ניקיל אלכסנדר-ווקר", rating: 83 }, { name: "גארי האריס", rating: 71 }, { name: "סיאון ג'יימס", rating: 70 }, 
+        { name: "ג'ורדן קלארקסון", rating: 76 }, { name: "סם מריל", rating: 77 }, { name: "מקס כריסטי", rating: 76 }, { name: "זאיר ויליאמס", rating: 72 }, 
+        { name: "איי.ג'יי גרין", rating: 75 }, { name: "ג'וליאן סטראותר", rating: 75 }, { name: "טרה ג'ונסון", rating: 76 }, { name: "קווין הארטר", rating: 76 }, 
+        { name: "קלי אוברה ג'וניור", rating: 78 }, { name: "סת' קרי", rating: 69 }, { name: "טרנס מאן", rating: 74 }, { name: "מוזס מודי", rating: 76 }, { name: "טים הארדווי ג'וניור", rating: 77 }, { name: "פלה לארסון", rating: 77 }
     ],
     SF: [
         { name: "ג'ייסון טייטום", rating: 94 }, { name: "לברון ג'יימס", rating: 92 }, { name: "קוואי לנארד", rating: 93 }, { name: "ג'ימי באטלר", rating: 85 }, 
-        { name: "פול ג'ורג'", rating: 84 }, { name: "מיקל ברידג'ס", rating: 83 }, { name: "ברנדון אינגרם", rating: 84 }, { name: "או.ג'י אנונובי", rating: 88 }, 
-        { name: "פרנץ ואגנר", rating: 86 }, { name: "קופר פלאג", rating: 87 }, { name: "קון קנופל", rating: 81 }, { name: "אייס ביילי", rating: 77 }, 
+        { name: "פול ג'ורג'", rating: 84 }, { name: "מיקל ברידג'ס", rating: 82 }, { name: "ברנדון אינגרם", rating: 84 }, { name: "או.ג'י אנונובי", rating: 88 }, 
+        { name: "פרנץ ואגנר", rating: 86 }, { name: "קופר פלאג", rating: 87 }, { name: "קון קנופל", rating: 82 }, { name: "אייס ביילי", rating: 77 }, 
         { name: "מייקל פורטר ג'וניור", rating: 84 }, { name: "סקוטי בארנס", rating: 88 }, { name: "דמאר דרוזן", rating: 82 }, { name: "ג'יילן וויליאמס", rating: 86 }, 
         { name: "אר.ג'יי בארט", rating: 82 }, { name: "הרברט ג'ונס", rating: 78 }, { name: "ג'ראמי גרנט", rating: 78 }, { name: "דני אבדיה", rating: 89 }, 
         { name: "אנדרו וויגינס", rating: 80 }, { name: "דילון ברוקס", rating: 81 }, { name: "דבין וואסל", rating: 80 }, { name: "גוי סנטוס", rating: 73 }, 
         { name: "ג'ייק לראביה", rating: 75 }, { name: "ג'וש גרין", rating: 72 }, { name: "הריסון בארנס", rating: 74 }, { name: "טריי מרפי", rating: 82 }, 
-        { name: "קאם ג'ונסון", rating: 79 }, { name: "קיגן מארי", rating: 78 }, { name: "זאקרי ריזאשה", rating: 75 }, { name: "קלדון ג'ונסון", rating: 76 }, 
+        { name: "קאם ג'ונסון", rating: 79 }, { name: "קיגן מארי", rating: 78 }, { name: "זאקרי ריזאשה", rating: 74 }, { name: "קלדון ג'ונסון", rating: 76 }, 
         { name: "אוסאר תומפסון", rating: 80 }, { name: "חיימה חאקז ג'וניור", rating: 80 }, { name: "קורי קיספרט", rating: 76 }, { name: "מאטאס בוזליס", rating: 79 }, 
         { name: "טידג'אן סאלון", rating: 70 }, { name: "קודי ויליאמס", rating: 72 }, { name: "קרטר בראיינט", rating: 71 }, { name: "סימונה פונטקיו", rating: 75 }, 
         { name: "רויס אוניל", rating: 74 }, { name: "טוריאן פרינס", rating: 72 }, { name: "קיילב מרטין", rating: 75 }, { name: "נאג'י מרשל", rating: 76 }, 
         { name: "דריק ג'ונס ג'וניור", rating: 76 }, { name: "ברוס בראון", rating: 75 }, { name: "דיאנדרה האנטר", rating: 78 }, { name: "ארון ניסמית'", rating: 79 }, 
-        { name: "אייזק אוקורו", rating: 74 }, { name: "ג'יידן מקדניאלס", rating: 83 }, { name: "גארי פייטון השני", rating: 73 }, { name: "סאדיק ביי", rating: 77 }, 
+        { name: "אייזק אוקורו", rating: 74 }, { name: "ג'יידן מקדניאלס", rating: 83 }, { name: "גארי פייטון השני", rating: 73 }, { name: "סאדיק ביי", rating: 79 }, 
         { name: "פייטון וואטסון", rating: 79 }, { name: "אוסמאן דיינג", rating: 69 }, { name: "קאם ויטמור", rating: 74 }, { name: "ג'בונטה גרין", rating: 71 }, 
         { name: "ג'וליאן שמפני", rating: 77 }, { name: "סם האוזר", rating: 75 }, { name: "טומאני קמארה", rating: 77 }, { name: "כריס מארי", rating: 66 }
     ],
     PF: [
-        { name: "יאניס אנטטוקומפו", rating: 97 }, { name: "קווין דוראנט", rating: 96 }, { name: "אנתוני דייוויס", rating: 95 }, { name: "ציון ויליאמסון", rating: 89 }, 
-        { name: "פאולו באנקרו", rating: 89 }, { name: "פסקל סיאקם", rating: 88 }, { name: "ג'וליוס רנדל", rating: 85 }, { name: "קארל-אנתוני טאונס", rating: 87 }, 
-        { name: "צ'ט הולמגרן", rating: 88 }, { name: "ג'ארן ג'קסון ג'וניור", rating: 86 }, { name: "ג'ון קולינס", rating: 82 }, { name: "לאורי מארקנן", rating: 86 }, 
-        { name: "אוואן מובלי", rating: 86 }, { name: "ארון גורדון", rating: 84 }, { name: "דריימונד גרין", rating: 81 }, { name: "קייל קוזמה", rating: 83 }, 
-        { name: "מיילס ברידג'ס", rating: 82 }, { name: "ג'ונתן קומינגה", rating: 83 }, { name: "ג'בארי סמית' ג'וניור", rating: 81 }, { name: "רוי הצ'ימורה", rating: 79 }, 
-        { name: "נאז ריד", rating: 82 }, { name: "בובי פורטיס", rating: 81 }, { name: "פי.ג'יי וושינגטון", rating: 81 }, { name: "טוביאס האריס", rating: 80 }, 
-        { name: "קוילן מארי בוילס", rating: 75 }, { name: "ג'יילן ג'ונסון", rating: 84 }, { name: "ג'רמי סוצ'אן", rating: 79 }, { name: "פטריק ויליאמס", rating: 78 }, 
-        { name: "טיילור הנדריקס", rating: 77 }, { name: "ג'ראס ווקר", rating: 77 }, { name: "גרנט ויליאמס", rating: 76 }, { name: "אובי טופין", rating: 79 }, 
-        { name: "קלי אוליניק", rating: 77 }, { name: "כריס בושיי", rating: 76 }, { name: "מקסי קלבר", rating: 75 }, { name: "לארי נאנס ג'וניור", rating: 76 }, 
-        { name: "דין וייד", rating: 75 }, { name: "קנריץ' וויליאמס", rating: 75 }, { name: "ג'יילן סאלון", rating: 74 }, { name: "אנתוני גיל", rating: 73 }, 
-        { name: "ג'ף גרין", rating: 74 }, { name: "לוקה גרזה", rating: 75 }, { name: "דני וולף", rating: 74 }, { name: "ראשיר פלמינג", rating: 72 }, 
-        { name: "סנטי אלדאמה", rating: 77 }, { name: "טרי ליילס", rating: 76 }, { name: "רון הולאנד", rating: 77 }, { name: "ג'ונתן אייזק", rating: 80 }, 
-        { name: "טארי איסון", rating: 79 }, { name: "סנדרו מאמוקלאשווילי", rating: 75 }
+        { name: "יאניס אנטטוקומפו", rating: 96 }, { name: "קווין דוראנט", rating: 92 }, { name: "ציון ויליאמסון", rating: 84 }, 
+        { name: "פאולו באנקרו", rating: 88 }, { name: "פסקל סיאקם", rating: 87 }, { name: "ג'וליוס רנדל", rating: 82 }, 
+        { name: "צ'ט הולמגרן", rating: 86 }, { name: "ג'ארן ג'קסון ג'וניור", rating: 85 }, { name: "ג'ון קולינס", rating: 78 }, { name: "לאורי מארקנן", rating: 86 }, 
+        { name: "אוואן מובלי", rating: 85 }, { name: "ארון גורדון", rating: 83 }, { name: "דריימונד גרין", rating: 76 }, { name: "קייל קוזמה", rating: 76 }, 
+        { name: "מיילס ברידג'ס", rating: 81 }, { name: "ג'ונתן קומינגה", rating: 77 }, { name: "ג'בארי סמית' ג'וניור", rating: 78 }, { name: "רוי הצ'ימורה", rating: 79 }, 
+        { name: "נאז ריד", rating: 81 }, { name: "בובי פורטיס", rating: 79 }, { name: "פי.ג'יי וושינגטון", rating: 78 }, { name: "טוביאס האריס", rating: 79 }, 
+        { name: "קוילן מארי בוילס", rating: 77 }, { name: "ג'יילן ג'ונסון", rating: 88 }, { name: "ג'רמי סוצ'אן", rating: 71 }, { name: "פטריק ויליאמס", rating: 70 }, 
+        { name: "טיילור הנדריקס", rating: 71 }, { name: "ג'ראס ווקר", rating: 77 }, { name: "גרנט ויליאמס", rating: 74 }, { name: "אובי טופין", rating: 78 }, 
+        { name: "קלי אוליניק", rating: 69 }, { name: "כריס בושיי", rating: 69 }, { name: "מקסי קלבר", rating: 68 }, { name: "לארי נאנס ג'וניור", rating: 72 }, 
+        { name: "דין וייד", rating: 76 }, { name: "קנריץ' וויליאמס", rating: 74 }, { name: "ג'יילן סאלון", rating: 71 }, { name: "אנתוני גיל", rating: 67 }, 
+        { name: "ג'ף גרין", rating: 73 }, { name: "לוקה גרזה", rating: 73 }, { name: "דני וולף", rating: 76 }, { name: "ראשיר פלמינג", rating: 75 }, 
+        { name: "סנטי אלדאמה", rating: 76 }, { name: "טרי ליילס", rating: 73 }, { name: "רון הולאנד", rating: 76 }, { name: "ג'ונתן אייזק", rating: 73 }, 
+        { name: "טארי איסון", rating: 79 }, { name: "סנדרו מאמוקלאשווילי", rating: 76 }
     ],
     C: [
-        { name: "ניקולה יוקיץ'", rating: 98 }, { name: "ג'ואל אמביד", rating: 97 }, { name: "ויקטור ומבניאמה", rating: 96 }, { name: "באם אדבאיו", rating: 89 }, 
-        { name: "אלכס סאר", rating: 78 }, { name: "דומאנטאס סאבוניס", rating: 88 }, { name: "רודי גובר", rating: 85 }, { name: "אלפרן שנגון", rating: 87 }, 
-        { name: "מיילס טרנר", rating: 84 }, { name: "קריסטפס פורזינגיס", rating: 86 }, { name: "ברוק לופז", rating: 80 }, { name: "ג'ארט אלן", rating: 85 }, 
-        { name: "ניק קלקסטון", rating: 83 }, { name: "דרק לייבלי", rating: 82 }, { name: "אייזיאה הרטנשטיין", rating: 82 }, { name: "איביצה זובאץ", rating: 81 }, 
-        { name: "קלינט קאפלה", rating: 80 }, { name: "יונאס ולנצ'יונאס", rating: 81 }, { name: "ונדל קרטר ג'וניור", rating: 80 }, { name: "יוסוף נורקיץ'", rating: 80 }, 
-        { name: "דיאנדרה אייטון", rating: 83 }, { name: "ווקר קסלר", rating: 80 }, { name: "דניאל גאפורד", rating: 81 }, { name: "מארק ויליאמס", rating: 81 }, 
-        { name: "ג'יילן דורן", rating: 83 }, { name: "מיטשל רובינסון", rating: 80 }, { name: "סטיבן אדמס", rating: 78 }, { name: "אונייקה אוקונגוו", rating: 80 }, 
-        { name: "זאק אידי", rating: 79 }, { name: "דונובן קלינגן", rating: 78 }, { name: "יעקב פולטל", rating: 80 }, { name: "קל'אל וור", rating: 77 }, 
-        { name: "טרייס ג'קסון-דייוויס", rating: 79 }, { name: "ג'יילין וויליאמס", rating: 78 }, { name: "דיירון שארפ", rating: 76 }, { name: "ניק ריצ'רדס", rating: 77 }, 
-        { name: "פול ריד", rating: 77 }, { name: "גוגה ביטאדזה", rating: 76 }, { name: "מייסון פלאמלי", rating: 75 }, { name: "אנדרה דראמונד", rating: 78 }, 
-        { name: "לוק קורנט", rating: 75 }, { name: "מוסא דיאבאטה", rating: 74 }, { name: "ריין קאלקברנר", rating: 74 }, { name: "מקסים ריינוד", rating: 73 }, 
-        { name: "דריק קווין", rating: 72 }, { name: "דואופ רית'", rating: 75 }, { name: "דווייט פאוול", rating: 74 }, { name: "ג'קסון הייז", rating: 76 }, 
-        { name: "תומאס בראיינט", rating: 75 }, { name: "ג'וק לנדייל", rating: 75 }, { name: "נמיאס קייטה", rating: 75 }, { name: "ג'יילן סמית'", rating: 77 }, 
-        { name: "ג'יילן האף", rating: 74 }, { name: "מוץ' ואגנר", rating: 77 }, { name: "ניקולה ווצ'ביץ'", rating: 82 }, { name: "רוברט וויליאמס השלישי", rating: 79 }, 
-        { name: "אל הורפורד", rating: 79 }, { name: "אייזאה סטיוארט", rating: 78 }, { name: "מרווין באגלי", rating: 77 }, { name: "ייבס מיסי", rating: 76 }
+        { name: "ניקולה יוקיץ'", rating: 97 }, { name: "ג'ואל אמביד", rating: 91 }, { name: "אנתוני דייוויס", rating: 90 },  { name: "קארל-אנתוני טאונס", rating: 90 }, { name: "ויקטור ומבניאמה", rating: 95 }, { name: "באם אדבאיו", rating: 87 }, 
+        { name: "אלכס סאר", rating: 80 }, { name: "דומאנטאס סאבוניס", rating: 84 }, { name: "רודי גובר", rating: 80 }, { name: "אלפרן שנגון", rating: 84 }, 
+        { name: "מיילס טרנר", rating: 78 }, { name: "קריסטפס פורזינגיס", rating: 79 }, { name: "ברוק לופז", rating: 75 }, { name: "ג'ארט אלן", rating: 84 }, 
+        { name: "ניק קלקסטון", rating: 77 }, { name: "דרק לייבלי", rating: 78 }, { name: "אייזיאה הרטנשטיין", rating: 82 }, { name: "איביצה זובאץ", rating: 82 }, 
+        { name: "קלינט קאפלה", rating: 74 }, { name: "ונדל קרטר ג'וניור", rating: 78 }, { name: "יוסוף נורקיץ'", rating: 77 }, 
+        { name: "דיאנדרה אייטון", rating: 78 }, { name: "ווקר קסלר", rating: 80 }, { name: "דניאל גאפורד", rating: 79 }, { name: "מארק ויליאמס", rating: 80 }, 
+        { name: "ג'יילן דורן", rating: 84 }, { name: "מיטשל רובינסון", rating: 79 }, { name: "סטיבן אדמס", rating: 75 }, { name: "אונייקה אוקונגוו", rating: 80 }, 
+        { name: "זאק אידי", rating: 78 }, { name: "דונובן קלינגן", rating: 79 }, { name: "יעקב הגדול", rating: 76 }, { name: "ק'ל'אל וורה", rating: 78 }, 
+        { name: "טרייס ג'קסון-דייוויס", rating: 73 }, { name: "הגלייזר", rating: 77 }, { name: "דיירון שארפ", rating: 75 }, { name: "ניק ריצ'רדס", rating: 74 }, 
+        { name: "פול ריד", rating: 77 }, { name: "גוגה ביטאדזה", rating: 76 }, { name: "מייסון פלאמלי", rating: 67 }, { name: "אנדרה דראמונד", rating: 77 }, 
+        { name: "לוק קורנט", rating: 78 }, { name: "מוסא דיאבאטה", rating: 76 }, { name: "ריין קאלקברנר", rating: 75 }, { name: "מקסים ריינוד", rating: 75 }, 
+        { name: "דריק קווין", rating: 77 }, { name: "דואופ רית'", rating: 65 }, { name: "דווייט פאוול", rating: 70 }, { name: "ג'קסון הייז", rating: 76 }, 
+        { name: "תומאס בראיינט", rating: 73 }, { name: "ג'וק לנדייל", rating: 73 }, { name: "נמיאס קייטה", rating: 79 }, { name: "צ", rating: 77 }, 
+        { name: "ג'יילן האף", rating: 76 }, { name: "מו ואגנר", rating: 74 }, { name: "ניקולה ווצ'ביץ'", rating: 79 }, { name: "רוברט וויליאמס השלישי", rating: 80 }, 
+        { name: "אל הורפורד", rating: 76 }, { name: "אייזאה סטיוארט", rating: 77 }, { name: "מרווין באגלי", rating: 77 }, { name: "ייבס מיסי", rating: 75 }
     ]
 };
 const rawPlayersDataMaccabi = {
     PG: [
-        { name: "טייריס רייס", rating: 89 }, { name: "יוגב אוחיון", rating: 85 }, { name: "יובל נעימי", rating: 74 }, { name: "ג'ורדן פארמר", rating: 88 }, { name: "טיילור רוצ'סטי", rating: 80 }, { name: "גל מקל", rating: 86 }, { name: "נוריס קול", rating: 84 }, { name: "פייר ג'קסון", rating: 83 }, { name: "נייט וולטרס", rating: 79 }, { name: "ארון ג'קסון", rating: 83 }, { name: "כריס ג'ונס", rating: 82 }, { name: "קינן אוונס", rating: 81 }, { name: "יפתח זיו", rating: 71 }, { name: "לורנזו בראון", rating: 88 }, { name: "תמיר בלאט", rating: 85 }, { name: "רוקאס יוקובאיטיס", rating: 83 }, { name: "עומר מאייר", rating: 70 },
-        { name: "תיאו פאפאלוקאס", rating: 82 }, { name: "מורן רות", rating: 75 }, { name: "עמית עבו", rating: 69 }, { name: "ים מדר", rating: 83 }, { name: "רמון סשנס", rating: 81 }, { name: "ג'רמי פארגו", rating: 92 }
+        { name: "טייריס רייס", rating: 89 }, { name: "יוגב אוחיון", rating: 82 }, { name: "יובל נעימי", rating: 69 }, { name: "ג'ורדן פארמר", rating: 87 }, { name: "טיילור רוצ'סטי", rating: 76 }, { name: "גל מקל", rating: 84 }, { name: "נוריס קול", rating: 81 }, { name: "פייר ג'קסון", rating: 81 }, { name: "נייט וולטרס", rating: 76 }, { name: "ארון ג'קסון", rating: 78 }, { name: "כריס ג'ונס", rating: 80 }, { name: "קינן אוונס", rating: 80 }, { name: "יפתח זיו", rating: 71 }, { name: "לורנזו בראון", rating: 87 }, { name: "תמיר בלאט", rating: 82 }, { name: "עומר מאייר", rating: 70 },
+        { name: "תיאו פאפאלוקאס", rating: 79 }, { name: "מורן רות", rating: 71 }, { name: "עמית עבו", rating: 66 }, { name: "ים מדר", rating: 81 }, { name: "רמון סשנס", rating: 79 }, { name: "ג'רמי פארגו", rating: 89 }
     ],
     SG: [
-        { name: "ריקי היקמן", rating: 88 }, { name: "סילבן לנדסברג", rating: 81 }, { name: "אנדרו גאודלוק", rating: 86 }, { name: "די.ג'יי. סילי", rating: 73 }, { name: "דגן יבזורי", rating: 75 }, { name: "ג'ון דיברתולומיאו", rating: 84 }, { name: "קנדריק ריי", rating: 73 }, { name: "טיילר דורסי", rating: 87 }, { name: "קיירי תומאס", rating: 73 }, { name: "ווייד בולדווין", rating: 92 }, { name: "אוסטין הולינס", rating: 74 }, { name: "ג'יילן אדאמס", rating: 79 }, { name: "ג'ו תומאסון", rating: 70 },
-        { name: "טל בורשטיין", rating: 83 }, { name: "דיוויד לוגאן", rating: 85 }, { name: "לוני ווקר", rating: 83 }, { name: "ג'ימי קלארק", rating: 87 }, { name: "סקוטי וילבקין", rating: 91 }, { name: "ג'ף דאוטין", rating: 75 }, { name: "גבריאל איפה לונדברג", rating: 84 }, { name: "קית לנגפורד", rating: 88 }
+        { name: "ריקי היקמן", rating: 86 }, { name: "סילבן לנדסברג", rating: 80 }, { name: "אנדרו גאודלוק", rating: 83 }, { name: "די.ג'יי. סילי", rating: 71 }, { name: "דגן יבזורי", rating: 73 }, { name: "ג'ון דיברתולומיאו", rating: 82 }, { name: "קנדריק ריי", rating: 66 }, { name: "טיילר דורסי", rating: 84 }, { name: "קיירי תומאס", rating: 68 }, { name: "ווייד בולדווין", rating: 88 }, { name: "אוסטין הולינס", rating: 70 }, { name: "ג'יילן אדאמס", rating: 78 }, { name: "ג'ו תומאסון", rating: 65 },
+        { name: "דורי סהר", rating: 61 }, { name: "טל בורשטיין", rating: 82 }, { name: "דיוויד לוגאן", rating: 83 }, { name: "לוני ווקר", rating: 83 }, { name: "ג'ימי קלארק", rating: 84 }, { name: "סקוטי וילבקין", rating: 88 }, { name: "ג'ף דאוטין", rating: 73 }, { name: "גבריאל איפה לונדברג", rating: 83 }, { name: "קית לנגפורד", rating: 85 }, { name: "רוקאס יוקובאיטיס", rating: 82 }, { name: "ג'יימס נאנלי", rating: 79 },
     ],
     SF: [
-        { name: "ליוואי רנדולף", rating: 82 }, { name: "דווין סמית'", rating: 89 }, { name: "ג'ו אינגלס", rating: 77 }, { name: "גיא פניני", rating: 80 }, { name: "סוני ווימס", rating: 88 }, { name: "דיאנדרה קיין", rating: 80 }, { name: "יובל זוסמן", rating: 77 }, { name: "כארם משעור", rating: 70 }, { name: "דני אבדיה", rating: 86 }, { name: "אלייז'ה בראיינט", rating: 86 }, { name: "סנדי כהן", rating: 72 }, { name: "ג'יימס נאנלי", rating: 80 }, { name: "בונזי קולסון", rating: 85 }, { name: "רפי מנקו", rating: 74 }, { name: "אנטוניוס קליבלנד", rating: 76 }, { name: "מריאל שאיוק", rating: 73 },         { name: "צ'אק אידסון", rating: 83 }, { name: "אושה בריסט", rating: 83 }, { name: "עוז בלייזר", rating: 74 }, { name: "מייקל רול", rating: 79 }, { name: "דארן היליארד", rating: 78 }, { name: "ניק קיינר מדלי", rating: 76 }
+        { name: "ליוואי רנדולף", rating: 82 }, { name: "דווין סמית'", rating: 88 }, { name: "ג'ו אינגלס", rating: 77 }, { name: "גיא פניני", rating: 81 }, { name: "סוני ווימס", rating: 83 }, { name: "דיאנדרה קיין", rating: 77 }, { name: "יובל זוסמן", rating: 77 }, { name: "כארם משעור", rating: 69 }, { name: "דני אבדיה", rating: 80 }, { name: "אלייז'ה בראיינט", rating: 83 }, { name: "סנדי כהן", rating: 68 }, { name: "בונזי קולסון", rating: 83 }, { name: "רפי מנקו", rating: 72 }, { name: "אנטוניוס קליבלנד", rating: 74 }, { name: "מריאל שאיוק", rating: 70 }, { name: "צ'אק אידסון", rating: 82 }, { name: "אושה בריסט", rating: 80 }, { name: "עוז בלייזר", rating: 71 }, { name: "מייקל רול", rating: 78 }, { name: "דארן היליארד", rating: 74 }, { name: "ניק קיינר מדלי", rating: 75 }
     ],
     PF: [
-        { name: "דייוויד בלו", rating: 88 }, { name: "ג'ייק כהן", rating: 80 }, { name: "בריאן רנדל", rating: 87 }, { name: "ג'ו אלכסנדר", rating: 75 }, { name: "דראגן בנדר", rating: 71 }, { name: "ויקטור ראד", rating: 73 }, { name: "קווינסי מילר", rating: 78 }, { name: "ג'ונה בולדן", rating: 79 }, { name: "ג'וני אובראיינט", rating: 80 }, { name: "אנג'לו קלויארו", rating: 82 }, { name: "עומרי כספי", rating: 85 }, { name: "קווינסי אייסי", rating: 82 }, { name: "טי.ג'יי. קליין", rating: 72 }, { name: "דריק ויליאמס", rating: 82 }, { name: "אלכס פוית'רס", rating: 81 }, { name: "ג'רל מרטין", rating: 78 }, { name: "סולימאן בריימו", rating: 71 }, { name: "ג'יימס ווב", rating: 75 }, { name: "ג'יילן הורד", rating: 88 }, { name: "וויל ריימן", rating: 77 },
-        { name: "טי ג'יי ליף", rating: 81 }, { name: "ריצ'רד הנדריקס", rating: 85 }, { name: "איתי שגב", rating: 72 }, { name: "רומן סורקין", rating: 87 }
+        { name: "דייוויד בלו", rating: 86 }, { name: "ג'ייק כהן", rating: 76 }, { name: "בריאן רנדל", rating: 82 }, { name: "ג'ו אלכסנדר", rating: 73 }, { name: "דראגן בנדר", rating: 70 }, { name: "ויקטור ראד", rating: 69 }, { name: "קווינסי מילר", rating: 77 }, { name: "ג'ונה בולדן", rating: 72 }, { name: "ג'וני אובראיינט", rating: 76 }, { name: "אנג'לו קלויארו", rating: 79 }, { name: "עומרי כספי", rating: 82 }, { name: "קווינסי אייסי", rating: 81 }, { name: "דריק ויליאמס", rating: 78 }, { name: "אלכס פוית'רס", rating: 77 }, { name: "ג'רל מרטין", rating: 76 }, { name: "סולימאן בריימו", rating: 69 }, { name: "ג'יימס ווב", rating: 73 }, { name: "ג'יילן הורד", rating: 85 }, { name: "וויל ריימן", rating: 76 },
+        { name: "טי ג'יי ליף", rating: 78 }, { name: "ריצ'רד הנדריקס", rating: 82 }, { name: "איתי שגב", rating: 73 }, { name: "רומן סורקין", rating: 83 }
     ],
     C: [
-        { name: "שון ג'יימס", rating: 84 }, { name: "סופוקליס שחורציאניטיס", rating: 93 }, { name: "אלכס טיוס", rating: 87 }, { name: "בן אלטיט", rating: 69 }, { name: "ארינזה אונואקו", rating: 79 }, { name: "קולטון אייברסון", rating: 72 }, { name: "מאיק צירבס", rating: 74 }, { name: "נמרוד לוי", rating: 68 }, { name: "טאריק בלאק", rating: 86 }, { name: "אותלו האנטר", rating: 84 }, { name: "ג'יילן ריינולדס", rating: 79 }, { name: "אמארה סטודמאייר", rating: 86 }, { name: "אנטה ז'יז'יץ'", rating: 81 }, { name: "מת'יאס לסור", rating: 82 }, { name: "ג'וש ניבו", rating: 87 }, { name: "חסיאל ריברו", rating: 84 }, { name: "ווניין גבריאל", rating: 73 },
-        { name: "יניב גרין", rating: 77 }, { name: "עידן זלמנסון", rating: 73 }, { name: "זאק הנקינס", rating: 74 }, { name: "מרסיו סנטוס", rating: 76 }
+        { name: "שון ג'יימס", rating: 81 }, { name: "סופוקליס שחורציאניטיס", rating: 89 }, { name: "אלכס טיוס", rating: 85 }, { name: "בן אלטיט", rating: 69 }, { name: "ארינזה אונואקו", rating: 75 }, { name: "קולטון אייברסון", rating: 64 }, { name: "מאיק צירבס", rating: 71 }, { name: "נמרוד לוי", rating: 68 }, { name: "טאריק בלאק", rating: 82 }, { name: "אותלו האנטר", rating: 82 }, { name: "ג'יילן ריינולדס", rating: 80 }, { name: "אמארה סטודמאייר", rating: 81 }, { name: "אנטה ז'יז'יץ'", rating: 81 }, { name: "ג'וש ניבו", rating: 85 }, { name: "חסיאל ריברו", rating: 81 }, { name: "ווניין גבריאל", rating: 73 },
+        { name: "יניב גרין", rating: 77 }, { name: "עידן זלמנסון", rating: 69 }, { name: "זאק הנקינס", rating: 70 }, { name: "מרסיו סנטוס", rating: 76 }, { name: "נווה בן שמן", rating: 55 }
     ]
 };
 
@@ -241,7 +241,7 @@ const rawPlayersDataEuroleague = {
         { name: "Antonio Blakeney", rating: 82 }, { name: "Brancou Badio", rating: 81 }, { name: "Jordan Loyd", rating: 80 },
         { name: "Marko Gudurić", rating: 81 }, { name: "Isaïa Cordinier", rating: 80 }, { name: "Devon Hall", rating: 75 }, { name: "Panagiotis Kalaitzakis", rating: 73 },
         { name: "Miki Berkovich", rating: 90 }, { name: "Keaton Wallace", rating: 78 }, { name: "John DiBartolomeo", rating: 73 }, 
-        { name: "Doron Jamchi", rating: 86 },
+        { name: "Doron Jamchi", rating: 86 }, { name: "Armoni Brooks", rating: 82 },
         { name: "Tal Brody", rating: 85 },
         { name: "Anthony Parker", rating: 93 },
         { name: "Kadeem Carrington", rating: 76 },
