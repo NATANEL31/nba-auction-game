@@ -232,8 +232,7 @@ const rawPlayersDataEuroleague = {
         { name: "Luka Dončić", rating: 94 },
         { name: "Sergio Rodríguez", rating: 88 },
         { name: "Jeremy Pargo", rating: 87 },
-        { name: "Miloš Teodosić", rating: 88 },
-        { name: "Alexey Shved", rating: 88 }
+        { name: "Miloš Teodosić", rating: 88 }
     ],
     SG: [
         { name: "Dzanan Musa", rating: 83 }, { name: "Nadir Hifi", rating: 87 }, { name: "Elijah Bryant", rating: 85 }, { name: "Kendrick Nunn", rating: 88 },
@@ -263,9 +262,7 @@ const rawPlayersDataEuroleague = {
         { name: "Oz Blayzer", rating: 67 },
         { name: "Guy Pnini", rating: 82 },
         { name: "Andrei Kirilenko", rating: 90 }, { name: "Cedi Osman", rating: 79 },
-        { name: "Timothé Luwawu-Cabarrot", rating: 87 },
-        { name: "Chuck Eidson", rating: 84 },
-        { name: "Sonny Weems", rating: 86 }
+        { name: "Timothé Luwawu-Cabarrot", rating: 87 }
     ],
     PF: [
         { name: "Aleksandar Vezenkov", rating: 89 }, { name: "Jaylen Hoard", rating: 83 }, { name: "Nikola Kalinić", rating: 87 }, { name: "Nigel Hayes-Davis", rating: 86 }, { name: "Guerschon Yabusele", rating: 86 },
@@ -292,9 +289,7 @@ const rawPlayersDataEuroleague = {
         { name: "Sofoklis Schortsanitis", rating: 89 },
         { name: "Jan Veselý", rating: 86 },
         { name: "Kyle Hines", rating: 87 },
-        { name: "Ante Tomić", rating: 86 },
-        { name: "Nikola Peković", rating: 85 },
-        { name: "Pau Gasol", rating: 93 }
+        { name: "Ante Tomić", rating: 86 }
     ]
 };
 
