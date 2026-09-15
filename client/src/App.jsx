@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import toast, { Toaster } from 'react-hot-toast'; // התוספת של הספרייה
 import './App.css';
 
-import Toast from './components/Toast';
+import Toast from './components/Toast'; // ה-Toast המקורי שלך
 import Background from './components/Background';
 import { setScene } from './audio/musicManager';
 import LoginScreen from './screens/LoginScreen';
@@ -48,7 +49,7 @@ function App() {
     document.documentElement.dataset.theme = theme;
   }, [gameState?.currentPack]);
 
-  // --- חיבור לשרת ---
+  // --- חיבור לשרת והאזנה לאירועים ---
   useEffect(() => {
     let timeoutId;
 
@@ -72,15 +73,50 @@ function App() {
       setHasJoined(false);
     });
 
-    // הוצאה על ידי מנהל המשחק
     socket.on('kicked', (msg) => {
       setErrorMsg(msg);
       setHasJoined(false);
       setGameState(null);
     });
 
+    // הלוגיקה של ההודעה בתחילת המשחק
+    socket.on('gameStarted', () => {
+      toast('Let the game begin!', {
+        icon: '🏀',
+        duration: 3500,
+        style: {
+          background: '#333',
+          color: '#fff',
+          fontWeight: 'bold',
+          fontSize: '18px'
+        },
+      });
+    });
+
     socket.on('playerSold', (data) => {
+      // ההודעה המקורית שלך נשארת
       setSoldNotification(`${data.playerName} נחתם על ידי ${data.winnerName}! 🎉`);
+
+      // 1. תנאי אוברול נמוך בסיבוב ראשון
+      if (data.isFirstPlayer && data.playerRating < 73) {
+        toast('איזה בתול 🤓', { 
+            icon: '🤦‍♂️', 
+            duration: 4000 
+        });
+      }
+
+      // 2. תנאי שחקן מעל 90 אוברול
+      if (data.playerRating >= 90) {
+        toast(`${data.winnerName} יצאת מלך 👑`, {
+          icon: '🔥',
+          duration: 4000,
+          style: {
+            border: '2px solid #FFD700',
+            padding: '16px',
+            fontWeight: 'bold'
+          },
+        });
+      }
 
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => setSoldNotification(null), 4000);
@@ -92,6 +128,7 @@ function App() {
       socket.off('error');
       socket.off('kicked');
       socket.off('playerSold');
+      socket.off('gameStarted');
       clearTimeout(timeoutId);
     };
   }, []);
@@ -101,8 +138,6 @@ function App() {
     gameState?.auctionIndex > 0 && !gameState?.currentAuction?.player;
   const me = gameState?.participants.find((p) => p.id === socket.id);
 
-  // החמישייה שלי לעריכה: myEditableRoster הוא override בלבד,
-  // כל עוד לא סידרתי מחדש מציגים את מה שהגיע מהשרת.
   const myRoster = myEditableRoster ?? me?.roster ?? null;
 
   // --- פעולות ---
@@ -123,10 +158,9 @@ function App() {
     setCustomBid('');
     setErrorMsg('');
   };
+  
   const handleBid = (amount) => socket.emit('placeBid', amount);
   const handleFold = () => socket.emit('fold');
-
-  // פעולות מנהל בלבד
   const handleKick = (playerId) => socket.emit('kickPlayer', playerId);
 
   const handleEndGameEarly = () => {
@@ -157,54 +191,35 @@ function App() {
     if (myRoster) socket.emit('rearrangeRoster', myRoster);
   };
 
-  // --- ניתוב מסכים ---
+  // --- ניתוב מסכים בצורה ששומרת על ה-Toaster על המסך ---
+  let screenContent;
+
   if (!hasJoined) {
-    return (
-      <>
-        <Background />
-        <LoginScreen
-          onJoin={handleJoin}
-          errorMsg={errorMsg}
-        />
-      </>
+    screenContent = <LoginScreen onJoin={handleJoin} errorMsg={errorMsg} />;
+  } else if (!gameState) {
+    screenContent = (
+      <div className="loading">
+        <div className="spinner" aria-hidden="true" />
+        <p>מתחבר לזירה…</p>
+      </div>
     );
-  }
-
-  if (!gameState) {
-    return (
-      <>
-        <Background />
-        <div className="loading">
-          <div className="spinner" aria-hidden="true" />
-          <p>מתחבר לזירה…</p>
-        </div>
-      </>
+  } else if (!gameState.gameStarted) {
+    screenContent = (
+      <LobbyScreen
+        participants={gameState.participants}
+        leaderboard={gameState.leaderboard}
+        selectedPack={selectedPack}
+        onPackChange={setSelectedPack}
+        onStartGame={handleStartGame}
+        onLeave={handleLeaveGame}
+        myId={socket.id}
+        hostId={gameState.hostId}
+        onKick={handleKick}
+      />
     );
-  }
-
-  if (!gameState.gameStarted) {
-    return (
+  } else if (isGameOver) {
+    screenContent = (
       <>
-        <Background />
-        <LobbyScreen
-          participants={gameState.participants}
-          leaderboard={gameState.leaderboard}
-          selectedPack={selectedPack}
-          onPackChange={setSelectedPack}
-          onStartGame={handleStartGame}
-          onLeave={handleLeaveGame}
-          myId={socket.id}
-          hostId={gameState.hostId}
-          onKick={handleKick}
-        />
-      </>
-    );
-  }
-
-  if (isGameOver) {
-    return (
-      <>
-        <Background />
         <Toast message={soldNotification} />
         <SummaryScreen
           participants={gameState.participants}
@@ -217,16 +232,31 @@ function App() {
         />
       </>
     );
-  }
-
-  if (!gameState.currentAuction?.player) {
-    return (
+  } else if (!gameState.currentAuction?.player) {
+    screenContent = (
+      <div className="loading">
+        <div className="spinner" aria-hidden="true" />
+        <p>טוען את השחקן הבא…</p>
+      </div>
+    );
+  } else {
+    screenContent = (
       <>
-        <Background />
-        <div className="loading">
-          <div className="spinner" aria-hidden="true" />
-          <p>טוען את השחקן הבא…</p>
-        </div>
+        <Toast message={soldNotification} />
+        <ArenaScreen
+          gameState={gameState}
+          me={me}
+          myId={socket.id}
+          myRoster={myRoster}
+          timeLeft={timeLeft}
+          customBid={customBid}
+          onCustomBidChange={setCustomBid}
+          onBid={handleBid}
+          onFold={handleFold}
+          onLeave={handleLeaveGame}
+          isHost={gameState.hostId === socket.id}
+          onEndGame={handleEndGameEarly}
+        />
       </>
     );
   }
@@ -234,21 +264,10 @@ function App() {
   return (
     <>
       <Background />
-      <Toast message={soldNotification} />
-      <ArenaScreen
-        gameState={gameState}
-        me={me}
-        myId={socket.id}
-        myRoster={myRoster}
-        timeLeft={timeLeft}
-        customBid={customBid}
-        onCustomBidChange={setCustomBid}
-        onBid={handleBid}
-        onFold={handleFold}
-        onLeave={handleLeaveGame}
-        isHost={gameState.hostId === socket.id}
-        onEndGame={handleEndGameEarly}
-      />
+      {/* מחזיק את ההודעות הקופצות המיוחדות בכל חלקי האפליקציה */}
+      <Toaster position="top-center" reverseOrder={false} />
+      
+      {screenContent}
     </>
   );
 }

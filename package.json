@@ -14,5 +14,8 @@
     "dev:client": "npm --prefix client run dev",
     "dev:server": "node server/server.js",
     "lint": "npm --prefix client run lint"
+  },
+  "dependencies": {
+    "react-hot-toast": "^2.6.0"
   }
 }

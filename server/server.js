@@ -458,6 +458,9 @@ function handleAuctionEnd() {
         if (winner && winner.budget >= finalBid) {
             winner.budget -= finalBid;
             
+            // --- תוספת: בודק אם הסגל כרגע ריק לחלוטין (לפני שמוסיפים את השחקן) ---
+            const isFirstPlayer = winner.roster.every(slot => slot.player === null);
+
             const positionsOrder = ['PG', 'SG', 'SF', 'PF', 'C'];
             const startIdx = positionsOrder.indexOf(gameState.currentAuction.player.position);
             
@@ -472,9 +475,12 @@ function handleAuctionEnd() {
                 }
             }
 
+            // --- עדכון ההודעה שנשלחת ללקוח כדי שתכיל את הרייטינג והבדיקה ---
             io.emit('playerSold', {
                 playerName: gameState.currentAuction.player.name,
-                winnerName: winner.name
+                winnerName: winner.name,
+                playerRating: gameState.currentAuction.player.rating,
+                isFirstPlayer: isFirstPlayer
             });
         }
     }
@@ -716,9 +722,13 @@ io.on('connection', (socket) => {
     socket.on('startGame', (selectedPack) => {
         if (!gameState.gameStarted && gameState.participants.length > 0 && socket.id === gameState.hostId) {
             gameState.gameStarted = true;
-            gameState.currentPack = selectedPack || 'nba'; // <-- מעדכן את החבילה בסטייט
+            gameState.currentPack = selectedPack || 'nba'; 
             gameState.auctionIndex = 0;
             initializeGamePlayers(selectedPack || 'nba');
+            
+            // --- תוספת: שולח התראה לכל השחקנים שהמשחק התחיל ---
+            io.emit('gameStarted');
+            
             startNextAuction();
         }
     });
