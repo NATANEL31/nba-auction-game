@@ -152,7 +152,7 @@ const rawPlayersDataNBA = {
         { name: "טידג'אן סאלון", rating: 70 }, { name: "קודי ויליאמס", rating: 72 }, { name: "קרטר בראיינט", rating: 71 }, { name: "סימונה פונטקיו", rating: 75 }, 
         { name: "רויס אוניל", rating: 74 }, { name: "טוריאן פרינס", rating: 72 }, { name: "קיילב מרטין", rating: 75 }, { name: "נאג'י מרשל", rating: 76 }, 
         { name: "דריק ג'ונס ג'וניור", rating: 76 }, { name: "ברוס בראון", rating: 75 }, { name: "דיאנדרה האנטר", rating: 78 }, { name: "ארון ניסמית'", rating: 79 }, 
-        { name: "אייזק אוקורו", rating: 74 }, { name: "ג'יידן מקדניאלס", rating: 83 }, { name: "גארי פייטון השני", rating: 73 }, { name: "סאדיק ביי", rating: 75 }, 
+        { name: "אייזק אוקורו", rating: 74 }, { name: "ג'יידן מקדניאלס", rating: 83 }, { name: "גארי פייטון השני", rating: 73 }, { name: "סאדיק ביי", rating: 77 }, 
         { name: "פייטון וואטסון", rating: 79 }, { name: "אוסמאן דיינג", rating: 69 }, { name: "קאם ויטמור", rating: 74 }, { name: "ג'בונטה גרין", rating: 71 }, 
         { name: "ג'וליאן שמפני", rating: 77 }, { name: "סם האוזר", rating: 75 }, { name: "טומאני קמארה", rating: 77 }, { name: "כריס מארי", rating: 66 }
     ],
@@ -261,7 +261,7 @@ const rawPlayersDataEuroleague = {
         { name: "Devin Smith", rating: 86 },
         { name: "Oz Blayzer", rating: 67 },
         { name: "Guy Pnini", rating: 82 },
-        { name: "Andrei Kirilenko", rating: 90 }, { name: "Cedi Osman", rating: 79 },
+        { name: "Andrei Kirilenko", rating: 90 }, { name: "Cedi Osman", rating: 80 },
         { name: "Timothé Luwawu-Cabarrot", rating: 87 }
     ],
     PF: [
