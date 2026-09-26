@@ -235,54 +235,59 @@ const rawPlayersDataMaccabi = {
 
 const rawPlayersDataEuroleague = {
     PG: [
-        { name: "Luka Dončić", rating: 94 }, { name: "Šarūnas Jasikevičius", rating: 92 }, { name: "Vassilis Spanoulis", rating: 92 }, { name: "Oded Kattash", rating: 91 },
-        { name: "Mike James", rating: 89 }, { name: "Nando de Colo", rating: 89 }, { name: "Sergio Llull", rating: 88 }, { name: "Sergio Rodríguez", rating: 88 },
-        { name: "Scottie Wilbekin", rating: 87 }, { name: "Shane Larkin", rating: 87 }, { name: "Facundo Campazzo", rating: 87 }, { name: "Jeremy Pargo", rating: 87 },
-        { name: "Wade Baldwin IV", rating: 86 }, { name: "Tyrese Rice", rating: 86 }, { name: "Sylvain Francisco", rating: 85 }, { name: "Codi Miller-McIntyre", rating: 83 },
-        { name: "Jean Montero", rating: 83 }, { name: "Justin Robinson", rating: 83 }, { name: "Carsen Edwards", rating: 81 }, { name: "Vasilije Micić", rating: 81 },
-        { name: "Jimmy Clark III", rating: 81 }, { name: "Gabriel Lundberg", rating: 81 }, { name: "Yam Madar", rating: 80 }, { name: "Trent Forrest", rating: 79 },
-        { name: "TJ Shorts II", rating: 79 }, { name: "Kostas Sloukas", rating: 78 }, { name: "Patty Mills", rating: 78 }, { name: "Théo Maledon", rating: 77 },
-        { name: "Tamir Blatt", rating: 77 }, { name: "Tomáš Satoranský", rating: 77 }, { name: "Matthew Strazel", rating: 75 }, { name: "Tyler Ennis", rating: 71 },
-        { name: "Yiftach Ziv", rating: 64 }, { name: "Amit Ebo", rating: 63 }
-    ],
-    SG: [
-        { name: "Anthony Parker", rating: 93 }, { name: "Juan Carlos Navarro", rating: 91 }, { name: "Miki Berkovich", rating: 90 }, { name: "Kendrick Nunn", rating: 88 },
-        { name: "Nadir Hifi", rating: 87 }, { name: "Tyler Dorsey", rating: 86 }, { name: "Andreas Obst", rating: 86 }, { name: "Doron Jamchi", rating: 86 },
-        { name: "Elijah Bryant", rating: 85 }, { name: "Tal Brody", rating: 85 }, { name: "Doron Perkins", rating: 85 }, { name: "Kevin Punter", rating: 84 },
-        { name: "Dzanan Musa", rating: 83 }, { name: "Talen Horton-Tucker", rating: 82 }, { name: "Élie Okobo", rating: 82 }, { name: "Antonio Blakeney", rating: 82 },
-        { name: "Armoni Brooks", rating: 82 }, { name: "Brancou Badio", rating: 81 }, { name: "Marko Gudurić", rating: 81 }, { name: "Markus Howard", rating: 80 },
-        { name: "PJ Dozier", rating: 80 }, { name: "Jordan Loyd", rating: 80 }, { name: "Isaïa Cordinier", rating: 80 }, { name: "Tal Burstein", rating: 80 },
-        { name: "Keaton Wallace", rating: 78 }, { name: "Kadeem Carrington", rating: 76 }, { name: "Devon Hall", rating: 75 }, { name: "Panagiotis Kalaitzakis", rating: 73 },
-        { name: "John DiBartolomeo", rating: 73 }, { name: "Guy Palatin", rating: 66 }, { name: "Bar Timor", rating: 65 }
-    ],
-    SF: [
-        { name: "Andrei Kirilenko", rating: 90 }, { name: "Timothé Luwawu-Cabarrot", rating: 87 }, { name: "Jordan Nwora", rating: 86 }, { name: "Devin Smith", rating: 86 },
-        { name: "Dwayne Bacon", rating: 85 }, { name: "Nadav Henefeld", rating: 85 }, { name: "Shavon Shields", rating: 84 }, { name: "Guy Pnini", rating: 82 },
-        { name: "Evan Fournier", rating: 81 }, { name: "Jaron Blossomgame", rating: 80 }, { name: "Bonzie Colson", rating: 80 }, { name: "Amir Coffey", rating: 80 },
-        { name: "Cedi Osman", rating: 80 }, { name: "Oshae Brissett", rating: 79 }, { name: "Isaac Bonga", rating: 79 }, { name: "Gabriel Deck", rating: 78 },
-        { name: "T.J. Warren", rating: 77 }, { name: "Ojeleye", rating: 77 }, { name: "Tyrese Martin", rating: 76 }, { name: "Collin Malcolm", rating: 75 },
-        { name: "Vladmir lucic", rating: 74 }, { name: "Menahem Kurkus", rating: 72 }, { name: "Braxton Key", rating: 70 }, { name: "Gur Lavi", rating: 69 },
-        { name: "Oz Blayzer", rating: 67 }
-    ],
-    PF: [
-        { name: "Aulcie Perry", rating: 90 }, { name: "Aleksandar Vezenkov", rating: 89 }, { name: "Kevin Magee", rating: 89 }, { name: "Nikola Mirotić", rating: 87 },
-        { name: "Nigel Hayes-Davis", rating: 86 }, { name: "Guerschon Yabusele", rating: 86 }, { name: "David Bluthenthal", rating: 85 }, { name: "Tornike Shengelia", rating: 84 },
-        { name: "Zach LeDay", rating: 84 }, { name: "Chima Moneke", rating: 84 }, { name: "Jaylen Hoard", rating: 83 }, { name: "Dario Šarić", rating: 82 },
-        { name: "Jae Crowder", rating: 80 }, { name: "Nikola Kalinić", rating: 79 }, { name: "Juancho Hernangómez", rating: 79 }, { name: "T. J. Leaf", rating: 78 },
-        { name: "Chuma Okeke", rating: 77 }, { name: "Chris Duarte", rating: 76 }, { name: "Ish Wainright", rating: 76 }, { name: "Ercan Osmani", rating: 75 },
-        { name: "Jacob Toppin", rating: 75 }, { name: "Dinos Mitoglou", rating: 75 }, { name: "Kostas Papanikolaou", rating: 74 }, { name: "Kostas Antetokounmpo", rating: 71 },
-        { name: "Will Rayman", rating: 70 }, { name: "Tomer Ginat", rating: 70 }, { name: "Dāvis Bertāns", rating: 69 }, { name: "Itay Segev", rating: 63 }
-    ],
-    C: [
-        { name: "Nikola Vujčić", rating: 92 }, { name: "Edy Tavares", rating: 89 }, { name: "Sofoklis Schortsanitis", rating: 89 }, { name: "Mfiondu Kabengele", rating: 87 },
-        { name: "Kyle Hines", rating: 87 }, { name: "Jan Veselý", rating: 86 }, { name: "Ante Tomić", rating: 86 }, { name: "Mathias Lessort", rating: 85 },
-        { name: "Jonas Valančiūnas", rating: 84 }, { name: "Daniel Oturu", rating: 84 }, { name: "Josh Nebo", rating: 83 }, { name: "Roman Sorkin", rating: 81 },
-        { name: "Nikola Milutinov", rating: 80 }, { name: "Daniel Theis", rating: 80 }, { name: "Bruno Fernando", rating: 80 }, { name: "Tanhum Cohen-Mintz", rating: 80 },
-        { name: "Tyrique Jones", rating: 79 }, { name: "Mbaye Ndiaye", rating: 79 }, { name: "Devin Booker", rating: 78 }, { name: "Kai Jones", rating: 78 },
-        { name: "Donta Hall", rating: 76 }, { name: "Tai Odiase", rating: 75 }, { name: "Ante Žižić", rating: 73 }, { name: "Márcio Santos", rating: 73 },
-        { name: "Georgios Papagiannis", rating: 72 }, { name: "Sam Hunter", rating: 71 }, { name: "Wenyen Gabriel", rating: 71 }, { name: "Mustapha Fall", rating: 70 },
-        { name: "Armando Bacot Jr.", rating: 68 }
-    ]
+            { name: "Luka Dončić", rating: 93 }, { name: "Šarūnas Jasikevičius", rating: 92 }, { name: "Oded Kattash", rating: 91 }, { name: "Mike James", rating: 89 }, 
+            { name: "Nando de Colo", rating: 87 }, { name: "Sergio Llull", rating: 88 }, { name: "Sergio Rodríguez", rating: 88 }, { name: "Shane Larkin", rating: 87 }, 
+            { name: "Facundo Campazzo", rating: 87 }, { name: "Jeremy Pargo", rating: 87 }, { name: "Tyrese Rice", rating: 86 }, { name: "Sylvain Francisco", rating: 85 }, 
+            { name: "Codi Miller-McIntyre", rating: 83 }, { name: "Jean Montero", rating: 83 }, { name: "Justin Robinson", rating: 82 }, { name: "Vasilije Micić", rating: 83 }, 
+            { name: "Jimmy Clark III", rating: 81 }, { name: "Gabriel Lundberg", rating: 81 }, { name: "Yam Madar", rating: 80 }, { name: "Trent Forrest", rating: 79 }, 
+            { name: "TJ Shorts II", rating: 81 }, { name: "Kostas Sloukas", rating: 79 }, { name: "Patty Mills", rating: 81 }, { name: "Théo Maledon", rating: 78 }, 
+            { name: "Tamir Blatt", rating: 78 }, { name: "Tomáš Satoranský", rating: 77 }, { name: "Matthew Strazel", rating: 77 }, { name: "Tyler Ennis", rating: 71 }, 
+            { name: "Yiftach ziv", rating: 64 }, { name: "Amit Ebo", rating: 63 }, { name: "Chris Jones", rating: 79 }, { name: "McKinley Wright IV", rating: 80 }, 
+            { name: "Jerian Grant", rating: 78 }, { name: "Carlik Jones", rating: 84 }, { name: "Jared Butler", rating: 78 }, { name: "Cory Joseph", rating: 73 }
+        ],
+        SG: [
+            { name: "Anthony Parker", rating: 93 }, { name: "Miki Berkovich", rating: 90 }, { name: "Kendrick Nunn", rating: 89 }, { name: "Nadir Hifi", rating: 86 }, 
+            { name: "Tyler Dorsey", rating: 86 }, { name: "Andreas Obst", rating: 86 }, { name: "Tal Brody", rating: 85 }, { name: "Kevin Punter", rating: 85 }, 
+            { name: "Wade Baldwin IV", rating: 87 }, { name: "Talen Horton-Tucker", rating: 85 }, { name: "Élie Okobo", rating: 82 }, { name: "Antonio Blakeney", rating: 82 }, 
+            { name: "Armoni Brooks", rating: 82 }, { name: "Brancou Badio", rating: 81 }, { name: "Marko Gudurić", rating: 81 }, { name: "Scottie Wilbekin", rating: 81 }, 
+            { name: "Markus Howard", rating: 80 }, { name: "Carsen Edwards", rating: 83 }, { name: "Rokas Jokubaitis", rating: 80 }, { name: "PJ Dozier", rating: 80 }, 
+            { name: "Jordan Loyd", rating: 80 }, { name: "Isaïa Cordinier", rating: 79 }, { name: "Tal Burstein", rating: 80 }, { name: "Keaton Wallace", rating: 78 }, 
+            { name: "Kadeem Carrington", rating: 76 }, { name: "Devon Hall", rating: 75 }, { name: "Panagiotis Kalaitzakis", rating: 73 }, { name: "John DiBartolomeo", rating: 73 }, 
+            { name: "Guy Palatin", rating: 66 }, { name: "Bar Timor", rating: 65 }
+        ],
+        SF: [
+            { name: "Mario Hezonja", rating: 86 }, { name: "Timothé Luwawu-Cabarrot", rating: 85 }, { name: "Jordan Nwora", rating: 83 }, { name: "Dzanan Musa", rating: 83 }, 
+            { name: "Devin Smith", rating: 86 }, { name: "Alpha Diallo", rating: 81 }, { name: "Doron Jamchi", rating: 86 }, { name: "Elijah Bryant", rating: 85 }, 
+            { name: "Dwayne Bacon", rating: 85 }, { name: "Nadav Henefeld", rating: 85 }, { name: "Shavon Shields", rating: 84 }, { name: "Guy Pnini", rating: 80 }, 
+            { name: "Evan Fournier", rating: 84 }, { name: "Jaron Blossomgame", rating: 78 }, { name: "Bonzie Colson", rating: 80 }, { name: "Amir Coffey", rating: 80 }, 
+            { name: "Cedi Osman", rating: 80 }, { name: "Oshae Brissett", rating: 79 }, { name: "Isaac Bonga", rating: 79 }, { name: "Gabriel Deck", rating: 78 }, 
+            { name: "T.J. Warren", rating: 78 }, { name: "Ojeleye", rating: 77 }, { name: "Tyrese Martin", rating: 76 }, { name: "Collin Malcolm", rating: 75 }, 
+            { name: "Vladmir lucic", rating: 74 }, { name: "Menahem Kurkus", rating: 72 }, { name: "Braxton Key", rating: 75 }, { name: "Gur Lavi", rating: 69 }, 
+            { name: "Oz Blayzer", rating: 67 }, { name: "Lamar Stevens", rating: 74 }, { name: "MarJon Beauchamp", rating: 78 },{ name: "Eugene Omoruyi", rating: 80 }, 
+            { name: "Taylor Cameron", rating: 78 }
+        ],
+        PF: [
+            { name: "Aulcie Perry", rating: 90 }, { name: "Aleksandar Vezenkov", rating: 89 }, { name: "Kevin Magee", rating: 89 }, { name: "Nikola Mirotić", rating: 87 }, 
+            { name: "Nigel Hayes-Davis", rating: 86 }, { name: "Guerschon Yabusele", rating: 86 }, { name: "David Bluthenthal", rating: 85 }, { name: "Tornike Shengelia", rating: 82 }, 
+            { name: "Mbaye Ndiaye", rating: 77 }, { name: "Zach LeDay", rating: 83 }, { name: "Chima Moneke", rating: 83 }, { name: "Jaylen Hoard", rating: 84 }, 
+            { name: "Dario Šarić", rating: 83 }, { name: "Jae Crowder", rating: 84 }, { name: "Nikola Kalinić", rating: 77 }, { name: "Juancho Hernangómez", rating: 78 }, 
+            { name: "T. J. Leaf", rating: 78 }, { name: "Chuma Okeke", rating: 77 }, { name: "Chris Duarte", rating: 76 }, { name: "Ish Wainright", rating: 76 }, 
+            { name: "Ercan Osmani", rating: 75 }, { name: "Jacob Toppin", rating: 75 }, { name: "Dinos Mitoglou", rating: 78 }, { name: "Kostas Papanikolaou", rating: 74 }, 
+            { name: "Kostas Antetokounmpo", rating: 71 }, { name: "Will Rayman", rating: 73 }, { name: "Tomer Ginat", rating: 70 }, { name: "Dāvis Bertāns", rating: 69 }, 
+            { name: "Itay Segev", rating: 63 }
+        ],
+        C: [
+            { name: "Nikola Vujčić", rating: 92 }, { name: "Edy Tavares", rating: 90 }, { name: "Sofoklis Schortsanitis", rating: 89 }, { name: "Mfiondu Kabengele", rating: 86 }, 
+            { name: "Kyle Hines", rating: 87 }, { name: "Jan Veselý", rating: 86 }, { name: "Johannes Thiemann", rating: 80 }, { name: "Mathias Lessort", rating: 85 }, 
+            { name: "Jonas Valančiūnas", rating: 85 }, { name: "Daniel Oturu", rating: 84 }, { name: "Josh Nebo", rating: 83 }, { name: "Roman Sorkin", rating: 81 }, 
+            { name: "Nikola Milutinov", rating: 85 }, { name: "Daniel Theis", rating: 80 }, { name: "Bruno Fernando", rating: 80 }, { name: "Tanhum Cohen-Mintz", rating: 80 }, 
+            { name: "Tyrique Jones", rating: 79 }, { name: "Devin Booker", rating: 78 }, { name: "Kai Jones", rating: 78 }, { name: "Donta Hall", rating: 78 }, 
+            { name: "Tai Odiase", rating: 75 }, { name: "Ante Žižić", rating: 73 }, { name: "Márcio Santos", rating: 73 }, { name: "Georgios Papagiannis", rating: 72 }, 
+            { name: "Sam Hunter", rating: 71 }, { name: "Wenyen Gabriel", rating: 72 }, { name: "Mustapha Fall", rating: 76 }, { name: "Armando Bacot Jr.", rating: 68 }, 
+            { name: "Serge Ibaka", rating: 77 }, { name: "Moses Wright", rating: 82 }, { name: "Austin Jermaine Wiley", rating: 74 }, { name: "Johnathan Motley", rating: 77 }, 
+            { name: "Vincent Poirier", rating: 81 }, { name: "Filip Petrušev", rating: 73 }, { name: "Marcus Bingham", rating: 77 }, { name: "Kevarrius Hayes", rating: 77 }, 
+            { name: "Jasiel Rivero", rating: 74 }
+        ]
 };
 
 let playersDB = [];
