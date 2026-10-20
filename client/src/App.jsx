@@ -100,28 +100,6 @@ function App() {
       // מייצר ID ייחודי לכל הודעה כדי שהספרייה תמיד תקפיץ אותה כהודעה חדשה
       const uniqueToastId = Date.now().toString() + Math.random().toString();
 
-      // תנאי שחקן גרוע - עכשיו קופץ תמיד כשמישהו קונה שחקן מתחת ל-73
-      if (data.playerRating < 73) {
-        toast('איזה בתול 🤓', { 
-            id: `nerd-${uniqueToastId}`,
-            icon: '🤦‍♂️', 
-            duration: 4000 
-        });
-      }
-
-      // תנאי שחקן מעל 90 אוברול 
-      if (data.playerRating >= 90) {
-        toast(`${data.winnerName} יצאת מלך 👑`, {
-          id: `king-${uniqueToastId}`,
-          icon: '🔥',
-          duration: 4000,
-          style: {
-            border: '2px solid #FFD700',
-            padding: '16px',
-            fontWeight: 'bold'
-          },
-        });
-      }
 
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => setSoldNotification(null), 4000);

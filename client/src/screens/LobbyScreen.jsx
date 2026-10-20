@@ -23,14 +23,7 @@ export default function LobbyScreen({
 
   return (
     <div className="app-shell">
-      {/* הוספנו את אזור הלוגו כאן בראש המסך */}
-      <div style={{ textAlign: 'center', paddingTop: '20px' }}>
-        <img 
-          src="/images/elman.jpeg" 
-          alt="לוגו המשחק" 
-          style={{ height: '120px', objectFit: 'contain' }} 
-/>.
-      </div>
+    
 
       <header className="masthead">
         <h1 className="masthead__title">חדר המתנה</h1>
