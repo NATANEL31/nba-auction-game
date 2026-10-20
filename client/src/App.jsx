@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import toast, { Toaster } from 'react-hot-toast'; // התוספת של הספרייה
+import toast, { Toaster } from 'react-hot-toast'; 
 import './App.css';
 
-import Toast from './components/Toast'; // ה-Toast המקורי שלך
+import Toast from './components/Toast'; 
 import Background from './components/Background';
 import { setScene } from './audio/musicManager';
 import LoginScreen from './screens/LoginScreen';
@@ -44,8 +44,7 @@ function App() {
   // --- ערכת נושא: מוחלת על <html> כדי שכל הטוקנים יתחלפו ---
   useEffect(() => {
     const pack = gameState?.currentPack;
-    const theme =
-      pack === 'maccabi' ? 'maccabi' : pack === 'euroleague' ? 'euroleague' : 'nba';
+    const theme = pack === 'maccabi' ? 'maccabi' : pack === 'euroleague' ? 'euroleague' : 'nba';
     document.documentElement.dataset.theme = theme;
   }, [gameState?.currentPack]);
 
@@ -100,7 +99,6 @@ function App() {
       // מייצר ID ייחודי לכל הודעה כדי שהספרייה תמיד תקפיץ אותה כהודעה חדשה
       const uniqueToastId = Date.now().toString() + Math.random().toString();
 
-
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => setSoldNotification(null), 4000);
     });
@@ -117,16 +115,15 @@ function App() {
   }, []);
 
   // --- נגזרות מצב ---
-  const isGameOver =
-    gameState?.auctionIndex > 0 && !gameState?.currentAuction?.player;
+  const isGameOver = gameState?.auctionIndex > 0 && !gameState?.currentAuction?.player;
   const me = gameState?.participants.find((p) => p.id === socket.id);
 
   const myRoster = myEditableRoster ?? me?.roster ?? null;
 
   // --- פעולות ---
-  const handleJoin = (selectedAvatar) => {
+  const handleJoin = (username) => {
     setErrorMsg('');
-    socket.emit('joinGame', selectedAvatar);
+    socket.emit('joinGame', username);
     setHasJoined(true);
   };
 
