@@ -14,7 +14,6 @@ export default function LoginScreen({
       <div className="brandmark">
         <div className="brandmark__logo">🏀</div>
         <h1 className="brandmark__name">המכרז</h1>
-        <p className="brandmark__tagline">אנא זכור: דגמת מרובה לא דגמת כלל</p>
       </div>
 
       <div className="panel" style={{ maxWidth: '800px', margin: '0 auto' }}>
