@@ -3,7 +3,8 @@ import { io } from 'socket.io-client';
 import toast, { Toaster } from 'react-hot-toast'; 
 import './App.css';
 
-import Toast from './components/Toast'; 
+import SoldOverlay from './components/SoldOverlay';
+import './polish.css';
 import Background from './components/Background';
 import { setScene } from './audio/musicManager';
 import LoginScreen from './screens/LoginScreen';
@@ -80,27 +81,18 @@ function App() {
 
     // הלוגיקה של ההודעה בתחילת המשחק
     socket.on('gameStarted', () => {
-      toast('Let the game begin!', {
+      toast('שהמשחק יתחיל!', {
         icon: '🏀',
         duration: 2500,
-        style: {
-          background: '#333',
-          color: '#fff',
-          fontWeight: 'bold',
-          fontSize: '18px'
-        },
       });
     });
 
     socket.on('playerSold', (data) => {
       // ההודעה הרגילה
-      setSoldNotification(`${data.playerName} נחתם על ידי ${data.winnerName}! 🎉`);
-
-      // מייצר ID ייחודי לכל הודעה כדי שהספרייה תמיד תקפיץ אותה כהודעה חדשה
-      const uniqueToastId = Date.now().toString() + Math.random().toString();
+      setSoldNotification({ ...data, id: Date.now() });
 
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => setSoldNotification(null), 4000);
+      timeoutId = setTimeout(() => setSoldNotification(null), 3200);
     });
 
     return () => {
@@ -200,7 +192,7 @@ function App() {
   } else if (isGameOver) {
     screenContent = (
       <>
-        <Toast message={soldNotification} />
+        <SoldOverlay info={soldNotification} />
         <SummaryScreen
           participants={gameState.participants}
           myId={socket.id}
@@ -222,7 +214,7 @@ function App() {
   } else {
     screenContent = (
       <>
-        <Toast message={soldNotification} />
+        <SoldOverlay info={soldNotification} />
         <ArenaScreen
           gameState={gameState}
           me={me}
@@ -245,7 +237,18 @@ function App() {
     <>
       <Background />
       {/* מחזיק את ההודעות הקופצות המיוחדות בכל חלקי האפליקציה */}
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            background: 'var(--surface-2)',
+            color: 'var(--text)',
+            border: '1px solid var(--border-strong)',
+            fontWeight: 700,
+          },
+        }}
+      />
       
       {screenContent}
     </>

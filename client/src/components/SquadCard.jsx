@@ -15,6 +15,7 @@ export default function SquadCard({
 }) {
   const isOffline = participant.connected === false;
   const filled = roster.filter((slot) => slot.player !== null).length;
+  const totalRating = roster.reduce((sum, slot) => sum + (slot.player?.rating ?? 0), 0);
 
   return (
     <section
@@ -28,6 +29,11 @@ export default function SquadCard({
         </h2>
 
         <div className="masthead__meta">
+          {totalRating > 0 && (
+            <span className="pill pill--rating tnum" title="סכום דירוגי החמישייה">
+              ⭐ {totalRating}
+            </span>
+          )}
           <span className="pill pill--money tnum">${participant.budget}</span>
           <span className="pill tnum">
             {filled}/{roster.length}

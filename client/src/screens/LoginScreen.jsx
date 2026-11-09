@@ -13,7 +13,7 @@ export default function LoginScreen({ onJoin, errorMsg }) {
   };
 
   return (
-    <div className="app-shell app-shell--narrow">
+    <div className="app-shell app-shell--narrow screen-enter">
       <div className="login-topbar">
         <MusicToggle />
       </div>

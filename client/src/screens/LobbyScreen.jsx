@@ -22,7 +22,7 @@ export default function LobbyScreen({
   const isHost = myId === hostId;
 
   return (
-    <div className="app-shell">
+    <div className="app-shell screen-enter">
     
 
       <header className="masthead">

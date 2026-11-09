@@ -485,6 +485,8 @@ function handleAuctionEnd() {
                 playerName: gameState.currentAuction.player.name,
                 winnerName: winner.name,
                 playerRating: gameState.currentAuction.player.rating,
+                price: finalBid,
+                photo: gameState.currentAuction.player.photo || null,
                 isFirstPlayer: isFirstPlayer
             });
         }

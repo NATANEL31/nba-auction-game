@@ -7,8 +7,8 @@ export default function Roster({ roster, onMove, compact = false }) {
     <div className={`roster ${compact ? 'roster--compact' : ''}`}>
       {roster.map((slot, idx) => (
         <div
-          key={idx}
-          className={`roster__slot ${slot.player ? '' : 'roster__slot--empty'}`}
+          key={`${idx}-${slot.player?.name ?? 'empty'}`}
+          className={`roster__slot ${slot.player ? 'roster__slot--filled' : 'roster__slot--empty'}`}
         >
           <span className="pos-badge">{slot.pos}</span>
 

@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import SquadCard from '../components/SquadCard';
 import LeaveButton from '../components/LeaveButton';
 import MusicToggle from '../components/MusicToggle';
 import PlayerAvatar from '../components/PlayerAvatar';
+import AnimatedNumber from '../components/AnimatedNumber';
 
 const TURN_SECONDS = 15;
 const DANGER_AT = 5;
@@ -23,6 +25,23 @@ export default function ArenaScreen({
   const auction = gameState.currentAuction;
   const player = auction.player;
 
+  // --- היסטוריית הצעות לשחקן הנוכחי (נגזרת משינויים במצב) ---
+  const bidKey = `${player.name}|${auction.highestBid}|${auction.highestBidder}`;
+  const [seenKey, setSeenKey] = useState(bidKey);
+  const [seenPlayer, setSeenPlayer] = useState(player.name);
+  const [history, setHistory] = useState([]);
+
+  if (bidKey !== seenKey) {
+    setSeenKey(bidKey);
+    setSeenPlayer(player.name);
+    const isNewPlayer = player.name !== seenPlayer;
+    const entry =
+      auction.highestBid >= 0 && auction.highestBidder
+        ? [{ id: bidKey, who: auction.highestBidder, amount: auction.highestBid }]
+        : [];
+    setHistory((h) => (isNewPlayer ? entry : [...entry, ...h].slice(0, 6)));
+  }
+
   const isMyTurn = auction.currentTurnId === myId;
   const currentTurnPlayer = gameState.participants.find(
     (p) => p.id === auction.currentTurnId,
@@ -38,6 +57,13 @@ export default function ArenaScreen({
     customBid !== '' &&
     Number(customBid) > currentHighest &&
     Number(customBid) <= maxAllowedBid;
+
+  // קפיצות מהירות: +5, +10 מעל ההצעה הנוכחית, ו"הכל" (כל התקציב)
+  const quickBids = [5, 10]
+    .map((n) => (isFirstBid ? n : currentHighest + n))
+    .filter((v) => v <= maxAllowedBid && v > currentHighest);
+  const allIn = maxAllowedBid > currentHighest && maxAllowedBid > 0 ? maxAllowedBid : null;
+  const iLead = Boolean(me && auction.highestBidder && auction.highestBidder === me.name);
 
   // סדר ההצעות, מסודר כך שהתור הנוכחי ראשון
   const activeBidderIds = auction.activeBidders || [];
@@ -63,14 +89,18 @@ export default function ArenaScreen({
   };
 
   return (
-    <div className="app-shell">
+    <div className="app-shell screen-enter">
       <header className="masthead">
         <h1 className="masthead__title">זירת המכרז</h1>
         <div className="masthead__meta">
           <span className="pill pill--accent tnum">
             סיבוב {gameState.auctionIndex + 1}
           </span>
-          {me && <span className="pill pill--money tnum">התקציב שלי ${me.budget}</span>}
+          {me && (
+            <span className="pill pill--money tnum">
+              התקציב שלי $<AnimatedNumber value={me.budget} />
+            </span>
+          )}
           <MusicToggle />
           {isHost && (
             <button
@@ -109,13 +139,11 @@ export default function ArenaScreen({
             </div>
           )}
 
-          {/* --- כרטיס השחקן שעל המגרש --- */}
-          <section className="panel">
+          {/* --- כרטיס השחקן שעל המגרש (key => אנימציית כניסה לכל שחקן) --- */}
+          <section className="panel player-card" key={player.name}>
             <header className="panel__head">
               <h2 className="panel__title">השחקן במכרז</h2>
-              <span className="eyebrow">
-                סיבוב {gameState.auctionIndex + 1}
-              </span>
+              <span className="eyebrow">סיבוב {gameState.auctionIndex + 1}</span>
             </header>
 
             <div className="player-card__body">
@@ -126,9 +154,7 @@ export default function ArenaScreen({
               <div className="player-card__info">
                 <div className="player-card__tags">
                   <span className="pos-badge pos-badge--lg">{player.position}</span>
-                  <span className="pill pill--rating tnum">
-                    ⭐ דירוג {player.rating}
-                  </span>
+                  <span className="pill pill--rating tnum">⭐ דירוג {player.rating}</span>
                 </div>
                 <h3 className="player-card__name">{player.name}</h3>
               </div>
@@ -153,12 +179,10 @@ export default function ArenaScreen({
           </section>
 
           {/* --- כרטיס המכרז: הצעה, מוביל, טיימר, פעולות --- */}
-          <section className={`panel ${isMyTurn ? 'panel--accent' : ''}`}>
+          <section className={`panel ${isMyTurn ? 'panel--accent panel--turn' : ''}`}>
             <header className="panel__head">
               <h2 className="panel__title">המכרז</h2>
-              <span className="eyebrow">
-                {isMyTurn ? 'התור שלך' : 'ממתין'}
-              </span>
+              <span className="eyebrow">{isMyTurn ? 'התור שלך' : 'ממתין'}</span>
             </header>
 
             <div className="bid-figure">
@@ -167,13 +191,19 @@ export default function ArenaScreen({
                 {isFirstBid ? (
                   <p className="bid-figure__amount--empty">טרם הוגשה הצעה</p>
                 ) : (
-                  <p className="bid-figure__amount tnum">${currentHighest}</p>
+                  <p className="bid-figure__amount tnum" key={currentHighest}>
+                    <AnimatedNumber value={currentHighest} prefix="$" />
+                  </p>
                 )}
               </div>
 
               <div className="bid-figure__cell">
                 <p className="eyebrow">מוביל</p>
-                <p className="bid-figure__leader-name">
+                <p
+                  className={`bid-figure__leader-name ${iLead ? 'bid-figure__leader-name--me' : ''}`}
+                  key={auction.highestBidder || 'none'}
+                >
+                  {iLead ? '👑 ' : ''}
                   {auction.highestBidder || '—'}
                 </p>
               </div>
@@ -220,6 +250,29 @@ export default function ArenaScreen({
                   >
                     +1$
                   </button>
+
+                  {quickBids.map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      className="btn btn--info"
+                      disabled={!isMyTurn}
+                      onClick={() => onBid(v)}
+                    >
+                      ${v}
+                    </button>
+                  ))}
+
+                  {allIn !== null && (
+                    <button
+                      type="button"
+                      className="btn btn--gold"
+                      disabled={!isMyTurn}
+                      onClick={() => onBid(allIn)}
+                    >
+                      הכל ${allIn}
+                    </button>
+                  )}
 
                   <input
                     type="number"
@@ -269,6 +322,23 @@ export default function ArenaScreen({
               )}
             </div>
           </section>
+
+          {history.length > 0 && (
+            <section className="panel">
+              <header className="panel__head">
+                <h2 className="panel__title">היסטוריית הצעות</h2>
+                <span className="eyebrow">אחרונות</span>
+              </header>
+              <ul className="bid-log">
+                {history.map((h) => (
+                  <li key={h.id} className="bid-log__row">
+                    <span>{h.who}</span>
+                    <strong className="tnum">${h.amount}</strong>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
 
         {/* ================= החמישייה שלי ================= */}
