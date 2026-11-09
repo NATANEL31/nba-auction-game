@@ -15,8 +15,11 @@ export default function LobbyScreen({
   myId,
   hostId,
   onKick,
+  records,
 }) {
   const ranked = Object.entries(leaderboard || {}).sort((a, b) => b[1] - a[1]);
+  const playerRecords = records?.players || {};
+  const hall = records && (records.priciestFive || records.bestDeal) ? records : null;
   const canStart = participants.length >= MIN_PLAYERS;
   const isSolo = participants.length === 1;
   const isHost = myId === hostId;
@@ -138,10 +141,56 @@ export default function LobbyScreen({
                   <span className="leaderboard__rank">
                     {MEDALS[idx] ?? `${idx + 1}.`}
                   </span>
-                  <span className="leaderboard__name">{name}</span>
-                  <span className="leaderboard__score tnum">{score} נק'</span>
+                  <span className="leaderboard__name">
+                    {name}
+                    {(playerRecords[name]?.priciest || playerRecords[name]?.bestDeal) && (
+                      <small className="leaderboard__extras">
+                        {playerRecords[name].priciest && `חמישייה יקרה $${playerRecords[name].priciest.total}`}
+                        {playerRecords[name].priciest && playerRecords[name].bestDeal && ' · '}
+                        {playerRecords[name].bestDeal && `עסקה: ${playerRecords[name].bestDeal.player}`}
+                      </small>
+                    )}
+                  </span>
+                  <span className="leaderboard__score tnum">
+                    {score} {score === 1 ? 'ניצחון' : 'ניצחונות'}
+                    {playerRecords[name]?.games > 0 && (
+                      <small className="leaderboard__games"> מתוך {playerRecords[name].games}</small>
+                    )}
+                  </span>
                 </div>
               ))}
+            </div>
+          </section>
+        )}
+
+        {hall && (
+          <section className="panel">
+            <header className="panel__head">
+              <h2 className="panel__title">🏅 היכל התהילה</h2>
+              <span className="eyebrow">Records</span>
+            </header>
+
+            <div className="hall">
+              {hall.priciestFive && (
+                <div className="hall__item">
+                  <p className="eyebrow">החמישייה הכי יקרה</p>
+                  <p className="hall__value tnum">${hall.priciestFive.total}</p>
+                  <p className="hall__who">{hall.priciestFive.owner}</p>
+                  <p className="hall__detail">
+                    {hall.priciestFive.players.map((pl) => `${pl.name} ($${pl.price})`).join(' · ')}
+                  </p>
+                </div>
+              )}
+              {hall.bestDeal && (
+                <div className="hall__item">
+                  <p className="eyebrow">העסקה הכי טובה</p>
+                  <p className="hall__value">{hall.bestDeal.player}</p>
+                  <p className="hall__who">
+                    {hall.bestDeal.owner} · דירוג {hall.bestDeal.rating} ב-${hall.bestDeal.price}
+                  </p>
+                  <p className="hall__detail">הניקוד: דירוג פחות 3 נקודות על כל דולר ששולם</p>
+                </div>
+              )}
             </div>
           </section>
         )}

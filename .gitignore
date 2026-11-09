@@ -8,3 +8,7 @@ client/dist/
 # מצב ריצה של השרת
 server/users.json
 server/leaderboard.json
+
+server/records.json
+server/stats-cache.json
+server/stats-namemap.json

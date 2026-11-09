@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { beep, turnChime } from '../audio/sfx';
 import SquadCard from '../components/SquadCard';
 import LeaveButton from '../components/LeaveButton';
 import MusicToggle from '../components/MusicToggle';
 import PlayerAvatar from '../components/PlayerAvatar';
 import AnimatedNumber from '../components/AnimatedNumber';
+import PlayerStatsStrip from '../components/PlayerStatsStrip';
 
 const TURN_SECONDS = 15;
 const DANGER_AT = 5;
@@ -83,6 +85,15 @@ export default function ArenaScreen({
 
   const rivals = gameState.participants.filter((p) => p.id !== myId);
 
+  // --- צלילים: צלצול כשהתור שלי מתחיל, וביפ בשניות האחרונות של התור שלי ---
+  useEffect(() => {
+    if (isMyTurn) turnChime();
+  }, [isMyTurn, auction.currentTurnId, auction.highestBid]);
+
+  useEffect(() => {
+    if (isMyTurn && timeLeft > 0 && timeLeft <= DANGER_AT) beep(timeLeft <= 2);
+  }, [isMyTurn, timeLeft]);
+
   const handleCustomSubmit = (e) => {
     e.preventDefault();
     if (isValidCustom) onBid(Number(customBid));
@@ -158,24 +169,9 @@ export default function ArenaScreen({
                 </div>
                 <h3 className="player-card__name">{player.name}</h3>
               </div>
-
-              {player.stats && (
-                <dl className="player-stats" aria-label="ממוצעים למשחק">
-                  <div className="player-stats__item">
-                    <dt>נק'</dt>
-                    <dd className="tnum">{player.stats.pts}</dd>
-                  </div>
-                  <div className="player-stats__item">
-                    <dt>ריב'</dt>
-                    <dd className="tnum">{player.stats.reb}</dd>
-                  </div>
-                  <div className="player-stats__item">
-                    <dt>אס'</dt>
-                    <dd className="tnum">{player.stats.ast}</dd>
-                  </div>
-                </dl>
-              )}
             </div>
+
+            <PlayerStatsStrip stats={player.stats} />
           </section>
 
           {/* --- כרטיס המכרז: הצעה, מוביל, טיימר, פעולות --- */}

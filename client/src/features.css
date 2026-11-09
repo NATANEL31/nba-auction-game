@@ -1,0 +1,385 @@
+/* ==========================================================================
+   Features layer: confirm modal, stats strip, voting, hall of fame, chat dock.
+   נטען אחרי polish.css.
+   ========================================================================== */
+
+/* --- Confirm modal ------------------------------------------------------- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: var(--s-4);
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(5px);
+  animation: modal-fade 0.2s ease both;
+}
+
+.modal__card {
+  width: min(100%, 400px);
+  padding: var(--s-5);
+  border-radius: 20px;
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-3), 0 0 0 5px var(--accent-wash);
+  animation: modal-pop 0.32s var(--ease-spring) both;
+}
+
+.modal__title {
+  font-size: 1.25rem;
+}
+
+.modal__message {
+  margin-top: var(--s-2);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+}
+
+/* --- Stats strip (under the player on the block) ------------------------- */
+
+.stats-strip {
+  padding: var(--s-3) var(--s-4) var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.stats-strip--empty {
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.stats-strip__grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.stats-strip__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--s-2) var(--s-1);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  animation: rise 0.5s var(--ease-out) both;
+}
+
+.stats-strip__cell:nth-child(2) { animation-delay: 0.05s; }
+.stats-strip__cell:nth-child(3) { animation-delay: 0.1s; }
+.stats-strip__cell:nth-child(4) { animation-delay: 0.15s; }
+.stats-strip__cell:nth-child(5) { animation-delay: 0.2s; }
+
+.stats-strip__cell dt {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.stats-strip__cell dd {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--accent);
+}
+
+.stats-strip__source {
+  margin-top: var(--s-2);
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+
+@media (max-width: 420px) {
+  .stats-strip__cell dt { font-size: 0.62rem; }
+  .stats-strip__cell dd { font-size: 1.1rem; }
+}
+
+/* --- Voting (summary) + hall of fame (lobby) ----------------------------- */
+
+.vote-hint {
+  margin-bottom: var(--s-4);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.vote-tally {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.vote-tally__count {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.vote-tally__rating {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+
+.vote-tally__names {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.leaderboard__games {
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.leaderboard__name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.leaderboard__extras {
+  font-weight: 400;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  white-space: normal;
+}
+
+.hall__item {
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hall__item + .hall__item {
+  border-top: 1px solid var(--border);
+}
+
+.hall__value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--gold);
+}
+
+.hall__who {
+  font-weight: 600;
+}
+
+.hall__detail {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.sold--winner .sold__crown {
+  font-size: 3.6rem;
+  line-height: 1;
+  margin-top: var(--s-3);
+  animation: crown-drop 0.8s var(--ease-spring) 0.2s both;
+}
+
+/* --- Chat dock + floating reactions -------------------------------------- */
+
+.dock {
+  position: fixed;
+  inset-inline-start: var(--s-3);
+  bottom: var(--s-3);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-2);
+  max-width: calc(100vw - var(--s-5));
+}
+
+.dock__bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding: 4px 6px;
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-strong);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-2);
+  overflow-x: auto;
+}
+
+.dock__emoji {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-spring), background-color 0.15s;
+}
+
+.dock__emoji:hover {
+  background: var(--accent-wash);
+  transform: scale(1.25) translateY(-3px);
+}
+
+.dock__emoji:active {
+  transform: scale(0.9);
+}
+
+.dock__toggle {
+  position: relative;
+  flex: none;
+  margin-inline-start: 4px;
+  overflow: visible;
+}
+
+.dock__badge {
+  position: absolute;
+  top: -6px;
+  inset-inline-end: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-full);
+  background: var(--danger);
+  color: var(--on-danger);
+  font-size: 0.7rem;
+  font-weight: 800;
+  animation: bump 0.4s var(--ease-spring);
+}
+
+.dock__panel {
+  width: min(320px, calc(100vw - var(--s-5)));
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border: 1px solid var(--border-strong);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-3);
+  overflow: hidden;
+  animation: rise 0.3s var(--ease-out) both;
+}
+
+.dock__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: var(--s-3);
+}
+
+.dock__empty {
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+.dock__msg {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  max-width: 88%;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: var(--surface-3);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  animation: slide-in-x 0.3s var(--ease-out) both;
+}
+
+.dock__msg strong {
+  font-size: var(--fs-xs);
+  color: var(--accent);
+}
+
+.dock__msg--me {
+  align-self: flex-end;
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-glow);
+}
+
+.dock__form {
+  display: flex;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3) var(--s-3);
+  border-top: 1px solid var(--border);
+}
+
+.dock__form .input {
+  padding: 8px 12px;
+}
+
+.floaters {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floater {
+  position: absolute;
+  bottom: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: float-up 2.8s ease-out forwards;
+}
+
+.floater__emoji {
+  font-size: 2.6rem;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+}
+
+.floater__name {
+  padding: 1px 8px;
+  border-radius: var(--r-full);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* מקום לדוק בתחתית כדי שלא יסתיר תוכן */
+.app-shell {
+  padding-bottom: 96px;
+}
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: translateY(14px) scale(0.92); }
+}
+
+@keyframes crown-drop {
+  from { opacity: 0; transform: translateY(-40px) scale(0.5) rotate(-20deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes float-up {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  12% { opacity: 1; transform: translateY(-30px) scale(1.15); }
+  100% { opacity: 0; transform: translateY(-62vh) scale(1); }
+}

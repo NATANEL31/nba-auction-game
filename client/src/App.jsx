@@ -4,7 +4,12 @@ import toast, { Toaster } from 'react-hot-toast';
 import './App.css';
 
 import SoldOverlay from './components/SoldOverlay';
+import WinnerOverlay from './components/WinnerOverlay';
+import ChatDock from './components/ChatDock';
+import { useConfirm } from './components/confirmContext';
+import { gavel, soldJingle, fanfare } from './audio/sfx';
 import './polish.css';
+import './features.css';
 import Background from './components/Background';
 import { setScene } from './audio/musicManager';
 import LoginScreen from './screens/LoginScreen';
@@ -15,6 +20,7 @@ import SummaryScreen from './screens/SummaryScreen';
 const socket = io();
 
 function App() {
+  const confirm = useConfirm();
   const [gameState, setGameState] = useState(null);
 
   const [hasJoined, setHasJoined] = useState(false);
@@ -23,6 +29,8 @@ function App() {
 
   const [myEditableRoster, setMyEditableRoster] = useState(null);
   const [soldNotification, setSoldNotification] = useState(null);
+  const [winnerInfo, setWinnerInfo] = useState(null);
+  const [myName, setMyName] = useState('');
 
   const [timeLeft, setTimeLeft] = useState(15);
   const [selectedPack, setSelectedPack] = useState('nba');
@@ -52,6 +60,7 @@ function App() {
   // --- חיבור לשרת והאזנה לאירועים ---
   useEffect(() => {
     let timeoutId;
+    let winnerTimeoutId;
 
     socket.on('updateState', (newState) => {
       setGameState(newState);
@@ -90,12 +99,22 @@ function App() {
     socket.on('playerSold', (data) => {
       // ההודעה הרגילה
       setSoldNotification({ ...data, id: Date.now() });
+      gavel();
+      soldJingle();
 
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => setSoldNotification(null), 3200);
     });
 
+    socket.on('winnerDeclared', (data) => {
+      setWinnerInfo({ ...data, id: Date.now() });
+      fanfare();
+      clearTimeout(winnerTimeoutId);
+      winnerTimeoutId = setTimeout(() => setWinnerInfo(null), 5200);
+    });
+
     return () => {
+      socket.off('winnerDeclared');
       socket.off('updateState');
       socket.off('timerUpdate');
       socket.off('error');
@@ -103,6 +122,7 @@ function App() {
       socket.off('playerSold');
       socket.off('gameStarted');
       clearTimeout(timeoutId);
+      clearTimeout(winnerTimeoutId);
     };
   }, []);
 
@@ -116,6 +136,7 @@ function App() {
   const handleJoin = (username) => {
     setErrorMsg('');
     socket.emit('joinGame', username);
+    setMyName(username);
     setHasJoined(true);
   };
 
@@ -127,6 +148,7 @@ function App() {
     setGameState(null);
     setMyEditableRoster(null);
     setSoldNotification(null);
+    setWinnerInfo(null);
     setCustomBid('');
     setErrorMsg('');
   };
@@ -135,16 +157,25 @@ function App() {
   const handleFold = () => socket.emit('fold');
   const handleKick = (playerId) => socket.emit('kickPlayer', playerId);
 
-  const handleEndGameEarly = () => {
-    if (window.confirm('לסיים את המשחק עבור כולם ולחזור ללובי?')) {
-      socket.emit('endGameEarly');
-    }
+  const handleEndGameEarly = async () => {
+    const ok = await confirm({
+      title: 'לסיים את המשחק?',
+      message: 'המשחק יסתיים עבור כולם וכולם יחזרו ללובי.',
+      confirmText: 'סיים משחק',
+      tone: 'danger',
+    });
+    if (ok) socket.emit('endGameEarly');
   };
 
-  const handleDeclareWinner = (winnerName) => {
-    if (window.confirm(`האם אתם מסכימים להכתיר את ${winnerName} כזוכה של המשחק הזה?`)) {
-      socket.emit('declareWinner', winnerName);
-    }
+  const handleVote = (candidateName) => socket.emit('voteWinner', candidateName);
+
+  const handleCloseVote = async () => {
+    const ok = await confirm({
+      title: 'לסגור את ההצבעה?',
+      message: 'הזוכה ייקבע לפי הקולות שנספרו עד עכשיו.',
+      confirmText: 'סגור הצבעה',
+    });
+    if (ok) socket.emit('closeVote');
   };
 
   const movePlayer = (idx, direction) => {
@@ -187,6 +218,7 @@ function App() {
         myId={socket.id}
         hostId={gameState.hostId}
         onKick={handleKick}
+        records={gameState.records}
       />
     );
   } else if (isGameOver) {
@@ -199,7 +231,11 @@ function App() {
           myEditableRoster={myRoster}
           onMovePlayer={movePlayer}
           onSaveRoster={saveRoster}
-          onDeclareWinner={handleDeclareWinner}
+          votes={gameState.votes || {}}
+          myName={me?.name}
+          isHost={gameState.hostId === socket.id}
+          onVote={handleVote}
+          onCloseVote={handleCloseVote}
           onLeave={handleLeaveGame}
         />
       </>
@@ -251,6 +287,9 @@ function App() {
       />
       
       {screenContent}
+
+      <WinnerOverlay info={winnerInfo} />
+      {hasJoined && gameState && <ChatDock socket={socket} myName={myName} />}
     </>
   );
 }

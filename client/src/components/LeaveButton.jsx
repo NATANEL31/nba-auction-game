@@ -1,23 +1,25 @@
+import { useConfirm } from './confirmContext';
+
 /**
  * יציאה יזומה מהמשחק — תמיד מבקשת אישור לפני שמנתקת.
  */
 export default function LeaveButton({ onLeave, inGame = true }) {
-  const handleClick = () => {
-    const message = inGame
-      ? 'בטוח שברצונך לצאת מהמשחק? הקבוצה שלך תימחק והמכרז ימשיך בלעדיך.'
-      : 'בטוח שברצונך לצאת מהחדר?';
+  const confirm = useConfirm();
 
-    if (window.confirm(message)) {
-      onLeave();
-    }
+  const handleClick = async () => {
+    const ok = await confirm({
+      title: inGame ? 'לצאת מהמשחק?' : 'לצאת מהחדר?',
+      message: inGame
+        ? 'הקבוצה שלך תימחק והמכרז ימשיך בלעדיך.'
+        : 'תחזור למסך הכניסה.',
+      confirmText: 'יציאה',
+      tone: 'danger',
+    });
+    if (ok) onLeave();
   };
 
   return (
-    <button
-      type="button"
-      className="btn btn--ghost btn--sm"
-      onClick={handleClick}
-    >
+    <button type="button" className="btn btn--ghost btn--sm" onClick={handleClick}>
       🚪 יציאה
     </button>
   );

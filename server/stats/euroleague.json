@@ -1,0 +1,1122 @@
+{
+ "Mike James": {
+  "pts": 16.4,
+  "reb": 3.5,
+  "ast": 6.5,
+  "stl": 0.9,
+  "blk": 0.1,
+  "gp": 39,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Nando de Colo": {
+  "pts": 11.5,
+  "reb": 1.7,
+  "ast": 3.4,
+  "stl": 0.6,
+  "blk": 0,
+  "gp": 30,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Sergio Llull": {
+  "pts": 3.1,
+  "reb": 0.8,
+  "ast": 1.5,
+  "stl": 0.2,
+  "blk": 0,
+  "gp": 40,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Shane Larkin": {
+  "pts": 6.3,
+  "reb": 0.5,
+  "ast": 2.3,
+  "stl": 0.3,
+  "blk": 0,
+  "gp": 6,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Facundo Campazzo": {
+  "pts": 9.7,
+  "reb": 2.3,
+  "ast": 4.9,
+  "stl": 0.6,
+  "blk": 0.2,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Sylvain Francisco": {
+  "pts": 13.8,
+  "reb": 2.3,
+  "ast": 4.7,
+  "stl": 0.7,
+  "blk": 0.3,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Codi Miller-McIntyre": {
+  "pts": 7.9,
+  "reb": 3.1,
+  "ast": 4.7,
+  "stl": 0.4,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jean Montero": {
+  "pts": 15.5,
+  "reb": 3.5,
+  "ast": 4.5,
+  "stl": 1.2,
+  "blk": 0.3,
+  "gp": 6,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Justin Robinson": {
+  "pts": 13.7,
+  "reb": 1.9,
+  "ast": 4.1,
+  "stl": 0.5,
+  "blk": 0.1,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Vasilije Micić": {
+  "pts": 14.6,
+  "reb": 2.7,
+  "ast": 4.6,
+  "stl": 0.2,
+  "blk": 0,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jimmy Clark III": {
+  "pts": 13.4,
+  "reb": 2.1,
+  "ast": 3.7,
+  "stl": 0.5,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Yam Madar": {
+  "pts": 11.7,
+  "reb": 2.3,
+  "ast": 4.6,
+  "stl": 0.5,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Trent Forrest": {
+  "pts": 3.4,
+  "reb": 1.8,
+  "ast": 2.1,
+  "stl": 0.6,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Kostas Sloukas": {
+  "pts": 9.6,
+  "reb": 1.9,
+  "ast": 5.1,
+  "stl": 0.7,
+  "blk": 0.1,
+  "gp": 38,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Patty Mills": {
+  "pts": 15.9,
+  "reb": 0.6,
+  "ast": 2.1,
+  "stl": 0.2,
+  "blk": 0,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Théo Maledon": {
+  "pts": 16.3,
+  "reb": 4,
+  "ast": 5.2,
+  "stl": 0.6,
+  "blk": 0.3,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Tamir Blatt": {
+  "pts": 7.1,
+  "reb": 1.8,
+  "ast": 5.2,
+  "stl": 0.3,
+  "blk": 0,
+  "gp": 38,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Tomáš Satoranský": {
+  "pts": 4.8,
+  "reb": 3.7,
+  "ast": 3.9,
+  "stl": 0.3,
+  "blk": 0,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Matthew Strazel": {
+  "pts": 10.8,
+  "reb": 1.4,
+  "ast": 4.1,
+  "stl": 0.6,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Chris Jones": {
+  "pts": 8.9,
+  "reb": 2.4,
+  "ast": 5.6,
+  "stl": 0.8,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "McKinley Wright IV": {
+  "pts": 10.6,
+  "reb": 2.8,
+  "ast": 3.4,
+  "stl": 0.5,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jerian Grant": {
+  "pts": 5.9,
+  "reb": 1,
+  "ast": 2.6,
+  "stl": 0.3,
+  "blk": 0.2,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Carlik Jones": {
+  "pts": 13.6,
+  "reb": 2.9,
+  "ast": 6,
+  "stl": 0.9,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jared Butler": {
+  "pts": 9.7,
+  "reb": 1.7,
+  "ast": 2.4,
+  "stl": 0.1,
+  "blk": 0.3,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Cory Joseph": {
+  "pts": 3.9,
+  "reb": 0.9,
+  "ast": 1.1,
+  "stl": 0.1,
+  "blk": 0,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Kendrick Nunn": {
+  "pts": 18.3,
+  "reb": 2.7,
+  "ast": 3.5,
+  "stl": 1,
+  "blk": 0.1,
+  "gp": 37,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Nadir Hifi": {
+  "pts": 22.1,
+  "reb": 2.3,
+  "ast": 3.6,
+  "stl": 1,
+  "blk": 0.1,
+  "gp": 7,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Tyler Dorsey": {
+  "pts": 15.9,
+  "reb": 2.3,
+  "ast": 2.6,
+  "stl": 0.7,
+  "blk": 0.1,
+  "gp": 43,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Andreas Obst": {
+  "pts": 9.9,
+  "reb": 1.4,
+  "ast": 2.4,
+  "stl": 0.5,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Kevin Punter": {
+  "pts": 15.9,
+  "reb": 2,
+  "ast": 2.4,
+  "stl": 0.9,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Wade Baldwin IV": {
+  "pts": 11.3,
+  "reb": 3.1,
+  "ast": 4.5,
+  "stl": 0.9,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Talen Horton-Tucker": {
+  "pts": 11.4,
+  "reb": 3.6,
+  "ast": 2.3,
+  "stl": 0.5,
+  "blk": 0.4,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Élie Okobo": {
+  "pts": 11.9,
+  "reb": 2,
+  "ast": 4.5,
+  "stl": 1,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Antonio Blakeney": {
+  "pts": 14.2,
+  "reb": 2.2,
+  "ast": 1,
+  "stl": 0.5,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Armoni Brooks": {
+  "pts": 14.9,
+  "reb": 3.8,
+  "ast": 1.2,
+  "stl": 0.6,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Brancou Badio": {
+  "pts": 5.3,
+  "reb": 2.5,
+  "ast": 2.3,
+  "stl": 0.4,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Marko Gudurić": {
+  "pts": 8.3,
+  "reb": 1.8,
+  "ast": 1.9,
+  "stl": 0.6,
+  "blk": 0,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Scottie Wilbekin": {
+  "pts": 13.3,
+  "reb": 1.5,
+  "ast": 2.9,
+  "stl": 0.7,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Carsen Edwards": {
+  "pts": 15.3,
+  "reb": 1.3,
+  "ast": 2.4,
+  "stl": 1.1,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Rokas Jokubaitis": {
+  "pts": 8.6,
+  "reb": 0.7,
+  "ast": 3.7,
+  "stl": 0.6,
+  "blk": 0,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "PJ Dozier": {
+  "pts": 6.8,
+  "reb": 1.8,
+  "ast": 1.5,
+  "stl": 0.5,
+  "blk": 0.2,
+  "gp": 6,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jordan Loyd": {
+  "pts": 8.9,
+  "reb": 3,
+  "ast": 2.4,
+  "stl": 0.7,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Isaïa Cordinier": {
+  "pts": 9.4,
+  "reb": 2.8,
+  "ast": 1.9,
+  "stl": 0.8,
+  "blk": 0.2,
+  "gp": 30,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Keaton Wallace": {
+  "pts": 5,
+  "reb": 1.7,
+  "ast": 2,
+  "stl": 0.3,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Devon Hall": {
+  "pts": 9.2,
+  "reb": 2.7,
+  "ast": 4,
+  "stl": 0.6,
+  "blk": 0.1,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Panagiotis Kalaitzakis": {
+  "pts": 1.9,
+  "reb": 1,
+  "ast": 2,
+  "stl": 0.6,
+  "blk": 0,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "John DiBartolomeo": {
+  "pts": 4,
+  "reb": 1.9,
+  "ast": 0.9,
+  "stl": 0.9,
+  "blk": 0,
+  "gp": 27,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Mario Hezonja": {
+  "pts": 13.3,
+  "reb": 4,
+  "ast": 2.4,
+  "stl": 0.8,
+  "blk": 0,
+  "gp": 44,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Timothé Luwawu-Cabarrot": {
+  "pts": 8.6,
+  "reb": 1.7,
+  "ast": 0.8,
+  "stl": 0.4,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jordan Nwora": {
+  "pts": 15,
+  "reb": 5.5,
+  "ast": 1.3,
+  "stl": 1,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Alpha Diallo": {
+  "pts": 11.9,
+  "reb": 4.4,
+  "ast": 1.4,
+  "stl": 1.4,
+  "blk": 0.5,
+  "gp": 42,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Elijah Bryant": {
+  "pts": 14.8,
+  "reb": 5.4,
+  "ast": 3.9,
+  "stl": 1.1,
+  "blk": 0.1,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Dwayne Bacon": {
+  "pts": 16.3,
+  "reb": 4.2,
+  "ast": 3,
+  "stl": 0.5,
+  "blk": 0.1,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Shavon Shields": {
+  "pts": 11.6,
+  "reb": 4.9,
+  "ast": 1.5,
+  "stl": 0.5,
+  "blk": 0.1,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Evan Fournier": {
+  "pts": 11.4,
+  "reb": 2.1,
+  "ast": 2.7,
+  "stl": 1.1,
+  "blk": 0,
+  "gp": 7,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jaron Blossomgame": {
+  "pts": 6.5,
+  "reb": 3.1,
+  "ast": 0.3,
+  "stl": 0.1,
+  "blk": 0.4,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Bonzie Colson": {
+  "pts": 10.4,
+  "reb": 3.1,
+  "ast": 0.6,
+  "stl": 1.1,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Amir Coffey": {
+  "pts": 5.8,
+  "reb": 2.7,
+  "ast": 1,
+  "stl": 0.8,
+  "blk": 0.2,
+  "gp": 6,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Cedi Osman": {
+  "pts": 12.9,
+  "reb": 3.5,
+  "ast": 1.2,
+  "stl": 0.7,
+  "blk": 0.1,
+  "gp": 39,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Isaac Bonga": {
+  "pts": 4.9,
+  "reb": 2.1,
+  "ast": 0.5,
+  "stl": 0.6,
+  "blk": 0.4,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Gabriel Deck": {
+  "pts": 7.1,
+  "reb": 3.5,
+  "ast": 1.2,
+  "stl": 0.4,
+  "blk": 0,
+  "gp": 41,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "T.J. Warren": {
+  "pts": 13,
+  "reb": 3,
+  "ast": 1.2,
+  "stl": 0.8,
+  "blk": 0.2,
+  "gp": 6,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Tyrese Martin": {
+  "pts": 8.9,
+  "reb": 4.5,
+  "ast": 1.4,
+  "stl": 0.8,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Collin Malcolm": {
+  "pts": 10.5,
+  "reb": 4.2,
+  "ast": 1.9,
+  "stl": 1,
+  "blk": 0.3,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Braxton Key": {
+  "pts": 8.2,
+  "reb": 4.8,
+  "ast": 1.4,
+  "stl": 1.2,
+  "blk": 0.5,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Lamar Stevens": {
+  "pts": 10.8,
+  "reb": 5,
+  "ast": 0.8,
+  "stl": 0.2,
+  "blk": 0.6,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "MarJon Beauchamp": {
+  "pts": 7,
+  "reb": 3.1,
+  "ast": 1.6,
+  "stl": 0.8,
+  "blk": 0,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Eugene Omoruyi": {
+  "pts": 10.3,
+  "reb": 2.5,
+  "ast": 2.4,
+  "stl": 0.8,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Nikola Mirotić": {
+  "pts": 13,
+  "reb": 3.1,
+  "ast": 0.9,
+  "stl": 0.5,
+  "blk": 0.2,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Nigel Hayes-Davis": {
+  "pts": 11.2,
+  "reb": 3.6,
+  "ast": 0.6,
+  "stl": 1,
+  "blk": 0.1,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Guerschon Yabusele": {
+  "pts": 8.7,
+  "reb": 4.6,
+  "ast": 1.1,
+  "stl": 0.4,
+  "blk": 0.5,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Tornike Shengelia": {
+  "pts": 6.7,
+  "reb": 2.6,
+  "ast": 1,
+  "stl": 0.2,
+  "blk": 0.2,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Mbaye Ndiaye": {
+  "pts": 8.6,
+  "reb": 3.1,
+  "ast": 1,
+  "stl": 1,
+  "blk": 0.9,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Zach LeDay": {
+  "pts": 11.2,
+  "reb": 4.5,
+  "ast": 0.8,
+  "stl": 0.2,
+  "blk": 0.1,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Chima Moneke": {
+  "pts": 10.3,
+  "reb": 4.6,
+  "ast": 1.5,
+  "stl": 0.8,
+  "blk": 0.4,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jaylen Hoard": {
+  "pts": 7.9,
+  "reb": 3.9,
+  "ast": 1.4,
+  "stl": 1,
+  "blk": 0.5,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Dario Šarić": {
+  "pts": 11.4,
+  "reb": 6.6,
+  "ast": 2.1,
+  "stl": 0.5,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jae Crowder": {
+  "pts": 10.1,
+  "reb": 4,
+  "ast": 3.9,
+  "stl": 0.9,
+  "blk": 0.4,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Nikola Kalinić": {
+  "pts": 5.8,
+  "reb": 3.5,
+  "ast": 1.8,
+  "stl": 0.5,
+  "blk": 0.3,
+  "gp": 39,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Juancho Hernangómez": {
+  "pts": 5,
+  "reb": 4.4,
+  "ast": 0.4,
+  "stl": 1,
+  "blk": 0.3,
+  "gp": 7,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "T. J. Leaf": {
+  "pts": 3.9,
+  "reb": 2.1,
+  "ast": 0.4,
+  "stl": 0,
+  "blk": 0.1,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Chuma Okeke": {
+  "pts": 6.9,
+  "reb": 3,
+  "ast": 1.3,
+  "stl": 0.9,
+  "blk": 0.4,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Chris Duarte": {
+  "pts": 9.1,
+  "reb": 4,
+  "ast": 1.6,
+  "stl": 1,
+  "blk": 0.3,
+  "gp": 7,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Ish Wainright": {
+  "pts": 4.7,
+  "reb": 2.1,
+  "ast": 0.7,
+  "stl": 0.8,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Ercan Osmani": {
+  "pts": 3.2,
+  "reb": 1.8,
+  "ast": 0.5,
+  "stl": 0.4,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Kostas Papanikolaou": {
+  "pts": 3.5,
+  "reb": 2.2,
+  "ast": 1,
+  "stl": 0.9,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Dāvis Bertāns": {
+  "pts": 3.2,
+  "reb": 1.4,
+  "ast": 0.4,
+  "stl": 0.5,
+  "blk": 0.1,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Mfiondu Kabengele": {
+  "pts": 14.6,
+  "reb": 7.8,
+  "ast": 1,
+  "stl": 0.6,
+  "blk": 0.8,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jan Veselý": {
+  "pts": 8.7,
+  "reb": 3.3,
+  "ast": 1.4,
+  "stl": 0.9,
+  "blk": 0.2,
+  "gp": 38,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Johannes Thiemann": {
+  "pts": 9.2,
+  "reb": 4.4,
+  "ast": 1.7,
+  "stl": 0.5,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Mathias Lessort": {
+  "pts": 12.6,
+  "reb": 7.6,
+  "ast": 1.8,
+  "stl": 1.4,
+  "blk": 0.8,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jonas Valančiūnas": {
+  "pts": 12.1,
+  "reb": 8.4,
+  "ast": 1.9,
+  "stl": 0.2,
+  "blk": 1,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Josh Nebo": {
+  "pts": 8.3,
+  "reb": 7.6,
+  "ast": 0.7,
+  "stl": 0.3,
+  "blk": 0.6,
+  "gp": 7,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Roman Sorkin": {
+  "pts": 9.9,
+  "reb": 1.8,
+  "ast": 0.9,
+  "stl": 0.6,
+  "blk": 0.6,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Nikola Milutinov": {
+  "pts": 3.2,
+  "reb": 6.2,
+  "ast": 0.8,
+  "stl": 0,
+  "blk": 0,
+  "gp": 6,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Daniel Theis": {
+  "pts": 7.9,
+  "reb": 3.4,
+  "ast": 1.9,
+  "stl": 0.9,
+  "blk": 0.1,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Bruno Fernando": {
+  "pts": 7.5,
+  "reb": 5.5,
+  "ast": 1.2,
+  "stl": 0.5,
+  "blk": 0.4,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Tyrique Jones": {
+  "pts": 5.9,
+  "reb": 3.1,
+  "ast": 1.2,
+  "stl": 0.3,
+  "blk": 0,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Devin Booker": {
+  "pts": 6.1,
+  "reb": 3.8,
+  "ast": 1.1,
+  "stl": 0.2,
+  "blk": 0,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Kai Jones": {
+  "pts": 3.5,
+  "reb": 3.2,
+  "ast": 0.2,
+  "stl": 0.5,
+  "blk": 1.3,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Donta Hall": {
+  "pts": 4.2,
+  "reb": 3.4,
+  "ast": 1.1,
+  "stl": 0.3,
+  "blk": 0.7,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Tai Odiase": {
+  "pts": 6,
+  "reb": 1.8,
+  "ast": 0,
+  "stl": 0.4,
+  "blk": 0.7,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Ante Žižić": {
+  "pts": 7.3,
+  "reb": 4.8,
+  "ast": 1.2,
+  "stl": 0.6,
+  "blk": 0.1,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Márcio Santos": {
+  "pts": 8.3,
+  "reb": 4,
+  "ast": 0.7,
+  "stl": 0.7,
+  "blk": 0.1,
+  "gp": 7,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Wenyen Gabriel": {
+  "pts": 7.1,
+  "reb": 3.2,
+  "ast": 0.7,
+  "stl": 0.9,
+  "blk": 0.5,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Armando Bacot Jr.": {
+  "pts": 3.5,
+  "reb": 2.6,
+  "ast": 0.2,
+  "stl": 0.5,
+  "blk": 0.5,
+  "gp": 8,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Moses Wright": {
+  "pts": 12.1,
+  "reb": 5.5,
+  "ast": 0.8,
+  "stl": 0.3,
+  "blk": 0.5,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Johnathan Motley": {
+  "pts": 8.3,
+  "reb": 2.4,
+  "ast": 0.9,
+  "stl": 0.3,
+  "blk": 0.2,
+  "gp": 35,
+  "season": "2025-26",
+  "label": "עונה אחרונה"
+ },
+ "Filip Petrušev": {
+  "pts": 8.1,
+  "reb": 2.8,
+  "ast": 0.7,
+  "stl": 0.3,
+  "blk": 0.2,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Marcus Bingham": {
+  "pts": 6.7,
+  "reb": 4.1,
+  "ast": 0.7,
+  "stl": 0.6,
+  "blk": 1.1,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Kevarrius Hayes": {
+  "pts": 9.1,
+  "reb": 4,
+  "ast": 0.4,
+  "stl": 0.7,
+  "blk": 1,
+  "gp": 9,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ },
+ "Jasiel Rivero": {
+  "pts": 6,
+  "reb": 3,
+  "ast": 0.6,
+  "stl": 0.5,
+  "blk": 0.2,
+  "gp": 10,
+  "season": "2026-27",
+  "label": "עונה אחרונה"
+ }
+}
